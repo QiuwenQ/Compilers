@@ -1,4 +1,1 @@
-int x;
-void y;
-struct Point{ int a; bool b;};
-int func1(int c, bool d){a=b=c;}
+int func1(int c, bool d){int a;w=("hi");y++; z--; b=c.num=false; a=true;}
