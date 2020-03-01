@@ -209,7 +209,6 @@ class StmtListNode extends ASTnode {
         Iterator it = myStmts.iterator();
         try {
             while (it.hasNext()) {
-                addIndentation(p,4);
                 ((StmtNode)it.next()).unparse(p, indent);
             }
         } catch (NoSuchElementException ex) {
@@ -405,7 +404,8 @@ class PostDecStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
-        myExp.unparse(p,indent);
+        addIndentation(p, indent);
+        myExp.unparse(p,0);
         p.println("--;");
     }
 
