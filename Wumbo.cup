@@ -91,6 +91,9 @@ non terminal LinkedList       formalsList;
 non terminal FormalDeclNode   formalDecl;
 non terminal StructDeclNode   structDecl;
 non terminal LinkedList       structBody;
+non terminal AssignNode       assignExp;
+non terminal ExpNode          exp;
+non terminal ExpNode          term;
 
 /* Precedences
  *
@@ -203,12 +206,38 @@ stmtList        ::= stmtList:sl stmt:s
                 {: RESULT = new LinkedList<DeclNode>();
                 :}
                 ;
-stmt            ::= loc:l1 MINUSMINUS SEMICOLON
+
+stmt            ::= assignExp:a SEMICOLON
+                {: RESULT = new AssignStmtNode(a);
+                :}
+                |loc:l PLUSPLUS SEMICOLON
+                {: RESULT = new PostIncStmtNode(l);
+                :}
+                |loc:l1 MINUSMINUS SEMICOLON
                 {: RESULT = new PostDecStmtNode(l1);
+                :}
+                | RETURN SEMICOLON
+                {: RESULT = new ReturnStmtNode(null);
                 :}
                 ;
 
+assignExp       ::= loc:l ASSIGN exp:e
+                {: RESULT = new AssignNode(l, e);
+                :}
+                ;
 
+exp             ::=assignExp: a
+                {: RESULT = a;
+                :}
+                |term:t
+                {: RESULT = t;
+                :}
+                ;
+
+term            ::= loc:l
+                {: RESULT = l;
+                :}
+                ;
 
 type            ::= INT
                 {: RESULT = new IntNode();

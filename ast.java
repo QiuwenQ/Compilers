@@ -386,6 +386,9 @@ class AssignStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,4);
+        myAssign.unparse(p, indent);
+        p.println(";");
     }
 
     // one child
@@ -398,6 +401,9 @@ class PostIncStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,indent);
+        myExp.unparse(p,0);
+        p.println("++;");
     }
 
     // one child
@@ -531,6 +537,8 @@ class ReturnStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,indent);
+        p.println("return;");
     }
 
     // one child
@@ -645,6 +653,11 @@ class AssignNode extends ExpNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        myLhs.unparse(p,0);
+        p.print(" = ");
+        p.print("(");
+        myExp.unparse(p,0);
+        p.print(")");
     }
 
     // two children
