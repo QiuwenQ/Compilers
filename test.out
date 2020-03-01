@@ -1,5 +1,6 @@
 int func1() {
     int a;
+    num1 = ((a - b) - c);
     num2 = (((a + b) + c) + d);
     f1 = func1();
     return a = b;

@@ -245,6 +245,9 @@ exp             ::=assignExp: a
                 | exp:e1 PLUS exp:e2
                 {: RESULT = new PlusNode(e1, e2);
                 :}
+                | exp:e1 MINUS exp:e2
+                {: RESULT = new MinusNode(e1, e2);
+                :}
                 |term:t
                 {: RESULT = t;
                 :}
