@@ -87,6 +87,9 @@ non terminal ExpNode          loc;
 non terminal StmtNode         stmt;
 non terminal LinkedList       varDeclList;
 non terminal LinkedList       stmtList;
+non terminal LinkedList       formalsList;
+non terminal FormalDeclNode   formalDecl;
+
 
 /* Precedences
  *
@@ -132,6 +135,25 @@ fnDecl          ::= type:t id:i formals:f fnBody:fb
 
 formals         ::= LPAREN RPAREN
                 {: RESULT = new LinkedList<DeclNode>();
+                :}
+                | LPAREN formalsList:fl RPAREN
+                {: RESULT = fl;
+                :}
+                ;
+
+formalsList     ::= formalDecl: fd
+                {: LinkedList list = new LinkedList<DeclNode>();
+                   list.addFirst(fd);
+                   RESULT = list;
+                :}
+                | formalDecl:fd COMMA formalsList:fl
+                {: fl.addFirst(fd);
+                   RESULT = fl;
+                :}
+                ;
+
+formalDecl      ::= type:t id:i        // note: no struct parameters
+                {: RESULT = new FormalDeclNode(t, i);
                 :}
                 ;
 
