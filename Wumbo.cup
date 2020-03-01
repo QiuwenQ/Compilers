@@ -102,7 +102,12 @@ non terminal LinkedList       actualList;
  * NOTE: Add precedence and associativity declarations here.
  *
  */
-
+precedence right ASSIGN;
+precedence left OR;
+precedence left AND;
+precedence nonassoc LESS, GREATER, LESSEQ, GREATEREQ, EQUALS, NOTEQUALS;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
 
 start with program;
 
@@ -236,6 +241,9 @@ assignExp       ::= loc:l ASSIGN exp:e
 
 exp             ::=assignExp: a
                 {: RESULT = a;
+                :}
+                | exp:e1 PLUS exp:e2
+                {: RESULT = new PlusNode(e1, e2);
                 :}
                 |term:t
                 {: RESULT = t;

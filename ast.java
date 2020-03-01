@@ -680,9 +680,7 @@ class AssignNode extends ExpNode {
     public void unparse(PrintWriter p, int indent) {
         myLhs.unparse(p,0);
         p.print(" = ");
-        p.print("(");
         myExp.unparse(p,0);
-        p.print(")");
     }
 
     // two children
@@ -769,6 +767,11 @@ class PlusNode extends BinaryExpNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        p.print("(");
+        myExp1.unparse(p,0);
+        p.print(" + ");
+        myExp2.unparse(p,0);
+        p.print(")");
     }
 }
 
