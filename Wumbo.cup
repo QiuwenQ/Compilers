@@ -94,6 +94,8 @@ non terminal LinkedList       structBody;
 non terminal AssignNode       assignExp;
 non terminal ExpNode          exp;
 non terminal ExpNode          term;
+non terminal ExpNode          fncall;
+non terminal LinkedList       actualList;
 
 /* Precedences
  *
@@ -251,6 +253,28 @@ term            ::= loc:l
                 :}
                 | LPAREN exp:e RPAREN
                 {: RESULT = e;
+                :}
+                | fncall:fc
+                {: RESULT = fc ;
+                :}
+                ;
+
+fncall          ::=  id:i LPAREN RPAREN   // fn call with no args
+                {: RESULT = new CallExpNode(i);
+                :}
+                | id:i LPAREN actualList:al RPAREN  // with args
+                {: RESULT = new CallExpNode(i, new ExpListNode (al));
+                :}
+                ;
+
+actualList      ::= exp:e
+                {: LinkedList list = new LinkedList();
+                   list.add(e);
+                   RESULT = list;
+                :}
+                | actualList:al COMMA exp:e
+                {: al.addLast(e);
+                   RESULT = al;
                 :}
                 ;
 

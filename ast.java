@@ -227,6 +227,19 @@ class ExpListNode extends ASTnode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        Iterator it = myExps.iterator();
+        try{
+            if(it.hasNext()){
+                ((ExpNode)it.next()).unparse(p, indent);
+            }
+            while(it.hasNext()){
+                p.print(", ");
+                ((ExpNode)it.next()).unparse(p, indent);
+            }
+        }catch (NoSuchElementException ex) {
+            System.err.println("unexpected NoSuchElementException in ExpListNode.print");
+            System.exit(-1);
+        }
     }
 
     // list of children (ExpNodes)
@@ -681,6 +694,14 @@ class CallExpNode extends ExpNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        //if null, then don't unparse
+        myId.unparse(p,0);
+        p.print("(");
+        if (myExpList!=null){
+             myExpList.unparse(p,0);
+         }
+        p.print(")");
+
     }
 
     // two children
