@@ -1,1 +1,1 @@
-int func1(){int a;num1= a-b-c; num2= a+b+c+d; f1= func1(); return a=b; funCall(a);return a.num= b.num = c.num; return false;}
+int func1(){int a;num= a==b||c; num = b>= c&&d+f;num= a<"hi"; num= b> c.ed; num= c!=false; numOther= "hi" <= c.ed+5;return a && "hi"-1; num1=1-2;num2= -a; numA = !a;num= a+!aa-ee+b*c/d-e;numd= a/b; num1= a*b*c; num2= a+b+c+d; f1= func1(); return a=b; funCall(a);return a.num= b.num = c.num; return false;}
