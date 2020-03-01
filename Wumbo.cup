@@ -89,7 +89,8 @@ non terminal LinkedList       varDeclList;
 non terminal LinkedList       stmtList;
 non terminal LinkedList       formalsList;
 non terminal FormalDeclNode   formalDecl;
-
+non terminal StructDeclNode   structDecl;
+non terminal LinkedList       structBody;
 
 /* Precedences
  *
@@ -126,10 +127,42 @@ decl            ::= varDecl:v
                 | fnDecl: fd
                 {: RESULT = fd;
                 :}
+                | structDecl:s
+                {: RESULT = s;
+                :}
+                ;
+varDeclList     ::= varDeclList:vl varDecl:vd
+                {: vl.addLast(vd);
+                   RESULT = vl;
+                :}
+                | /* epsilon */
+                {: RESULT = new LinkedList<DeclNode>();
+                :}
+                ;
+
+varDecl         ::= type:t id:i SEMICOLON
+                {: RESULT = new VarDeclNode(t, i, VarDeclNode.NOT_STRUCT);
+                :}
                 ;
 
 fnDecl          ::= type:t id:i formals:f fnBody:fb
                 {: RESULT = new FnDeclNode(t, i, new FormalsListNode(f), fb);
+                :}
+                ;
+
+structDecl      ::= STRUCT id:i LCURLY structBody:sb RCURLY SEMICOLON
+                {: RESULT = new StructDeclNode(i, new DeclListNode(sb));
+                :}
+                ;
+
+structBody      ::= structBody:sb varDecl:vd
+                {: sb.addLast(vd);
+                   RESULT = sb;
+                :}
+                | varDecl:vd
+                {: LinkedList list = new LinkedList<VarDeclNode>();
+                   list.add(vd);
+                   RESULT = list;
                 :}
                 ;
 
@@ -175,19 +208,7 @@ stmt            ::= loc:l1 MINUSMINUS SEMICOLON
                 :}
                 ;
 
-varDeclList     ::= varDeclList:vl varDecl:vd
-                {: vl.addLast(vd);
-                   RESULT = vl;
-                :}
-                | /* epsilon */
-                {: RESULT = new LinkedList<DeclNode>();
-                :}
-                ;
 
-varDecl         ::= type:t id:i SEMICOLON
-                {: RESULT = new VarDeclNode(t, i, VarDeclNode.NOT_STRUCT);
-                :}
-                ;
 
 type            ::= INT
                 {: RESULT = new IntNode();

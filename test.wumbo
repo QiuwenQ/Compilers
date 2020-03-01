@@ -1,3 +1,4 @@
 int x;
 void y;
+struct Point{ int a; bool b;};
 int func1(int c, bool d){int a; b.num--; a--;}
