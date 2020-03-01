@@ -550,8 +550,13 @@ class ReturnStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        //TODO: check if exp is null
         addIndentation(p,indent);
-        p.println("return;");
+        p.print("return ");
+        if (myExp!=null){
+            myExp.unparse(p,0);
+        }
+        p.println(";");
     }
 
     // one child

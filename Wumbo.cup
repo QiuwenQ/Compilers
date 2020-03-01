@@ -218,6 +218,9 @@ stmt            ::= assignExp:a SEMICOLON
                 |loc:l1 MINUSMINUS SEMICOLON
                 {: RESULT = new PostDecStmtNode(l1);
                 :}
+                | RETURN exp:e SEMICOLON
+                {: RESULT = new ReturnStmtNode(e);
+                :}
                 | RETURN SEMICOLON
                 {: RESULT = new ReturnStmtNode(null);
                 :}

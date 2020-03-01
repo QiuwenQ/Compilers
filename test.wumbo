@@ -1,1 +1,1 @@
-int func1(int c, bool d){int a;f1= func1(); f2=func2(b=c); w=("hi");y++; z--; b=c.num=false; a=true;}
+int func1(){int a;f1= func1(); return a=b; return a.num= b.num = c.num; return false;}
