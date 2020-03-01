@@ -1,2 +1,3 @@
 int x;
 int y;
+int func1(){int a; b.num--; a--;}

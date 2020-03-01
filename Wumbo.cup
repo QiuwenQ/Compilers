@@ -80,7 +80,13 @@ non terminal DeclNode         decl;
 non terminal VarDeclNode      varDecl;
 non terminal TypeNode         type;
 non terminal IdNode           id;
-
+non terminal FnDeclNode       fnDecl;
+non terminal LinkedList       formals;
+non terminal FnBodyNode       fnBody;
+non terminal ExpNode          loc;
+non terminal StmtNode         stmt;
+non terminal LinkedList       varDeclList;
+non terminal LinkedList       stmtList;
 
 /* Precedences
  *
@@ -114,6 +120,46 @@ declList        ::= declList:dl decl:d
 decl            ::= varDecl:v
                 {: RESULT = v;
                 :}
+                | fnDecl: fd
+                {: RESULT = fd;
+                :}
+                ;
+
+fnDecl          ::= type:t id:i formals:f fnBody:fb
+                {: RESULT = new FnDeclNode(t, i, new FormalsListNode(f), fb);
+                :}
+                ;
+
+formals         ::= LPAREN RPAREN
+                {: RESULT = new LinkedList<DeclNode>();
+                :}
+                ;
+
+fnBody          ::= LCURLY varDeclList:vl stmtList:sl RCURLY
+                {: RESULT = new FnBodyNode(new DeclListNode(vl), new StmtListNode(sl));
+                :}
+                ;
+
+stmtList        ::= stmtList:sl stmt:s
+                {: sl.addLast(s);
+                   RESULT = sl;
+                :}
+                | /* epsilon */
+                {: RESULT = new LinkedList<DeclNode>();
+                :}
+                ;
+stmt            ::= loc:l1 MINUSMINUS SEMICOLON
+                {: RESULT = new PostDecStmtNode(l1);
+                :}
+                ;
+
+varDeclList     ::= varDeclList:vl varDecl:vd
+                {: vl.addLast(vd);
+                   RESULT = vl;
+                :}
+                | /* epsilon */
+                {: RESULT = new LinkedList<DeclNode>();
+                :}
                 ;
 
 varDecl         ::= type:t id:i SEMICOLON
@@ -123,6 +169,14 @@ varDecl         ::= type:t id:i SEMICOLON
 
 type            ::= INT
                 {: RESULT = new IntNode();
+                :}
+                ;
+
+loc             ::= id:i
+                {: RESULT = i;
+                :}
+                | loc:l DOT id:i
+                {: RESULT = new DotAccessExpNode(l, i);
                 :}
                 ;
 
