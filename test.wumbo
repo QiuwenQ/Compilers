@@ -1,1 +1,1 @@
-int func1(){int a;f1= func1(); return a=b; return a.num= b.num = c.num; return false;}
+int func1(){int a;f1= func1(); return a=b; funCall(a);return a.num= b.num = c.num; return false;}

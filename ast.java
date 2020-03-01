@@ -538,6 +538,9 @@ class CallStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,4);
+        myCall.unparse(p,0);
+        p.println(";");
     }
 
     // one child

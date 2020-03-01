@@ -94,7 +94,7 @@ non terminal LinkedList       structBody;
 non terminal AssignNode       assignExp;
 non terminal ExpNode          exp;
 non terminal ExpNode          term;
-non terminal ExpNode          fncall;
+non terminal CallExpNode      fncall;
 non terminal LinkedList       actualList;
 
 /* Precedences
@@ -223,6 +223,9 @@ stmt            ::= assignExp:a SEMICOLON
                 :}
                 | RETURN SEMICOLON
                 {: RESULT = new ReturnStmtNode(null);
+                :}
+                | fncall:fc SEMICOLON
+                {: RESULT = new CallStmtNode(fc);
                 :}
                 ;
 
