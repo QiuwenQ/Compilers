@@ -221,8 +221,26 @@ stmt            ::= assignExp:a SEMICOLON
                 |loc:l PLUSPLUS SEMICOLON
                 {: RESULT = new PostIncStmtNode(l);
                 :}
-                |loc:l1 MINUSMINUS SEMICOLON
-                {: RESULT = new PostDecStmtNode(l1);
+                |loc:l MINUSMINUS SEMICOLON
+                {: RESULT = new PostDecStmtNode(l);
+                :}
+                | CIN READ loc:l SEMICOLON
+                {: RESULT = new ReadStmtNode(l);
+                :}
+                | COUT WRITE exp:e SEMICOLON
+                {: RESULT=  new WriteStmtNode(e);
+                :}
+                | IF LPAREN exp:e RPAREN LCURLY varDeclList:vl stmtList:sl RCURLY
+                {: RESULT = new IfStmtNode(e, new DeclListNode(vl), new StmtListNode(sl));
+                :}
+                | IF LPAREN exp:e RPAREN LCURLY varDeclList:vl1 stmtList:sl1 RCURLY ELSE LCURLY varDeclList:vl2 stmtList:sl2 RCURLY
+                {: RESULT = new IfElseStmtNode(e, new DeclListNode(vl1), new StmtListNode(sl1), new DeclListNode(vl2), new StmtListNode(sl2));
+                :}
+                | WHILE LPAREN exp:e RPAREN LCURLY varDeclList:vl stmtList:sl RCURLY
+                {: RESULT = new WhileStmtNode(e, new DeclListNode(vl), new StmtListNode(sl));
+                :}
+                | REPEAT LPAREN exp:e RPAREN LCURLY varDeclList:vl stmtList:sl RCURLY
+                {: RESULT = new RepeatStmtNode(e, new DeclListNode(vl), new StmtListNode(sl));
                 :}
                 | RETURN exp:e SEMICOLON
                 {: RESULT = new ReturnStmtNode(e);

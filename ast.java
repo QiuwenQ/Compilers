@@ -399,8 +399,8 @@ class AssignStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
-        addIndentation(p,4);
-        myAssign.unparse(p, indent);
+        addIndentation(p,indent);
+        myAssign.unparse(p, 0);
         p.println(";");
     }
 
@@ -444,6 +444,10 @@ class ReadStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,indent);
+        p.print("cin >> ");
+        myExp.unparse(p,0);
+        p.println(";");
     }
 
     // one child (actually can only be an IdNode or an ArrayExpNode)
@@ -456,6 +460,10 @@ class WriteStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,indent);
+        p.print("cout << ");
+        myExp.unparse(p,0);
+        p.println(";");
     }
 
     // one child
@@ -470,6 +478,14 @@ class IfStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,indent);
+        p.print("if(");
+        myExp.unparse(p,0);
+        p.println("){");
+        myDeclList.unparse(p,indent+4);
+        myStmtList.unparse(p,indent+4);
+        addIndentation(p,indent);
+        p.println("}");
     }
 
     // three children
@@ -490,6 +506,18 @@ class IfElseStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,indent);
+        p.print("if(");
+        myExp.unparse(p,0);
+        p.println("){");
+        myThenDeclList.unparse(p,indent+4);
+        myThenStmtList.unparse(p,indent+4);
+        addIndentation(p,indent);
+        p.println("} else {");
+        myElseDeclList.unparse(p,indent+4);
+        myElseStmtList.unparse(p,indent+4);
+        addIndentation(p,indent);
+        p.println("}");
     }
 
     // five children
@@ -508,6 +536,14 @@ class WhileStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,indent);
+        p.print("while(");
+        myExp.unparse(p,0);
+        p.println("){");
+        myDeclList.unparse(p,indent+4);
+        myStmtList.unparse(p,indent+4);
+        addIndentation(p,indent);
+        p.println("}");
     }
 
     // three children
@@ -524,6 +560,14 @@ class RepeatStmtNode extends StmtNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        addIndentation(p,indent);
+        p.print("repeat(");
+        myExp.unparse(p,0);
+        p.println("){");
+        myDeclList.unparse(p,indent+4);
+        myStmtList.unparse(p,indent+4);
+        addIndentation(p,indent);
+        p.println("}");
     }
 
     // three children
@@ -661,7 +705,9 @@ class DotAccessExpNode extends ExpNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        p.print("(");
         myLoc.unparse(p,0);
+        p.print(")");
         p.print(".");
         myId.unparse(p,0);
     }
