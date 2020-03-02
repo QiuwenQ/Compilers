@@ -1,4 +1,7 @@
+int afirst;
+structPoint point1;
 int func1() {
+    structPoints point2;
     if((a < b)){
         int a;
         a = 5;

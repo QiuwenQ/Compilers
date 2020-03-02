@@ -380,6 +380,8 @@ class StructNode extends TypeNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        p.print("struct");
+        myId.unparse(p,0);
     }
 
     // one child
