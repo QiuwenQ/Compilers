@@ -1,19 +1,123 @@
-int afirst;
-struct Point point1;
-int func1(){
-struct Points point2;
-if (a<b){
+#This file is for testing wumbo.grammar
+//check all varDecls and types
 int a;
-a=5;
-if(a>b){
-int b;} else{
-int c;}
-repeat(a>c){
-int w;
-w = w.c -w.a;
+bool b;
+void c;
+struct Point point1;
+
+//structDecl: need at least one declaration
+#test one varDecl in structbody
+struct Point{
+	int a;
+};
+#test varDeclList in structBody
+struct Point{
+	bool b;
+	void c;
+	int d;
+};
+
+//fnDecl
+#test no formals and no fnBody
+int func0(){
+	
 }
+#test no formals, one decl
+int func1(){
+	int a1;
 }
-cin >> a.bac;
-cout << a==b;
-num= num.num2.num3;
-num= a==b||c; num = b>= c&&d+f;num= a<"hi"; num= b> c.ed; num= c!=false; numOther= "hi" <= c.ed+5;return a && "hi"-1; num1=1-2;num2= -a; numA = !a;num= a+!aa-ee+b*c/d-e;numd= a/b; num1= a*b*c; num2= a+b+c+d; f1= func1(); return a=b; funCall(a);return a.num= b.num = c.num; return false;}
+#test one formal, no decl
+int func(int a){
+	
+}
+#test formalsList, one formalDecl
+void func1(bool a){
+	int a1;
+}
+#test having only one stmt
+void func1(bool a){
+	int a1;
+	a= b;
+}
+#test formalsList multiple formalDecls
+bool func1(int a, bool b, void c){
+	int a1;
+}
+#test fnBody with all stmtList types
+int func2(){
+	bool a2;
+
+	#use a = exp to test all exp and test assignExp stmt
+	//test all terms using a = terms
+	a = b; //loc
+	a = b.c; //loc DOT id
+	a = 345; //INTLITERAL
+	a = "hi"; //STRINGLITERAL
+	a = true; //TRUE
+	a = false; //false
+	a = (5); //LPAREN exp RPAREN
+	a = func(); //fncall no args: no actualList
+	a = func(a,b,c); //fncall with args: actualList
+
+	//rest of exps and associativity with itself
+	b = b +b; //PLUS
+	b = b-b; //MINUS
+	b = b*b; //TIMES
+	b = b/b; //DIVIDE
+	b = !b; //NOT
+	b = b&&b; //AND
+	b = b||b; //OR
+	b = b==b; //EQUALS
+	b = b!=b; //NOTEQUALS
+	b = b<b; //LESS
+	b = b>b; //GREATER
+	b = b<=b; //LESSEQ
+	b = b>=b; //GREATEREQ
+	b = -"hi"; //MINUS term
+
+	//test precedence of operators
+	c = a+b-c*d/e+!f&&g||h;
+	c = a.b.c.d;
+	c = a=b=c=d;
+
+	//test associativity
+	d = 1+1+1;
+	d = 1-1-1;
+	d = 1*1*1;
+	d = 1/1/1;
+
+	//simple stmts
+	loc++;
+	loc--;
+	cin >> loc.id;
+	cout << exp + exp;
+
+	//test conditionals and loops
+	if (a&&a){ //nested if else in if
+		int a;
+		a=b;
+		if (c&&c){
+			int dec;
+			dec = a;
+		} else {
+			int dec;
+			dec = a;
+		}
+		
+	}
+	while ( a!=b){ 
+		int dec;
+		dec = a;
+	}
+	repeat ( a!=b){
+		int dec;
+		dec = a;
+	}
+	//fncall
+	func1(b,c);
+
+	//test return stmts
+	return a == b;
+	return;
+}
+

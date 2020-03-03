@@ -601,8 +601,9 @@ class ReturnStmtNode extends StmtNode {
     public void unparse(PrintWriter p, int indent) {
         //TODO: check if exp is null
         addIndentation(p,indent);
-        p.print("return ");
+        p.print("return");
         if (myExp!=null){
+            addIndentation(p,1);
             myExp.unparse(p,0);
         }
         p.println(";");
@@ -728,7 +729,9 @@ class AssignNode extends ExpNode {
     public void unparse(PrintWriter p, int indent) {
         myLhs.unparse(p,0);
         p.print(" = ");
+        p.print("(");
         myExp.unparse(p,0);
+         p.print(")");
     }
 
     // two children

@@ -1,40 +1,88 @@
-int afirst;
+int a;
+bool b;
+void c;
 structPoint point1;
+struct Point {
+    int a;
+};
+struct Point {
+    bool b;
+    void c;
+    int d;
+};
+int func0() {
+}
 int func1() {
-    structPoints point2;
-    if((a < b)){
+    int a1;
+}
+int func(int a) {
+}
+void func1(bool a) {
+    int a1;
+}
+void func1(bool a) {
+    int a1;
+    a = (b);
+}
+bool func1(int a, bool b, void c) {
+    int a1;
+}
+int func2() {
+    bool a2;
+    a = (b);
+    a = ((b).c);
+    a = (345);
+    a = ("hi");
+    a = (true);
+    a = (false);
+    a = (5);
+    a = (func());
+    a = (func(a, b, c));
+    b = ((b + b));
+    b = ((b - b));
+    b = ((b * b));
+    b = ((b / b));
+    b = ((!b));
+    b = ((b && b));
+    b = ((b || b));
+    b = ((b == b));
+    b = ((b != b));
+    b = ((b < b));
+    b = ((b > b));
+    b = ((b <= b));
+    b = ((b >= b));
+    b = ((-"hi"));
+    c = ((((((a + b) - ((c * d) / e)) + (!f)) && g) || h));
+    c = ((((a).b).c).d);
+    c = (a = (b = (c = (d))));
+    d = (((1 + 1) + 1));
+    d = (((1 - 1) - 1));
+    d = (((1 * 1) * 1));
+    d = (((1 / 1) / 1));
+    loc++;
+    loc--;
+    cin >> (loc).id;
+    cout << (exp + exp);
+    if((a && a)){
         int a;
-        a = 5;
-        if((a > b)){
-            int b;
+        a = (b);
+        if((c && c)){
+            int dec;
+            dec = (a);
         } else {
-            int c;
-        }
-        repeat((a > c)){
-            int w;
-            w = ((w).c - (w).a);
+            int dec;
+            dec = (a);
         }
     }
-    cin >> (a).bac;
-    cout << (a == b);
-    num = ((num).num2).num3;
-    num = ((a == b) || c);
-    num = ((b >= c) && (d + f));
-    num = (a < "hi");
-    num = (b > (c).ed);
-    num = (c != false);
-    numOther = ("hi" <= ((c).ed + 5));
-    return (a && ("hi" - 1));
-    num1 = (1 - 2);
-    num2 = (-a);
-    numA = (!a);
-    num = ((((a + (!aa)) - ee) + ((b * c) / d)) - e);
-    numd = (a / b);
-    num1 = ((a * b) * c);
-    num2 = (((a + b) + c) + d);
-    f1 = func1();
-    return a = b;
-    funCall(a);
-    return (a).num = (b).num = (c).num;
-    return false;
+    while((a != b)){
+        int dec;
+        dec = (a);
+    }
+    repeat((a != b)){
+        int dec;
+        dec = (a);
+    }
+    func1(b, c);
+    return (a == b);
+    return;
 }
