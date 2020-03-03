@@ -162,13 +162,14 @@ class FormalsListNode extends ASTnode {
 
     public void unparse(PrintWriter p, int indent) {
         p.print('(');
+        //similar to declListNode but added a line to print comma to separate formals
         Iterator it = myFormals.iterator();
         try{
             if(it.hasNext()){
                 ((FormalDeclNode)it.next()).unparse(p, indent);
             }
             while(it.hasNext()){
-                p.print(", ");
+                p.print(", "); // add comma here so comma is in between the formals
                 ((FormalDeclNode)it.next()).unparse(p, indent);
             }
         }catch (NoSuchElementException ex) {
@@ -206,6 +207,7 @@ class StmtListNode extends ASTnode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        //similar to declListNode
         Iterator it = myStmts.iterator();
         try {
             while (it.hasNext()) {
@@ -227,6 +229,7 @@ class ExpListNode extends ASTnode {
     }
 
     public void unparse(PrintWriter p, int indent) {
+        //similar to formal list node
         Iterator it = myExps.iterator();
         try{
             if(it.hasNext()){
@@ -263,7 +266,7 @@ class VarDeclNode extends DeclNode {
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myType.unparse(p, 0);
-        p.print(" ");
+        p.print(" "); // space between type and id
         myId.unparse(p, 0);
         p.println(";");
     }
@@ -319,7 +322,7 @@ class FormalDeclNode extends DeclNode {
     private TypeNode myType;
     private IdNode myId;
 }
-
+//for a structure with declarations
 class StructDeclNode extends DeclNode {
     public StructDeclNode(IdNode id, DeclListNode declList) {
         myId = id;
@@ -329,8 +332,8 @@ class StructDeclNode extends DeclNode {
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         p.print("struct ");
-        myId.unparse(p,0);
-        p.print(" {\n");
+        myId.unparse(p,0); 
+        p.println(" {");
         myDeclList.unparse(p, 4);
         p.println("};");
     }
@@ -380,7 +383,8 @@ class StructNode extends TypeNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
-        p.print("struct");
+        //for when it is struct Point point1; and only storing struct Point
+        p.print("struct ");
         myId.unparse(p,0);
     }
 
@@ -484,6 +488,7 @@ class IfStmtNode extends StmtNode {
         p.print("if(");
         myExp.unparse(p,0);
         p.println("){");
+        //indent+4 for formatting
         myDeclList.unparse(p,indent+4);
         myStmtList.unparse(p,indent+4);
         addIndentation(p,indent);
@@ -602,6 +607,7 @@ class ReturnStmtNode extends StmtNode {
         //TODO: check if exp is null
         addIndentation(p,indent);
         p.print("return");
+        //if there is nothing after "return", skip unparsing (or else unparsing null)
         if (myExp!=null){
             addIndentation(p,1);
             myExp.unparse(p,0);
@@ -754,6 +760,7 @@ class CallExpNode extends ExpNode {
         //if null, then don't unparse
         myId.unparse(p,0);
         p.print("(");
+        //if function call has no args, don't unparse
         if (myExpList!=null){
              myExpList.unparse(p,0);
          }
