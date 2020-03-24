@@ -9,11 +9,11 @@ public class Sym {
         this.type = type;
     }
     //method to set the struct symbol table
-    public setTable(HashMap<String, Sym> tab){
+    public void setTable(HashMap<String, Sym> tab){
         this.table = tab;
     }
     //accessor method for struct symbol table
-    public getTable(){
+    public HashMap<String, Sym> getTable(){
         return this.table;
     }
     
