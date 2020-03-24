@@ -1,0 +1,4 @@
+int y;
+bool x;
+int f(int x, bool b){
+}
