@@ -693,13 +693,13 @@ class IdNode extends ExpNode {
         myCharNum = charNum;
         myStrVal = strVal;
     }
-    public String[3] analysis(){ //used to obtain name of the ID
+    public String[] analysis(){ //used to obtain name of the ID
         //TODO:arraylist to hold all these 3 values 
         //String [3] idInfo = {myLineNum, myCharNum, myStrVal};
         //return idInfo
     }
 
-    public setSym(){
+    public void setSym(){
         //TODO FINISH:
     }
     public void unparse(PrintWriter p, int indent) {
