@@ -697,6 +697,7 @@ class IdNode extends ExpNode {
         //TODO:arraylist to hold all these 3 values 
         //String [3] idInfo = {myLineNum, myCharNum, myStrVal};
         //return idInfo
+        return "";
     }
 
     public void setSym(){
