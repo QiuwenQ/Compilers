@@ -127,7 +127,7 @@ class ProgramNode extends ASTnode {
         myDeclList = L;
     }
     public void analysis(PrintWriter p){
-        mySymTable = new Symtable();
+        mySymTable = new SymTable();
         myDeclList.analysis(p, mySymTable);
     }
     public void unparse(PrintWriter p, int indent) {
@@ -135,7 +135,7 @@ class ProgramNode extends ASTnode {
     }
 
     private DeclListNode myDeclList;
-    private Symtable mySymTable;
+    private SymTable mySymTable;
 }
 
 class DeclListNode extends ASTnode {
@@ -143,7 +143,7 @@ class DeclListNode extends ASTnode {
         myDecls = S;
     }
     //go through each decl node and analyze it
-    public void analysis(PrintWriter p, Symtable sTable){
+    public void analysis(PrintWriter p, SymTable sTable){
         Iterator it = myDecls.iterator();
         int x=0;
         try {
@@ -253,7 +253,7 @@ class VarDeclNode extends DeclNode {
         myId = id;
         mySize = size;
     }
-    public void analysis(PrintWriter p , Symtable mySymTable){
+    public void analysis(PrintWriter p , SymTable mySymTable){
         //TODO:left off here
         if (mySize != 0){//is a regular variable declaration
             /*String [3] myIdInfo = id.idInfo;
