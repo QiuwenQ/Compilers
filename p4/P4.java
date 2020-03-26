@@ -55,6 +55,7 @@ public class P4 {
         }
 
 	// ADD NAME ANALYSIS PART HERE
+        ((ASTnode)root.value).analysis(outFile);
         ((ASTnode)root.value).unparse(outFile, 0);
         outFile.close();
 

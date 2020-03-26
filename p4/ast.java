@@ -126,19 +126,37 @@ class ProgramNode extends ASTnode {
     public ProgramNode(DeclListNode L) {
         myDeclList = L;
     }
-
+    public void analysis(PrintWriter p){
+        mySymTable = new Symtable();
+        myDeclList.analysis(p, mySymTable);
+    }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
     }
 
     private DeclListNode myDeclList;
+    private Symtable mySymTable;
 }
 
 class DeclListNode extends ASTnode {
     public DeclListNode(List<DeclNode> S) {
         myDecls = S;
     }
-
+    //go through each decl node and analyze it
+    public void analysis(PrintWriter p, Symtable sTable){
+        Iterator it = myDecls.iterator();
+        int x=0;
+        try {
+            while (it.hasNext()) {
+                //((DeclNode)it.next()).analysis(p, sTable);
+                p.println(x);
+                x++;
+            }
+        } catch (NoSuchElementException ex) {
+            System.err.println("unexpected NoSuchElementException in DeclListNode.print");
+            System.exit(-1);
+        }
+    }
     public void unparse(PrintWriter p, int indent) {
         Iterator it = myDecls.iterator();
         try {
@@ -235,7 +253,24 @@ class VarDeclNode extends DeclNode {
         myId = id;
         mySize = size;
     }
+    public void analysis(PrintWriter p , Symtable mySymTable){
+        //TODO:left off here
+        if (mySize != 0){//is a regular variable declaration
+            /*String [3] myIdInfo = id.idInfo;
+            String name = myIdInfo[2];
+            //check if in local scope
+            if (mySymTable.lookupLocal(name) == null) {
+                mySymTable.addDecl(name, new Sym(myType.strName));
+            } else{
+                //report error message
+            }
+            */
+            
+            //if not, create and add the sym
+        } else{ //is a struct declaration
 
+        }
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myType.unparse(p, 0);
@@ -322,10 +357,12 @@ class StructDeclNode extends DeclNode {
 // **********************************************************************
 
 abstract class TypeNode extends ASTnode {
+    public String strName;
 }
 
 class IntNode extends TypeNode {
     public IntNode() {
+        strName = "int";
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -335,6 +372,7 @@ class IntNode extends TypeNode {
 
 class BoolNode extends TypeNode {
     public BoolNode() {
+        strName = "bool";
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -344,6 +382,7 @@ class BoolNode extends TypeNode {
 
 class VoidNode extends TypeNode {
     public VoidNode() {
+        strName = "void";
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -354,6 +393,7 @@ class VoidNode extends TypeNode {
 class StructNode extends TypeNode {
     public StructNode(IdNode id) {
         myId = id;
+        strName = "struct";
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -653,7 +693,15 @@ class IdNode extends ExpNode {
         myCharNum = charNum;
         myStrVal = strVal;
     }
+    public String[3] analysis(){ //used to obtain name of the ID
+        //TODO:arraylist to hold all these 3 values 
+        //String [3] idInfo = {myLineNum, myCharNum, myStrVal};
+        //return idInfo
+    }
 
+    public setSym(){
+        //TODO FINISH:
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
     }
@@ -661,6 +709,7 @@ class IdNode extends ExpNode {
     private int myLineNum;
     private int myCharNum;
     private String myStrVal;
+    private Sym mySym; //link to sym in symtable (has info on type)
 }
 
 class DotAccessExpNode extends ExpNode {
