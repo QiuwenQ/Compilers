@@ -18,7 +18,7 @@ public class Sym {
     public HashMap<String, Sym> getTable(){
         return this.table;
     }
-    public void setIdLocation(String line, String ch){
+    public void setIdLocation(int line, int ch){
         idLocation = new String [] {line, ch};
     }
     public String [] getIdLocation(){
