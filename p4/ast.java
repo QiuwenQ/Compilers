@@ -270,7 +270,7 @@ class VarDeclNode extends DeclNode {
             if (sTable.lookupLocal(name) == null) {
                 //create new Sym
                 Sym idSym = new Sym(myType.strName);
-                idSym.setIdLocation(info[0], info[2]);
+                idSym.setIdLocation(info[0], info[1]);
                 sTable.addDecl(name, idSym);
             } else{
                 //report error message
