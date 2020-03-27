@@ -279,7 +279,7 @@ class VarDeclNode extends DeclNode {
                     sTable.addDecl(name, idSym);
                     
                     //Debug
-                    p.println("var "name +" "+ idSym.toString());
+                    p.println("var "+ name +" "+ idSym.toString());
                 } else{
                      //report error message
                 }
