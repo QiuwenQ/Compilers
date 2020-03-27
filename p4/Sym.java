@@ -19,7 +19,7 @@ public class Sym {
         return this.table;
     }
     public void setIdLocation(String line, String ch){
-        idLocation = {line, ch};
+        idLocation = new String [] {line, ch};
     }
     public String [] getIdLocation(){
         return idLocation;
