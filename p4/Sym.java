@@ -1,6 +1,7 @@
 import java.util.*;
 public class Sym {
     private String type;
+    private String [] idLocation;
 
     /* table is used to separately store the symbol table 
     associated with each struct definition */
@@ -17,7 +18,12 @@ public class Sym {
     public HashMap<String, Sym> getTable(){
         return this.table;
     }
-    
+    public setIdLocation(String line, String ch){
+        idLocation = {line, ch};
+    }
+    public String [] getIdLocation(){
+        return idLocation;
+    }
     public String getType() {
         return type;
     }

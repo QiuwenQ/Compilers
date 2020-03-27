@@ -145,7 +145,7 @@ class DeclListNode extends ASTnode {
     //go through each decl node and analyze it
     public void analysis(PrintWriter p, SymTable sTable){
         Iterator it = myDecls.iterator();
-        int x=0;
+        int x = 0;
         try {
             while (it.hasNext()) {
                 //((DeclNode)it.next()).analysis(p, sTable);
@@ -264,15 +264,17 @@ class VarDeclNode extends DeclNode {
     public void analysis(PrintWriter p , SymTable sTable){
         //TODO:left off here
         if (mySize != 0){//is a regular variable declaration
-            /*String [3] myIdInfo = id.idInfo;
-            String name = myIdInfo[2];
+            String [] info = myId.getIdInfo();
+            String name = info[2];
             //check if in local scope
-            if (mySymTable.lookupLocal(name) == null) {
-                mySymTable.addDecl(name, new Sym(myType.strName));
+            if (sTable.lookupLocal(name) == null) {
+                //create new Sym
+                Sym idSym = new Sym(myType.strName);
+                idSym.setIdLocation(info[0], info[2]);
+                sTable.addDecl(name, idSym);
             } else{
                 //report error message
             }
-            */
             
             //if not, create and add the sym
         } else{ //is a struct declaration
@@ -746,15 +748,13 @@ class IdNode extends ExpNode {
         myStrVal = strVal;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //empty analysis function
     }
-    public String[] analysis(){ //used to obtain name of the ID
-        //TODO:arraylist to hold all these 3 values 
-        //String [3] idInfo = {myLineNum, myCharNum, myStrVal};
-        //return idInfo
-        return null;
+    //access method for Id's line, char, and value
+    public String [] getIdInfo(){
+        String [] s = {myLineNum, myCharNum, myStrVal};
+        return s;
     }
-
     public void setSym(){
         //TODO FINISH:
     }
@@ -812,7 +812,7 @@ class CallExpNode extends ExpNode {
         myId = name;
         myExpList = elist;
     }
-    
+
     public CallExpNode(IdNode name) {
         myId = name;
         myExpList = new ExpListNode(new LinkedList<ExpNode>());
