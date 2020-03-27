@@ -264,8 +264,8 @@ class VarDeclNode extends DeclNode {
     public void analysis(PrintWriter p , SymTable sTable){
         //TODO:left off here
         if (mySize != 0){//is a regular variable declaration
-            String [] info = myId.getIdInfo();
-            String name = info[2];
+            int [] info = myId.getIdInfo();
+            String name = myId.getName();
             //check if in local scope
             if (sTable.lookupLocal(name) == null) {
                 //create new Sym
@@ -751,9 +751,12 @@ class IdNode extends ExpNode {
         //empty analysis function
     }
     //access method for Id's line, char, and value
-    public String [] getIdInfo(){
-        String [] s = {myLineNum, myCharNum, myStrVal};
-        return s;
+    public int [] getIdInfo(){
+        int [] i = new int [] {myLineNum, myCharNum};
+        return i;
+    }
+    public String getName(){
+        return myStrVal;
     }
     public void setSym(){
         //TODO FINISH:
