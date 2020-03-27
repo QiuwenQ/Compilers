@@ -276,7 +276,7 @@ class VarDeclNode extends DeclNode {
                 } else{
                      //report error message
                 }
-            } catch(EmptySymTableException){
+            } catch(EmptySymTableException e){
                 System.err.println("unexpected EmptySymTableException in VarDeclNode.analysis");
             }
             
