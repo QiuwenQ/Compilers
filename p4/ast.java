@@ -278,7 +278,13 @@ class VarDeclNode extends DeclNode {
                 }
             } catch(EmptySymTableException e){
                 System.err.println("unexpected EmptySymTableException in VarDeclNode.analysis");
-            }
+            } catch(DuplicateSymException e){
+                System.err.println("unexpected DuplicateSymException in VarDeclNode.analysis");
+            } catch(IllegalArgumentException e){
+                System.err.println("unexpected IllegalArgumentException in VarDeclNode.analysis");
+            } catch(Exception e){
+                System.err.println("unexpected Exception in VarDeclNode.analysis");
+            } 
             
             //if not, create and add the sym
         } else{ //is a struct declaration
