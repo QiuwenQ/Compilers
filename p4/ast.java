@@ -148,9 +148,7 @@ class DeclListNode extends ASTnode {
         int x = 0;
         try {
             while (it.hasNext()) {
-                //((DeclNode)it.next()).analysis(p, sTable);
-                p.println(x);
-                x++;
+                ((DeclNode)it.next()).analysis(p, sTable);
             }
         } catch (NoSuchElementException ex) {
             System.err.println("unexpected NoSuchElementException in DeclListNode.print");
