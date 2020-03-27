@@ -266,14 +266,18 @@ class VarDeclNode extends DeclNode {
         if (mySize != 0){//is a regular variable declaration
             int [] info = myId.getIdInfo();
             String name = myId.getName();
-            //check if in local scope
-            if (sTable.lookupLocal(name) == null) {
-                //create new Sym
-                Sym idSym = new Sym(myType.strName);
-                idSym.setIdLocation(info[0], info[1]);
-                sTable.addDecl(name, idSym);
-            } else{
-                //report error message
+            try{
+                //check if in local scope
+                if (sTable.lookupLocal(name) == null) {
+                    //create new Sym
+                    Sym idSym = new Sym(myType.strName);
+                    idSym.setIdLocation(info[0], info[1]);
+                    sTable.addDecl(name, idSym);
+                } else{
+                     //report error message
+                }
+            } catch(EmptySymTableException){
+                System.err.println("unexpected EmptySymTableException in VarDeclNode.analysis");
             }
             
             //if not, create and add the sym
