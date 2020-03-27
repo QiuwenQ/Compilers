@@ -128,7 +128,13 @@ class ProgramNode extends ASTnode {
     }
     public void analysis(PrintWriter p, SymTable sTable){
         mySymTable = new SymTable();
+        //Debug
+        p.println("----------------------");
+
         myDeclList.analysis(p, mySymTable);
+
+        //Debug
+        p.println("----------------------");
     }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
@@ -271,11 +277,13 @@ class VarDeclNode extends DeclNode {
                     Sym idSym = new Sym(myType.strName);
                     idSym.setIdLocation(info[0], info[1]);
                     sTable.addDecl(name, idSym);
+                    
                     //Debug
-                    p.println(name + idSym.toString());
+                    p.println("var "name +" "+ idSym.toString());
                 } else{
                      //report error message
                 }
+                //TODO: edit these error messages
             } catch(EmptySymTableException e){
                 System.err.println("unexpected EmptySymTableException in VarDeclNode.analysis");
             } catch(DuplicateSymException e){
