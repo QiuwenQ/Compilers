@@ -29,6 +29,9 @@ public class Sym {
     }
     
     public String toString() {
+        if (idLocation!=null){
+            return type +" "+ idLocation[0] + " "+idLocation[1];
+        } 
         return type;
     }
 }

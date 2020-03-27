@@ -271,6 +271,8 @@ class VarDeclNode extends DeclNode {
                     Sym idSym = new Sym(myType.strName);
                     idSym.setIdLocation(info[0], info[1]);
                     sTable.addDecl(name, idSym);
+                    //Debug
+                    p.println(name + idSym.toString());
                 } else{
                      //report error message
                 }
