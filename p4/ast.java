@@ -391,10 +391,32 @@ class FnDeclNode extends DeclNode {
         myBody = body;
     }
     public void analysis(PrintWriter p, SymTable sTable){
+        //TODO:check the type and ID for the function first before going into the formals and body!!
+        int [] info = myId.getIdInfo();
+        String name = myId.getName();
+        //function can be void so don't need to check for that
+        try{
+            //check if in local scope, if not, then add function name to local scope
+            if (sTable.lookupLocal(name) == null) {
+                //create new Sym and add to symTable
+                Sym idSym = new Sym(myType.strName);
+                idSym.setIdLocation(info[0], info[1]); //add line and char of var
+                sTable.addDecl(name, idSym);
+            }
+        } catch (Exception e){
+            System.err.println("unexpected Exception in FnDeclNode.analysis");
+        }
+
+        //analyze formals and body (independent of if func name already exists)
         sTable.addScope();
         myFormalsList.analysis(p, sTable);
         //myBody.analysis(p, sTable);
+
+        //debug: print the function sym table
+        sTable.print();
+
         try{
+            //remove scope of the function after finishing analyzing formals and body
             sTable.removeScope();
         } catch (Exception e){
             System.err.println("unexpected Exception in VarDeclNode.analysis");
