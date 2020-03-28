@@ -1,4 +1,7 @@
 int y;
 bool x;
-int f(int x, bool b){
-}
+struct Point {
+	int x;
+	int y;
+};
+struct Point pt;

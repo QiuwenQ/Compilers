@@ -1,0 +1,13 @@
+int y;
+bool a;
+bool y;
+void v;
+struct Point {
+        int x;
+        int y;
+};
+struct Point1 pt;
+struct a ptA;
+bool Point;
+struct Point a;
+ 
