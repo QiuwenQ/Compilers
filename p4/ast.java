@@ -302,7 +302,7 @@ class VarDeclNode extends DeclNode {
     
     //structure analysis
     public void sAnalysis(PrintWriter p , SymTable sTable){ //is a struct declaration
-        /*
+        
         //struct idNode information example for: struct Point
         IdNode sId = myType.getIdNode(); 
         int [] sInfo = sId.getIdInfo();
@@ -336,7 +336,7 @@ class VarDeclNode extends DeclNode {
         } else { //struct type not declared, issue error: Invalid name of struct type
 
         }
-        */
+        
     }
     
     public void unparse(PrintWriter p, int indent) {
