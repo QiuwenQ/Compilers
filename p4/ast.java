@@ -286,7 +286,7 @@ class VarDeclNode extends DeclNode {
                 sTable.addDecl(name, idSym);
                 
                 //Debug
-                p.println("var "+ name +" "+ idSym.toString());
+                p.println(name +" "+ idSym.toString());
             } else{
                  //TODO: var name exists, report error message: Multiply declared identifier
             }
@@ -413,10 +413,11 @@ class StructDeclNode extends DeclNode {
                 
                 //create new Sym and add to symTable
                 Sym idSym = new Sym("struct"); //set type to struct
+                idSym.setIdLocation(info[0], info[1]); //add line and char of var
                 SymTable structTable = new SymTable();
 
                 //Debug
-                p.println("var "+ name +" "+ idSym.toString());
+                p.println(name +" "+ idSym.toString());
                 p.println("---------S:StructScope-------------");
 
                 myDeclList.analysis(p,structTable);
