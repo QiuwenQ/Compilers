@@ -132,6 +132,9 @@ class ProgramNode extends ASTnode {
         //p.println("---------S:GlobalScope-------------");
 
         myDeclList.analysis(p, mySymTable);
+
+        //debug
+        p.print("---------global");
         mySymTable.print();
 
         //Debug
@@ -424,8 +427,9 @@ class StructDeclNode extends DeclNode {
                 myDeclList.analysis(p,structTable);
 
                 //Debug
+                p.print("---------" + name);
                 structTable.print();
-                
+
                 idSym.setTable(structTable); //set the struct table
                 sTable.addDecl(name, idSym); //add the struct to this scope
 
