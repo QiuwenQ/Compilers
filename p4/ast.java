@@ -129,12 +129,13 @@ class ProgramNode extends ASTnode {
     public void analysis(PrintWriter p, SymTable sTable){
         mySymTable = new SymTable();
         //Debug
-        p.println("---------S:GlobalScope-------------");
+        sTable.print();
+        //p.println("---------S:GlobalScope-------------");
 
         myDeclList.analysis(p, mySymTable);
 
         //Debug
-        p.println("---------E:GlobalScope-------------");
+        //p.println("---------E:GlobalScope-------------");
     }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
@@ -286,7 +287,7 @@ class VarDeclNode extends DeclNode {
                 sTable.addDecl(name, idSym);
                 
                 //Debug
-                p.println(name +" "+ idSym.toString());
+                //p.println(name +" "+ idSym.toString());
             } else{
                  //TODO: var name exists, report error message: Multiply declared identifier
             }
@@ -417,15 +418,15 @@ class StructDeclNode extends DeclNode {
                 SymTable structTable = new SymTable();
 
                 //Debug
-                p.println(name +" "+ idSym.toString());
-                p.println("---------S:StructScope-------------");
+                //p.println(name +" "+ idSym.toString());
+                //p.println("---------S:StructScope-------------");
 
                 myDeclList.analysis(p,structTable);
                 idSym.setTable(structTable); //set the struct table
                 sTable.addDecl(name, idSym); //add the struct to this scope
 
                 //Debug
-                p.println("---------E:StructScope-------------");
+                //p.println("---------E:StructScope-------------");
                 
             } else{
                  //TODO: var name exists, report error message: Multiply declared identifier
