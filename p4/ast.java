@@ -190,7 +190,7 @@ class FormalsListNode extends ASTnode {
         Iterator<FormalDeclNode> it = myFormals.iterator();
         if (it.hasNext()){
             while(it.hasNext()){
-                FormalDeclnode currNode = it.next();
+                FormalDeclNode currNode = it.next();
                 currNode.analysis(p, sTable);
                 String currType = currNode.getFormalType();
                 fTypes.add(currType);
