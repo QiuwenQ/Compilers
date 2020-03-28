@@ -394,7 +394,12 @@ class FnDeclNode extends DeclNode {
         sTable.addScope();
         myFormalsList.analysis(p, sTable);
         //myBody.analysis(p, sTable);
-        sTable.removeScope();
+        try{
+            sTable.removeScope();
+        } catch (Exception e){
+            System.err.println("unexpected Exception in VarDeclNode.analysis");
+        }
+        
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
