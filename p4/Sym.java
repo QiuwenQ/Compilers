@@ -33,7 +33,6 @@ public class Sym {
             return type +" "+ idLocation[0] + " "+idLocation[1];
         } 
         if (table != null){
-            table.print();
             return type +" "+ idLocation[0] + " "+idLocation[1];
         }
         return type;
