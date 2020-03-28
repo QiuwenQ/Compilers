@@ -328,7 +328,8 @@ class VarDeclNode extends DeclNode {
                         idSym.setIdLocation(info[0], info[1]); //add line and char of var
                         sTable.addDecl(name, idSym); //add to table
                     }
-
+                } catch(Exception e){
+                    //TODO: add errors
                 }
             } else{ // name exist but isn't struct type, issue error: Invalid name of struct type
 
