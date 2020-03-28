@@ -426,9 +426,9 @@ class StructDeclNode extends DeclNode {
     public void analysis(PrintWriter p, SymTable sTable){
         int [] info = myId.getIdInfo(); //line and char
         String name = myId.getName(); //var name of struct
-        //check if name of struct is in local scope
+        //check if name of struct is in global scope: since can only be declared global
         try{
-            if (sTable.lookupLocal(name) == null) {
+            if (sTable.lookupGlobal(name) == null) {
                 
                 //create new Sym and add to symTable
                 Sym idSym = new Sym("struct"); //set type to struct
