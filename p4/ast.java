@@ -284,25 +284,26 @@ class VarDeclNode extends DeclNode {
         if (myType.strName == "void"){
             String msg = "Non-function declared void";
             ErrMsg.fatal(info[0], info[1], msg);
-        }
-        try{
-            //check if in local scope, since not in local scope, then can declare this
-            if (sTable.lookupLocal(name) == null) {
-                //create new Sym and add to symTable
-                Sym idSym = new Sym(myType.strName);
-                idSym.setIdLocation(info[0], info[1]); //add line and char of var
-                sTable.addDecl(name, idSym);
+        } else{
+            try{
+                //check if in local scope, since not in local scope, then can declare this
+                if (sTable.lookupLocal(name) == null) {
+                    //create new Sym and add to symTable
+                    Sym idSym = new Sym(myType.strName);
+                    idSym.setIdLocation(info[0], info[1]); //add line and char of var
+                    sTable.addDecl(name, idSym);
                 
-                //Debug
-                //p.println(name +" "+ idSym.toString());
-            } else{
-                String msg = "Multiply declared identifier";
-                ErrMsg.fatal(info[0], info[1], msg);
-            }
-            //TODO: edit these error messages
-        } catch(Exception e){
-            System.err.println("unexpected Exception in VarDeclNode.analysis");
-        }   
+                    //Debug
+                    //p.println(name +" "+ idSym.toString());
+                } else{
+                    String msg = "Multiply declared identifier";
+                    ErrMsg.fatal(info[0], info[1], msg);
+                }  
+                //TODO: edit these error messages
+            } catch(Exception e){
+                System.err.println("unexpected Exception in VarDeclNode.analysis");
+            }  
+        } 
     }
     
     //structure analysis
