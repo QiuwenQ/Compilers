@@ -185,6 +185,13 @@ class FormalsListNode extends ASTnode {
         myFormals = S;
     }
     public void analysis(PrintWriter p, SymTable sTable){
+        //go through each formalDeclNode and analyze it
+        Iterator<FormalDeclNode> it = myFormals.iterator();
+        if (it.hasNext()){
+            while(it.hasNext()){
+                it.next().analysis(p, sTable);
+            }
+        }
 
     }
     public void unparse(PrintWriter p, int indent) {
@@ -380,7 +387,8 @@ class FnDeclNode extends DeclNode {
         myBody = body;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myFormalsList.analysis(p, sTable);
+        //myBody.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -406,7 +414,32 @@ class FormalDeclNode extends DeclNode {
         myId = id;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //same idea as VarDeclNode.vAnalysis
+        int [] info = myId.getIdInfo();
+        String name = myId.getName();
+        if (myType.strName == "void"){
+            String msg = "Non-function declared void";
+            ErrMsg.fatal(info[0], info[1], msg);
+        } else{
+            try{
+                //check if in local scope, since not in local scope, then can declare this
+                if (sTable.lookupLocal(name) == null) {
+                    //create new Sym and add to symTable
+                    Sym idSym = new Sym(myType.strName);
+                    idSym.setIdLocation(info[0], info[1]); //add line and char of var
+                    sTable.addDecl(name, idSym);
+                
+                    //Debug
+                    //p.println(name +" "+ idSym.toString());
+                } else{
+                    String msg = "Multiply declared identifier";
+                    ErrMsg.fatal(info[0], info[1], msg);
+                }  
+                //TODO: edit these error messages
+            } catch(Exception e){
+                System.err.println("unexpected Exception in VarDeclNode.analysis");
+            }  
+        } 
     }
     public void unparse(PrintWriter p, int indent) {
         myType.unparse(p, 0);
@@ -458,6 +491,7 @@ class StructDeclNode extends DeclNode {
             }
         } catch(Exception e){
             //TODO: edit errors
+            System.err.println("unexpected Exception in StructDeclNode.analysis");
         }
     }
     public void unparse(PrintWriter p, int indent) {
