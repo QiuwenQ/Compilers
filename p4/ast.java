@@ -185,14 +185,16 @@ class FormalsListNode extends ASTnode {
         myFormals = S;
     }
     public void analysis(PrintWriter p, SymTable sTable){
+        fTypes = new ArrayList<>();
         //go through each formalDeclNode and analyze it
         Iterator<FormalDeclNode> it = myFormals.iterator();
         if (it.hasNext()){
             while(it.hasNext()){
                 it.next().analysis(p, sTable);
+                String currType = it.next().getFormalType();
+                fTypes.add(currType);
             }
         }
-
     }
     public void unparse(PrintWriter p, int indent) {
         Iterator<FormalDeclNode> it = myFormals.iterator();
@@ -204,7 +206,8 @@ class FormalsListNode extends ASTnode {
             }
         }
     }
-
+    //holds the types of all correctly declared variables
+    private List<String> fTypes; 
     private List<FormalDeclNode> myFormals;
 }
 
@@ -447,7 +450,11 @@ class FormalDeclNode extends DeclNode {
         p.print(" ");
         myId.unparse(p, 0);
     }
-    public String formalType = "";
+    //accessor method for formalType
+    public String getFormalType(){
+        return formalType;
+    }
+    private String formalType = "";
     private TypeNode myType;
     private IdNode myId;
 }
