@@ -390,6 +390,7 @@ class FnDeclNode extends DeclNode {
         myBody = body;
     }
     public void analysis(PrintWriter p, SymTable sTable){
+        sTable.addScope();
         myFormalsList.analysis(p, sTable);
         //myBody.analysis(p, sTable);
     }
@@ -441,7 +442,7 @@ class FormalDeclNode extends DeclNode {
                 }  
                 //TODO: edit these error messages
             } catch(Exception e){
-                System.err.println("unexpected Exception in VarDeclNode.analysis");
+                System.err.println("unexpected Exception in FormalDeclNode.analysis");
             }  
         } 
     }
