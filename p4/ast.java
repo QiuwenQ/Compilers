@@ -335,7 +335,10 @@ class VarDeclNode extends DeclNode {
                         Sym idSym = new Sym(sName); //type is type of struct
                         idSym.setIdLocation(info[0], info[1]); //add line and char of var
                         sTable.addDecl(name, idSym); //add to table
-                    }
+                    } else{ //var name exists, can't declare this!
+                        String msg = "Multiply declared identifier";
+                        ErrMsg.fatal(info[0], info[1], msg);
+                    }  
                 } catch(Exception e){
                     //TODO: add errors
                     System.err.println("unexpected Exception in VarDeclNode.analysis");
