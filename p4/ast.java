@@ -307,7 +307,7 @@ class VarDeclNode extends DeclNode {
         IdNode sId = ((StructNode)myType).getIdNode(); 
         int [] sInfo = sId.getIdInfo();
         String sName = sId.getName(); //name of the struct ex. Point
-        Sym sSym;
+        Sym sSym = null;
         try{
             sSym = sTable.lookupGlobal(sName);
         } catch(Exception e){
