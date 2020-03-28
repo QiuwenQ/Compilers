@@ -129,10 +129,10 @@ class ProgramNode extends ASTnode {
     public void analysis(PrintWriter p, SymTable sTable){
         mySymTable = new SymTable();
         //Debug
-        sTable.print();
         //p.println("---------S:GlobalScope-------------");
 
         myDeclList.analysis(p, mySymTable);
+        mySymTable.print();
 
         //Debug
         //p.println("---------E:GlobalScope-------------");
