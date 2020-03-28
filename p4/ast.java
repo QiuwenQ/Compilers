@@ -412,7 +412,7 @@ class StructDeclNode extends DeclNode {
             if (sTable.lookupLocal(name) == null) {
                 //create new Sym and add to symTable
                 Sym idSym = new Sym("struct"); //set type to struct
-                HashMap<String, Sym> structTable = new HashMap<String, Sym>();
+                SymTable structTable = new SymTable();
                 myDeclList.analysis(p,structTable);
                 idSym.setTable(structTable); //set the struct table
                 sTable.addDecl(name, idSym); //add the struct to this scope
