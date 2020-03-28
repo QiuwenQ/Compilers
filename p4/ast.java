@@ -292,7 +292,6 @@ class VarDeclNode extends DeclNode {
                 //Debug
                 //p.println(name +" "+ idSym.toString());
             } else{
-                //TODO: var name exists, report error message: Multiply declared identifier
                 String msg = "Multiply declared identifier";
                 ErrMsg.fatal(info[0], info[1], msg);
             }
@@ -314,6 +313,7 @@ class VarDeclNode extends DeclNode {
             sSym = sTable.lookupGlobal(sName);
         } catch(Exception e){
             //TODO: edit these error messages
+            System.err.println("unexpected Exception in VarDeclNode.analysis");
         }
             
         //check if struct type has been declared and check if it is actually a struct type
@@ -333,12 +333,15 @@ class VarDeclNode extends DeclNode {
                     }
                 } catch(Exception e){
                     //TODO: add errors
+                    System.err.println("unexpected Exception in VarDeclNode.analysis");
                 }
             } else{ // name exist but isn't struct type, issue error: Invalid name of struct type
-
+                String msg = "Invalid name of struct type";
+                ErrMsg.fatal(info[0], info[1], msg);
             }
         } else { //struct type not declared, issue error: Invalid name of struct type
-
+                String msg = "Invalid name of struct type";
+                ErrMsg.fatal(info[0], info[1], msg);
         }
         
     }
