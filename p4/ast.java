@@ -337,11 +337,11 @@ class VarDeclNode extends DeclNode {
                 }
             } else{ // name exist but isn't struct type, issue error: Invalid name of struct type
                 String msg = "Invalid name of struct type";
-                ErrMsg.fatal(info[0], info[1], msg);
+                ErrMsg.fatal(sInfo[0], sInfo[1], msg);
             }
         } else { //struct type not declared, issue error: Invalid name of struct type
                 String msg = "Invalid name of struct type";
-                ErrMsg.fatal(info[0], info[1], msg);
+                ErrMsg.fatal(sInfo[0], sInfo[1], msg);
         }
         
     }
