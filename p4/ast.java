@@ -190,8 +190,9 @@ class FormalsListNode extends ASTnode {
         Iterator<FormalDeclNode> it = myFormals.iterator();
         if (it.hasNext()){
             while(it.hasNext()){
-                it.next().analysis(p, sTable);
-                String currType = it.next().getFormalType();
+                FormalDeclnode currNode = it.next();
+                currNode.analysis(p, sTable);
+                String currType = currNode.getFormalType();
                 fTypes.add(currType);
             }
         }
@@ -393,6 +394,7 @@ class FnDeclNode extends DeclNode {
         sTable.addScope();
         myFormalsList.analysis(p, sTable);
         //myBody.analysis(p, sTable);
+        sTable.removeScope();
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
