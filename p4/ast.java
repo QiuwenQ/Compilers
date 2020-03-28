@@ -134,7 +134,7 @@ class ProgramNode extends ASTnode {
         myDeclList.analysis(p, mySymTable);
 
         //debug
-        p.print("---------global");
+        System.out.println("---------global");
         mySymTable.print();
 
         //Debug
@@ -427,7 +427,7 @@ class StructDeclNode extends DeclNode {
                 myDeclList.analysis(p,structTable);
 
                 //Debug
-                p.print("---------" + name);
+                System.out.println("---------" + name);
                 structTable.print();
 
                 idSym.setTable(structTable); //set the struct table
