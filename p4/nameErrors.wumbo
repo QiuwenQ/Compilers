@@ -3,6 +3,9 @@ bool a;
 bool y;
 void v;
 struct Point pt0;
+struct a{
+	int aa;
+};
 struct Point {
         int x;
         int y;
