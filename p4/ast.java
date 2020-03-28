@@ -405,7 +405,23 @@ class StructDeclNode extends DeclNode {
         myDeclList = declList;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        int [] info = myId.getIdInfo(); //line and char
+        String name = myId.getName(); //var name of struct
+        //check if name of struct is in local scope
+        try{
+            if (sTable.lookupLocal(name) == null) {
+                //create new Sym and add to symTable
+                Sym idSym = new Sym("struct"); //set type to struct
+                HashMap<String, Sym> structTable = new new HashMap<String, Sym>();
+                myDeclList.analysis(p,structTable);
+                idSym.setTable(structTable); //set the struct table
+                sTable.addDecl(name, idSym); //add the struct to this scope
+            } else{
+                 //TODO: var name exists, report error message: Multiply declared identifier
+            }
+        } catch(Exception e){
+            //TODO: edit errors
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
