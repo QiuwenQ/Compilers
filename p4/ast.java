@@ -281,6 +281,10 @@ class VarDeclNode extends DeclNode {
         //TODO: check if type is void, if so, issue error: Non-function declared void
         int [] info = myId.getIdInfo();
         String name = myId.getName();
+        if (myType.strName == "void"){
+            String msg = "Non-function declared void";
+            ErrMsg.fatal(info[0], info[1], msg);
+        }
         try{
             //check if in local scope, since not in local scope, then can declare this
             if (sTable.lookupLocal(name) == null) {
@@ -335,11 +339,11 @@ class VarDeclNode extends DeclNode {
                     //TODO: add errors
                     System.err.println("unexpected Exception in VarDeclNode.analysis");
                 }
-            } else{ // name exist but isn't struct type, issue error: Invalid name of struct type
+            } else{ // name exist but isn't struct type
                 String msg = "Invalid name of struct type";
                 ErrMsg.fatal(sInfo[0], sInfo[1], msg);
             }
-        } else { //struct type not declared, issue error: Invalid name of struct type
+        } else { //struct type not declared
                 String msg = "Invalid name of struct type";
                 ErrMsg.fatal(sInfo[0], sInfo[1], msg);
         }
