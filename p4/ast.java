@@ -428,7 +428,8 @@ class FormalDeclNode extends DeclNode {
                     Sym idSym = new Sym(myType.strName);
                     idSym.setIdLocation(info[0], info[1]); //add line and char of var
                     sTable.addDecl(name, idSym);
-                
+                    //store the type of this formal so FormalsListNode can access
+                    formalType = myType.strName;
                     //Debug
                     //p.println(name +" "+ idSym.toString());
                 } else{
@@ -446,7 +447,7 @@ class FormalDeclNode extends DeclNode {
         p.print(" ");
         myId.unparse(p, 0);
     }
-
+    public String formalType = "";
     private TypeNode myType;
     private IdNode myId;
 }
