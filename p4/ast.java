@@ -292,7 +292,9 @@ class VarDeclNode extends DeclNode {
                 //Debug
                 //p.println(name +" "+ idSym.toString());
             } else{
-                 //TODO: var name exists, report error message: Multiply declared identifier
+                //TODO: var name exists, report error message: Multiply declared identifier
+                String msg = "Multiply declared identifier";
+                ErrMsg.fatal(info[0], info[1], msg);
             }
             //TODO: edit these error messages
         } catch(Exception e){
