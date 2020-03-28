@@ -266,39 +266,73 @@ class VarDeclNode extends DeclNode {
         mySize = size;
     }
     public void analysis(PrintWriter p , SymTable sTable){
-        //TODO:left off here
-        if (mySize != 0){//is a regular variable declaration
-            int [] info = myId.getIdInfo();
-            String name = myId.getName();
-            try{
-                //check if in local scope
-                if (sTable.lookupLocal(name) == null) {
-                    //create new Sym
-                    Sym idSym = new Sym(myType.strName);
-                    idSym.setIdLocation(info[0], info[1]);
-                    sTable.addDecl(name, idSym);
-                    
-                    //Debug
-                    p.println("var "+ name +" "+ idSym.toString());
-                } else{
-                     //report error message
-                }
-                //TODO: edit these error messages
-            } catch(EmptySymTableException e){
-                System.err.println("unexpected EmptySymTableException in VarDeclNode.analysis");
-            } catch(DuplicateSymException e){
-                System.err.println("unexpected DuplicateSymException in VarDeclNode.analysis");
-            } catch(IllegalArgumentException e){
-                System.err.println("unexpected IllegalArgumentException in VarDeclNode.analysis");
-            } catch(Exception e){
-                System.err.println("unexpected Exception in VarDeclNode.analysis");
-            } 
+        if (mySize != 0){//a regular variable declaration
+            vAnalysis(p, sTable);
+        } else{
+            sAnalysis(p, sTable);
+        }
+    }
+    //variable analysis
+    public void vAnalysis(PrintWriter p , SymTable sTable){//regular var declaration 
+        //TODO: check if type is void, if so, issue error: Non-function declared void
+        int [] info = myId.getIdInfo();
+        String name = myId.getName();
+        try{
+            //check if in local scope, since not in local scope, then can declare this
+            if (sTable.lookupLocal(name) == null) {
+                //create new Sym and add to symTable
+                Sym idSym = new Sym(myType.strName);
+                idSym.setIdLocation(info[0], info[1]); //add line and char of var
+                sTable.addDecl(name, idSym);
+                
+                //Debug
+                p.println("var "+ name +" "+ idSym.toString());
+            } else{
+                 //TODO: var name exists, report error message: Multiply declared identifier
+            }
+            //TODO: edit these error messages
+        } catch(Exception e){
+            System.err.println("unexpected Exception in VarDeclNode.analysis");
+        }   
+    }
+    /*
+    //structure analysis
+    public void sAnalysis(PrintWriter p , SymTable sTable){ //is a struct declaration
+        //struct idNode information example for: struct Point
+        IdNode sId = myType.getIdNode(); 
+        int [] sInfo = sId.getIdInfo();
+        String sName = sId.getName(); //name of the struct ex. Point
+        try{
+            Sym sSym = sTable.lookupGlobal(sName);
+        } catch(Exception e){
+            //TODO: edit these error messages
+        }
             
-            //if not, create and add the sym
-        } else{ //is a struct declaration
+        //check if struct type has been declared and check if it is actually a struct type
+        if(sSym != null){
+            if (sSym.getType() == "struct"){ //name of a struct
+                //now check the variable name
+                //get id information
+                int [] info = myId.getIdInfo();
+                String name = myId.getName();
+                try{
+                    //check if in local scope, since not in local scope, then can declare this
+                    if (sTable.lookupLocal(name) == null) {
+                        //create new Sym and add to symTable
+                        Sym idSym = new Sym(sName); //type is type of struct
+                        idSym.setIdLocation(info[0], info[1]); //add line and char of var
+                        sTable.addDecl(name, idSym); //add to table
+                    }
+
+                }
+            } else{ // name exist but isn't struct type, issue error: Invalid name of struct type
+
+            }
+        } else { //struct type not declared, issue error: Invalid name of struct type
 
         }
     }
+    */
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myType.unparse(p, 0);
@@ -433,10 +467,13 @@ class VoidNode extends TypeNode {
 class StructNode extends TypeNode {
     public StructNode(IdNode id) {
         myId = id;
-        strName = "struct";
+        strName = myId.getName();
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //empty
+    }
+    public IdNode getIdNode(){
+        return myId;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("struct ");
