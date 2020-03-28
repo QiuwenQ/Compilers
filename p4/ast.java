@@ -422,6 +422,10 @@ class StructDeclNode extends DeclNode {
                 //p.println("---------S:StructScope-------------");
 
                 myDeclList.analysis(p,structTable);
+
+                //Debug
+                structTable.print();
+                
                 idSym.setTable(structTable); //set the struct table
                 sTable.addDecl(name, idSym); //add the struct to this scope
 
