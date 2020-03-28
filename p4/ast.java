@@ -413,7 +413,7 @@ class FnDeclNode extends DeclNode {
         //myBody.analysis(p, sTable);
 
         //debug: print the function sym table
-        p.println("---------" + name);
+        System.out.println("---------"+ name);
         sTable.print();
 
         try{
