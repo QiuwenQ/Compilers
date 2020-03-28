@@ -452,7 +452,9 @@ class StructDeclNode extends DeclNode {
                 //p.println("---------E:StructScope-------------");
                 
             } else{
-                 //TODO: var name exists, report error message: Multiply declared identifier
+                //TODO: var name exists, report error message: Multiply declared identifier
+                String msg = "Multiply declared identifier";
+                ErrMsg.fatal(info[0], info[1], msg);
             }
         } catch(Exception e){
             //TODO: edit errors
