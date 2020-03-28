@@ -129,12 +129,12 @@ class ProgramNode extends ASTnode {
     public void analysis(PrintWriter p, SymTable sTable){
         mySymTable = new SymTable();
         //Debug
-        p.println("----------------------");
+        p.println("---------S:GlobalScope-------------");
 
         myDeclList.analysis(p, mySymTable);
 
         //Debug
-        p.println("----------------------");
+        p.println("---------E:GlobalScope-------------");
     }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
@@ -410,12 +410,22 @@ class StructDeclNode extends DeclNode {
         //check if name of struct is in local scope
         try{
             if (sTable.lookupLocal(name) == null) {
+                
                 //create new Sym and add to symTable
                 Sym idSym = new Sym("struct"); //set type to struct
                 SymTable structTable = new SymTable();
+
+                //Debug
+                p.println("var "+ name +" "+ idSym.toString());
+                p.println("---------S:StructScope-------------");
+
                 myDeclList.analysis(p,structTable);
                 idSym.setTable(structTable); //set the struct table
                 sTable.addDecl(name, idSym); //add the struct to this scope
+
+                //Debug
+                p.println("---------E:StructScope-------------");
+                
             } else{
                  //TODO: var name exists, report error message: Multiply declared identifier
             }
