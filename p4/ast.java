@@ -304,11 +304,12 @@ class VarDeclNode extends DeclNode {
     public void sAnalysis(PrintWriter p , SymTable sTable){ //is a struct declaration
         
         //struct idNode information example for: struct Point
-        IdNode sId = myType.getIdNode(); 
+        IdNode sId = ((StructNode)myType).getIdNode(); 
         int [] sInfo = sId.getIdInfo();
         String sName = sId.getName(); //name of the struct ex. Point
+        Sym sSym;
         try{
-            Sym sSym = sTable.lookupGlobal(sName);
+            sSym = sTable.lookupGlobal(sName);
         } catch(Exception e){
             //TODO: edit these error messages
         }
