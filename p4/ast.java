@@ -200,7 +200,7 @@ class FormalsListNode extends ASTnode {
             }
         }
         //debug
-        //System.out.println("formal array:" + fTypes.toString());
+        System.out.println("formal array:" + fTypes.toString());
     }
     public void unparse(PrintWriter p, int indent) {
         Iterator<FormalDeclNode> it = myFormals.iterator();
