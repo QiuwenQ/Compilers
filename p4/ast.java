@@ -196,6 +196,7 @@ class FormalsListNode extends ASTnode {
                 fTypes.add(currType);
             }
         }
+        System.out.println("formal array:" + fTypes.toString());
     }
     public void unparse(PrintWriter p, int indent) {
         Iterator<FormalDeclNode> it = myFormals.iterator();
@@ -530,7 +531,7 @@ class StructDeclNode extends DeclNode {
                 //p.println("---------E:StructScope-------------");
                 
             } else{
-                //TODO: var name exists, report error message: Multiply declared identifier
+                //TODO: var name exists, report error message:
                 String msg = "Multiply declared identifier";
                 ErrMsg.fatal(info[0], info[1], msg);
             }
