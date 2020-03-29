@@ -220,8 +220,8 @@ class FnBodyNode extends ASTnode {
     public void analysis(PrintWriter p, SymTable sTable){
         //scope is within the function, also includes the formals
         //TODO left
-        myDeclList(p,sTable);
-        //myStmtList(p,sTable);
+        myDeclList.analysis(p,sTable);
+        //myStmtList.analysis(p,sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
