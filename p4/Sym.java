@@ -46,12 +46,6 @@ public class Sym {
             }
             return type +" "+ idLocation[0] + " "+idLocation[1] + listT;
         }
-        if (idLocation!=null){
-            return type +" "+ idLocation[0] + " "+idLocation[1];
-        } 
-        if (table != null){
-            return type +" "+ idLocation[0] + " "+idLocation[1];
-        }
-        return type;
+        return type +" "+ idLocation[0] + " "+idLocation[1];
     }
 }
