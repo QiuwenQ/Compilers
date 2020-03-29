@@ -45,7 +45,12 @@ public class Sym {
             return type +" "+ idLocation[0] + " "+idLocation[1];
         }
         if (fnFormals != null){
-            return type +" "+ idLocation[0] + " "+idLocation[1] + fnFormals.toArray().toString();
+            int size = fnFormals.size();
+            String listT = "";
+            for (int i = 0; i<size; i++){
+                listT+= " "+fnFormals.get(i);
+            }
+            return type +" "+ idLocation[0] + " "+idLocation[1] + listT;
         }
         return type;
     }
