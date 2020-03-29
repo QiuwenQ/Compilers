@@ -956,30 +956,24 @@ class IdNode extends ExpNode {
     }
     public void analysis(PrintWriter p, SymTable sTable){
         //analysis of id usage
-        boolean idFound = false; //keep track of if id was found
         //check local first then global if it is declared
         try{
-            idSym = sTable.lookupLocal(myStrVal);
+            Sym idSym = sTable.lookupLocal(myStrVal);
             if (idSym == null){ //not in local, try global
                 idSym = sTable.lookupGlobal(myStrVal);
                 if (idSym == null){
                     //id can't be find locally and globally: error
                     String msg = "Undeclared identifier";
-                    ErrMsg.fatal(lineNum, charNum, msg);
+                    ErrMsg.fatal(myLineNum, myCharNum, msg);
                 } else{ //id found globally
-                    idFound = true; 
+                    mySym = idSym;//link the sym to this idNode
                 }
             } else{ // id found locally
-                idFound = true;
+                mySym = idSym;//link the sym to this idNode
             }
         } catch (Exception e){
             System.err.println("unexpected Exception in IdNode.analysis");
         }
-        if (idFound){ //id found either globally or locally
-            //link the sym to this idNode
-            mySym = idSym;
-        }
-
     }
     //access method for Id's line, char, and value
     public int [] getIdInfo(){
@@ -989,7 +983,7 @@ class IdNode extends ExpNode {
     public String getName(){
         return myStrVal;
     }
-    public void getIdSym(){
+    public Sym getIdSym(){
         //for usage of an ID in dot access
         return mySym;
     }
