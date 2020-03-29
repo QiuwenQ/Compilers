@@ -45,7 +45,7 @@ public class Sym {
             return type +" "+ idLocation[0] + " "+idLocation[1];
         }
         if (fnFormals != null){
-            return type +" "+ idLocation[0] + " "+idLocation[1] + fnFormals.toString();
+            return type +" "+ idLocation[0] + " "+idLocation[1] + fnFormals.toArray().toString();
         }
         return type;
     }
