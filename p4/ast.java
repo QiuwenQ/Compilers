@@ -218,7 +218,10 @@ class FnBodyNode extends ASTnode {
         myStmtList = stmtList;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //scope is within the function, also includes the formals
+        //TODO left
+        myDeclList(p,sTable);
+        //myStmtList(p,sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
@@ -413,7 +416,7 @@ class FnDeclNode extends DeclNode {
         //analyze formals and body (independent of of func name already exists)
         sTable.addScope();
         myFormalsList.analysis(p, sTable);
-        //myBody.analysis(p, sTable);
+        myBody.analysis(p, sTable);
 
         //debug: print the function sym table
         System.out.println("---------"+ name);
@@ -423,7 +426,7 @@ class FnDeclNode extends DeclNode {
             //remove scope of the function after finishing analyzing formals and body
             sTable.removeScope();
         } catch (Exception e){
-            System.err.println("unexpected Exception in VarDeclNode.analysis");
+            System.err.println("unexpected EmptySymTableException in VarDeclNode.analysis");
         }
         
     }
