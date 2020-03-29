@@ -192,11 +192,15 @@ class FormalsListNode extends ASTnode {
             while(it.hasNext()){
                 FormalDeclNode currNode = it.next();
                 currNode.analysis(p, sTable);
+                //store each formal's type if string is NOT empty (is a good decl)
                 String currType = currNode.getFormalType();
-                fTypes.add(currType);
+                if (currType != ""){
+                    fTypes.add(currType);
+                }
             }
         }
-        System.out.println("formal array:" + fTypes.toString());
+        //debug
+        //System.out.println("formal array:" + fTypes.toString());
     }
     public void unparse(PrintWriter p, int indent) {
         Iterator<FormalDeclNode> it = myFormals.iterator();
@@ -207,6 +211,10 @@ class FormalsListNode extends ASTnode {
                 it.next().unparse(p, indent);
             }
         }
+    }
+    //accessor for fTypes field 
+    public List<String> getFTypes(){
+        return fTypes;
     }
     //holds the types of all correctly declared variables
     private List<String> fTypes; 
@@ -471,8 +479,9 @@ class FormalDeclNode extends DeclNode {
                     sTable.addDecl(name, idSym);
                     //store the type of this formal so FormalsListNode can access
                     formalType = myType.strName;
-                    System.out.println("#### formalType = "+ formalType);
+
                     //Debug
+                    //System.out.println("#### formalType = "+ formalType);
                     //p.println(name +" "+ idSym.toString());
                 } else{
                     String msg = "Multiply declared identifier";
