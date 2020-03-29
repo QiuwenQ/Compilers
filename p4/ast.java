@@ -471,6 +471,7 @@ class FormalDeclNode extends DeclNode {
                     sTable.addDecl(name, idSym);
                     //store the type of this formal so FormalsListNode can access
                     formalType = myType.strName;
+                    System.out.println("#### formalType = "+ formalType);
                     //Debug
                     //p.println(name +" "+ idSym.toString());
                 } else{
