@@ -228,9 +228,9 @@ class FnBodyNode extends ASTnode {
     }
     public void analysis(PrintWriter p, SymTable sTable){
         //scope is within the function, also includes the formals
-        //TODO left
+        //TODO left : work on statement list (USAGE CHECKS!!)
         myDeclList.analysis(p,sTable);
-        //myStmtList.analysis(p,sTable);
+        myStmtList.analysis(p,sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
@@ -246,7 +246,10 @@ class StmtListNode extends ASTnode {
         myStmts = S;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        Iterator<StmtNode> it = myStmts.iterator();
+        while (it.hasNext()) {
+            it.next().analysis(p, sTable);
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         Iterator<StmtNode> it = myStmts.iterator();
@@ -644,7 +647,7 @@ class AssignStmtNode extends StmtNode {
         myAssign = assign;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myAssign.analysis(p,sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -949,10 +952,34 @@ class IdNode extends ExpNode {
     public IdNode(int lineNum, int charNum, String strVal) {
         myLineNum = lineNum;
         myCharNum = charNum;
-        myStrVal = strVal;
+        myStrVal = strVal; //name of the id
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        //empty analysis function
+        //analysis of id usage
+        boolean idFound = false; //keep track of if id was found
+        //check local first then global if it is declared
+        try{
+            idSym = sTable.lookupLocal(myStrVal);
+            if (idSym == null){ //not in local, try global
+                idSym = sTable.lookupGlobal(myStrVal);
+                if (idSym == null){
+                    //id can't be find locally and globally: error
+                    String msg = "Undeclared identifier";
+                    ErrMsg.fatal(lineNum, charNum, msg);
+                } else{ //id found globally
+                    idFound = true; 
+                }
+            } else{ // id found locally
+                idFound = true;
+            }
+        } catch (Exception e){
+            System.err.println("unexpected Exception in IdNode.analysis");
+        }
+        if (idFound){ //id found either globally or locally
+            //link the sym to this idNode
+            mySym = idSym;
+        }
+
     }
     //access method for Id's line, char, and value
     public int [] getIdInfo(){
@@ -962,8 +989,9 @@ class IdNode extends ExpNode {
     public String getName(){
         return myStrVal;
     }
-    public void setSym(){
-        //TODO FINISH:
+    public void getIdSym(){
+        //for usage of an ID in dot access
+        return mySym;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
@@ -981,7 +1009,8 @@ class DotAccessExpNode extends ExpNode {
         myId = id;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myLoc.analysis(p, sTable);
+        myId.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1000,7 +1029,8 @@ class AssignNode extends ExpNode {
         myExp = exp;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myLhs.analysis(p, sTable);
+        myExp.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         if (indent != -1)  p.print("(");
