@@ -3,5 +3,10 @@ bool x;
 struct Point {
 	int x;
 	int y;
+	bool Point;
 };
 struct Point pt;
+int f(int x , bool y, int c){
+	int d;
+	int f;
+}
