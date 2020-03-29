@@ -406,12 +406,13 @@ class FnDeclNode extends DeclNode {
         //TODO:check the type and ID for the function first before going into the formals and body!!
         int [] info = myId.getIdInfo();
         String name = myId.getName();
+        Sym idSym = null;
         //function can be void so don't need to check for that
         try{
             //check if in local scope, if not, then add function name to local scope
             if (sTable.lookupLocal(name) == null) {
                 //create new Sym and add to symTable
-                Sym idSym = new Sym(myType.strName);
+                idSym = new Sym(myType.strName);
                 idSym.setIdLocation(info[0], info[1]); //add line and char of var
                 sTable.addDecl(name, idSym);
             } else{ //in local scope: issue error
@@ -425,6 +426,9 @@ class FnDeclNode extends DeclNode {
         //analyze formals and body (independent of of func name already exists)
         sTable.addScope();
         myFormalsList.analysis(p, sTable);
+        if (idSym != null){
+            idSym.setFnFormals(myFormalsList.getFTypes());
+        }
         myBody.analysis(p, sTable);
 
         //debug: print the function sym table
