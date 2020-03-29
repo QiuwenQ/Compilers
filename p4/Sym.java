@@ -38,12 +38,6 @@ public class Sym {
         return fnFormals;
     }
     public String toString() {
-        if (idLocation!=null){
-            return type +" "+ idLocation[0] + " "+idLocation[1];
-        } 
-        if (table != null){
-            return type +" "+ idLocation[0] + " "+idLocation[1];
-        }
         if (fnFormals != null){
             int size = fnFormals.size();
             String listT = "";
@@ -51,6 +45,12 @@ public class Sym {
                 listT+= " "+fnFormals.get(i);
             }
             return type +" "+ idLocation[0] + " "+idLocation[1] + listT;
+        }
+        if (idLocation!=null){
+            return type +" "+ idLocation[0] + " "+idLocation[1];
+        } 
+        if (table != null){
+            return type +" "+ idLocation[0] + " "+idLocation[1];
         }
         return type;
     }
