@@ -402,12 +402,15 @@ class FnDeclNode extends DeclNode {
                 Sym idSym = new Sym(myType.strName);
                 idSym.setIdLocation(info[0], info[1]); //add line and char of var
                 sTable.addDecl(name, idSym);
+            } else{ //in local scope: issue error
+                String msg = "Multiply declared identifier";
+                ErrMsg.fatal(info[0], info[1], msg);
             }
         } catch (Exception e){
             System.err.println("unexpected Exception in FnDeclNode.analysis");
         }
 
-        //analyze formals and body (independent of if func name already exists)
+        //analyze formals and body (independent of of func name already exists)
         sTable.addScope();
         myFormalsList.analysis(p, sTable);
         //myBody.analysis(p, sTable);
