@@ -1,7 +1,11 @@
 import java.util.*;
 public class Sym {
     private String type;
+    //array to keep track of the id's line and char
     private int [] idLocation;
+
+    //array to keep track of function's formal's type
+    private List<String> fnFormals;
 
     /* table is used to separately store the symbol table 
     associated with each struct definition */
@@ -27,13 +31,21 @@ public class Sym {
     public String getType() {
         return type;
     }
-    
+    public void setFnFormals(List <String> a){
+        fnFormals = a;
+    }
+    public List<String> getFnFormals(){
+        return fnFormals;
+    }
     public String toString() {
         if (idLocation!=null){
             return type +" "+ idLocation[0] + " "+idLocation[1];
         } 
         if (table != null){
             return type +" "+ idLocation[0] + " "+idLocation[1];
+        }
+        if (fnFormals != null){
+            return type +" "+ idLocation[0] + " "+idLocation[1] + fnFormals.toString();
         }
         return type;
     }
