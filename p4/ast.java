@@ -663,7 +663,7 @@ class PostIncStmtNode extends StmtNode {
         myExp = exp;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -679,7 +679,7 @@ class PostDecStmtNode extends StmtNode {
         myExp = exp;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -695,7 +695,7 @@ class ReadStmtNode extends StmtNode {
         myExp = e;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -713,7 +713,7 @@ class WriteStmtNode extends StmtNode {
         myExp = exp;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -732,7 +732,15 @@ class IfStmtNode extends StmtNode {
         myStmtList = slist;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp.analysis(p, sTable);
+        try{
+            sTable.addScope();
+            myDeclList.analysis(p, sTable);
+            myStmtList.analysis(p, sTable);
+            sTable.removeScope();
+        } catch (Exception e){
+            System.err.println("unexpected Exception in IfStmtNode.analysis");
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -761,6 +769,27 @@ class IfElseStmtNode extends StmtNode {
         myElseStmtList = slist2;
     }
     public void analysis(PrintWriter p, SymTable sTable){
+        myExp.analysis(p, sTable);
+        //add if scope
+        try{
+            sTable.addScope();
+            myThenDeclList.analysis(p, sTable);
+            myThenStmtList.analysis(p, sTable);
+            //remove if scope
+            sTable.removeScope();
+        } catch (Exception e){
+            System.err.println("unexpected Exception in IfElseStmtNode.analysis (If)");
+        }
+        //add else scope
+        try{
+            sTable.addScope();
+            myElseDeclList.analysis(p, sTable);
+            myElseStmtList.analysis(p, sTable);
+            //remove else scope
+            sTable.removeScope();
+        } catch (Exception e){
+            System.err.println("unexpected Exception in IfElseStmtNode.analysis (else)");
+        }
         
     }
     public void unparse(PrintWriter p, int indent) {
@@ -858,7 +887,9 @@ class ReturnStmtNode extends StmtNode {
         myExp = exp;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        if (myExp != null){
+            myExp.analysis(p, sTable);
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
