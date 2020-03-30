@@ -1,12 +1,26 @@
-int y;
-bool x;
-struct Point {
+int a;
+int zz;
+struct Point{
 	int x;
-	int y;
-	bool Point;
+	bool y;
 };
-struct Point pt;
-int f(int x , bool y, int c){
-	int d;
-	int f;
+int func(bool a, int b){
+	struct Point pt;
+	repeat(a){ int a; a=b;}
+	pt.x = a;
+	a = b;
+	zz = a;
+	a++;
+	a--;
+	cin >> pt.x;
+	cout << a;
+	if (a==b){
+		bool b;
+		b = a;
+	} 
+	else {
+		bool b;
+		b = a;
+	}
+
 }

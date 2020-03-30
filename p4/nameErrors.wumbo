@@ -1,9 +1,19 @@
-int b;
-int b(int a, bool b, void v){
-	int b;
-	int c;
-}
-bool func(){
-}
-void func2(int x, int y, int z){
+int a;
+struct Point{
+	int x;
+	bool y;
+};
+int func(bool a, int b){
+	struct Point pt;
+	pt.x = a;
+	pt.y = 5;
+	pt.non = 5;
+	if ((a == b)) {
+        	bool b;
+        	b = a;
+    	}
+    	else {
+        	bool b;
+        	b = a;
+    	}
 }

@@ -1,0 +1,30 @@
+int a;
+int zz;
+struct Point{
+    int x;
+    bool y;
+};
+
+int func(bool a, int b) {
+    struct Point pt;
+    repeat (a(bool)) {
+        int a;
+        a(int) = b(int);
+    }
+    pt(Point).x(int) = a(bool);
+    a(bool) = b(int);
+    zz(int) = a(bool);
+    a(bool)++;
+    a(bool)--;
+    cin >> pt(Point).x(int);
+    cout << a(bool);
+    if ((a == b)) {
+        bool b;
+        b(bool) = a(bool);
+    }
+    else {
+        bool b;
+        b(bool) = a(bool);
+    }
+}
+
