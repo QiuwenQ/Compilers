@@ -266,7 +266,10 @@ class ExpListNode extends ASTnode {
         myExps = S;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        Iterator<ExpNode> it = myExps.iterator();
+        if (it.hasNext()) { // if there is at least one element
+            it.next().analysis(p, sTable);
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         Iterator<ExpNode> it = myExps.iterator();
@@ -889,7 +892,7 @@ class CallStmtNode extends StmtNode {
         myCall = call;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myCall.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -1038,7 +1041,7 @@ class IdNode extends ExpNode {
     }
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
-        if (mySym!=null){
+        if (mySym!=null && !isStructAccess){
             p.print("("+mySym.getType()+")");
         }
         
@@ -1151,10 +1154,34 @@ class CallExpNode extends ExpNode {
         myExpList = new ExpListNode(new LinkedList<ExpNode>());
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        //TODO:
+        //using this method to not print the type of func after the var name
+        myId.setIsStructAccess(); 
+        myId.analysis(p, sTable);
+        if (myExpList != null){
+            myExpList.analysis(p, sTable);
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         myId.unparse(p, 0);
+        //TODO; add printout of function formals types
+        List <String> formalTypeList = myId.getIdSym().getFnFormals();
+        Iterator <String> it = formalTypeList.iterator();
+        p.print("(");
+        //print the function formals types
+        if (it.hasNext()){
+            p.print(it.next());
+            while(it.hasNext()){
+                p.print(",");
+                p.print(it.next());
+            }
+        }
+        //print arrow
+        p.print("->");
+        //print the function return type
+        p.print(myId.getIdSym().getType());
+        p.print(")");
+
+        //print function parameters
         p.print("(");
         if (myExpList != null) {
             myExpList.unparse(p, 0);
