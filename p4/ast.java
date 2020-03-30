@@ -961,7 +961,7 @@ class IdNode extends ExpNode {
             Sym idSym = sTable.lookupLocal(myStrVal);
             if (idSym == null){ //not in local, try global
                 idSym = sTable.lookupGlobal(myStrVal);
-                if (idSym == null){
+                if (idSym == null && !isStructAccess){
                     //id can't be find locally and globally: error
                     String msg = "Undeclared identifier";
                     ErrMsg.fatal(myLineNum, myCharNum, msg);
@@ -989,12 +989,20 @@ class IdNode extends ExpNode {
     }
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
+        if (mySym!=null){
+            p.print("("+mySym.getType()+")");
+        }
+        
+    }
+    public void setIsStructAccess(){
+        isStructAccess = true;
     }
 
     private int myLineNum;
     private int myCharNum;
     private String myStrVal;
     private Sym mySym; //link to sym in symtable (has info on type)
+    private boolean isStructAccess = false;
 }
 
 class DotAccessExpNode extends ExpNode {
@@ -1011,14 +1019,26 @@ class DotAccessExpNode extends ExpNode {
         
         if (myLSym != null){ //a sym was linked so lhs exists
             //check if lhs is a struct
-            String lType = myLSym.getType();
-            if (lType == "struct"){
+            String lStruct = myLSym.getType(); //name of the struct
+            //check globally if this matches a struct
+            structSym = null;
+            try{
+                structSym = sTable.lookupGlobal(lStruct);
+            } catch (Exception e){
+                System.err.println("unexpected Exception in DotAccessExpNode.analysis lookupGlobal");
+            }
+            //debug
+            //System.out.println("^^^^^^"+structSym.getType()+"^^^^^^^");
+            if (structSym.getType() == "struct"){
                 //lhs is a struct so check right side is a field of struct
-                myId.analysis(p, sTable);
+                myId.setIsStructAccess();
+                SymTable structTable = structSym.getTable();
+                myId.analysis(p, structTable);
                 String rName = myId.getName();
                 //check in symbol table of struct if var name exists
                 try{
-                    myRSym = myLSym.getTable().lookupLocal(rName);
+                    //look into struct table
+                    myRSym = structSym.getTable().lookupLocal(rName);
                     if (myRSym == null){ //rhs is not a field in struct
                         int [] info = myId.getIdInfo();
                         String msg = "Invalid struct field name";
@@ -1035,16 +1055,18 @@ class DotAccessExpNode extends ExpNode {
         }
     }
     public void unparse(PrintWriter p, int indent) {
-        p.print("(");
+        //p.print("(");
         myLoc.unparse(p, 0);
-        p.print(").");
+        p.print(".");
         myId.unparse(p, 0);
+        //p.print("("+myRSym.getType()+")");
     }
     public boolean lhsNoError;
     private ExpNode myLoc;
     private IdNode myId;
-    private Sym myLSym;
-    private Sym myRSym;
+    private Sym myLSym; //type is i.e. Point
+    private Sym structSym; //type is struct
+    private Sym myRSym; //type is i.e int/bool
     //create another field for right hand sym
 }
 
