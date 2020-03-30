@@ -17,3 +17,7 @@ int func(bool a, int b){
         	b = a;
     	}
 }
+int func(bool a1, int b1){
+	struct Point pt1;
+	pt1.y = a1;
+}

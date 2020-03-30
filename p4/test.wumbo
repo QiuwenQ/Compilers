@@ -1,15 +1,15 @@
-int a;
 int zz;
 struct Point{
 	int x;
-	bool y;
+	int y;
 };
-int func(bool a, int b){
-	struct Point pt;
-	repeat(a){ int a; a=b;}
-	pt.x = pt.x + b;
-	a = a/a;
-	a = a == 3;
-	a = !a;
-	a = -a;
+int f(int x, bool b) { }
+void g() {
+    int a;
+    bool b;
+    struct Point p;
+    p.x = a;
+    b = a == 3;
+    f(a + p.y*2, b);
+    g();
 }

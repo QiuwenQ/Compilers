@@ -1,20 +1,19 @@
-int a;
 int zz;
 struct Point{
     int x;
-    bool y;
+    int y;
 };
 
-int func(bool a, int b) {
-    struct Point pt;
-    repeat (a(bool)) {
-        int a;
-        a(int) = b(int);
-    }
-    pt(Point).x(int) = (pt(Point).x(int) + b(int));
-    a(bool) = (a(bool) / a(bool));
-    a(bool) = (a(bool) == 3);
-    a(bool) = (!a(bool));
-    a(bool) = (-a(bool));
+int f(int x, bool b) {
+}
+
+void g() {
+    int a;
+    bool b;
+    struct Point p;
+    p(Point).x = a(int);
+    b(bool) = (a(int) == 3);
+    f(int,bool->int)((a(int) + (p(Point).y * 2)), b);
+    g(->void)();
 }
 
