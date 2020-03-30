@@ -1151,7 +1151,7 @@ class CallExpNode extends ExpNode {
         myExpList = new ExpListNode(new LinkedList<ExpNode>());
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //TODO:
     }
     public void unparse(PrintWriter p, int indent) {
         myId.unparse(p, 0);
@@ -1193,7 +1193,7 @@ class UnaryMinusNode extends UnaryExpNode {
         super(exp);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(-");
@@ -1207,7 +1207,7 @@ class NotNode extends UnaryExpNode {
         super(exp);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(!");
@@ -1225,7 +1225,8 @@ class PlusNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1241,7 +1242,8 @@ class MinusNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1257,7 +1259,8 @@ class TimesNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1273,7 +1276,8 @@ class DivideNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1289,7 +1293,8 @@ class AndNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1305,7 +1310,8 @@ class OrNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1321,7 +1327,8 @@ class EqualsNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1337,7 +1344,8 @@ class NotEqualsNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1353,7 +1361,8 @@ class LessNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1369,7 +1378,8 @@ class GreaterNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1385,7 +1395,8 @@ class LessEqNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1401,7 +1412,8 @@ class GreaterEqNode extends BinaryExpNode {
         super(exp1, exp2);
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp1.analysis(p, sTable);
+        myExp2.analysis(p, sTable);
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
