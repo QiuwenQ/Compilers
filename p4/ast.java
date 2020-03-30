@@ -823,7 +823,16 @@ class WhileStmtNode extends StmtNode {
         myStmtList = slist;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp.analysis(p, sTable);
+        try{
+            sTable.addScope();
+            myDeclList.analysis(p, sTable);
+            myStmtList.analysis(p, sTable);
+            //remove else scope
+            sTable.removeScope();
+        } catch (Exception e){
+            System.err.println("unexpected Exception in WhileStmtNode.analysis");
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -848,7 +857,16 @@ class RepeatStmtNode extends StmtNode {
         myStmtList = slist;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        myExp.analysis(p, sTable);
+        try{
+            sTable.addScope();
+            myDeclList.analysis(p, sTable);
+            myStmtList.analysis(p, sTable);
+            //remove else scope
+            sTable.removeScope();
+        } catch (Exception e){
+            System.err.println("unexpected Exception in RepeatStmtNode.analysis");
+        }
     }
     public void unparse(PrintWriter p, int indent) {
 	addIndentation(p, indent);
