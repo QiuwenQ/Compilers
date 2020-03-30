@@ -11,20 +11,10 @@ int func(bool a, int b) {
         int a;
         a(int) = b(int);
     }
-    pt(Point).x(int) = a(bool);
-    a(bool) = b(int);
-    zz(int) = a(bool);
-    a(bool)++;
-    a(bool)--;
-    cin >> pt(Point).x(int);
-    cout << a(bool);
-    if ((a == b)) {
-        bool b;
-        b(bool) = a(bool);
-    }
-    else {
-        bool b;
-        b(bool) = a(bool);
-    }
+    pt(Point).x(int) = (pt(Point).x(int) + b(int));
+    a(bool) = (a(bool) / a(bool));
+    a(bool) = (a(bool) == 3);
+    a(bool) = (!a(bool));
+    a(bool) = (-a(bool));
 }
 

@@ -7,20 +7,9 @@ struct Point{
 int func(bool a, int b){
 	struct Point pt;
 	repeat(a){ int a; a=b;}
-	pt.x = a;
-	a = b;
-	zz = a;
-	a++;
-	a--;
-	cin >> pt.x;
-	cout << a;
-	if (a==b){
-		bool b;
-		b = a;
-	} 
-	else {
-		bool b;
-		b = a;
-	}
-
+	pt.x = pt.x + b;
+	a = a/a;
+	a = a == 3;
+	a = !a;
+	a = -a;
 }
