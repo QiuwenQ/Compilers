@@ -887,7 +887,7 @@ class IntLitNode extends ExpNode {
         myIntVal = intVal;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //empty
     }
     public void unparse(PrintWriter p, int indent) {
         p.print(myIntVal);
@@ -905,7 +905,7 @@ class StringLitNode extends ExpNode {
         myStrVal = strVal;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //empty
     }
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
@@ -922,7 +922,7 @@ class TrueNode extends ExpNode {
         myCharNum = charNum;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //empty
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("true");
@@ -938,7 +938,7 @@ class FalseNode extends ExpNode {
         myCharNum = charNum;
     }
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //empty
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("false");
@@ -1003,8 +1003,36 @@ class DotAccessExpNode extends ExpNode {
         myId = id;
     }
     public void analysis(PrintWriter p, SymTable sTable){
+        //TODO: incorporate complicated nesting situations
+        //current assumption only pt.x access
         myLoc.analysis(p, sTable);
-        myId.analysis(p, sTable);
+        
+        myLSym = ((IdNode)myLoc).getIdSym(); //sym associated with lhs
+        
+        if (myLSym != null){ //a sym was linked so lhs exists
+            //check if lhs is a struct
+            String lType = myLSym.getType();
+            if (lType == "struct"){
+                //lhs is a struct so check right side is a field of struct
+                myId.analysis(p, sTable);
+                String rName = myId.getName();
+                //check in symbol table of struct if var name exists
+                try{
+                    myRSym = myLSym.getTable().lookupLocal(rName);
+                    if (myRSym == null){ //rhs is not a field in struct
+                        int [] info = myId.getIdInfo();
+                        String msg = "Invalid struct field name";
+                        ErrMsg.fatal(info[0], info[1], msg);
+                    }
+                } catch (Exception e){
+                    System.err.println("unexpected Exception in DotAccessExpNode.analysis");
+                }
+            } else { //lhs exist but not a struct: error bad struct access
+                int [] info = ((IdNode)myLoc).getIdInfo();
+                String msg = "Dot-access of non-struct type";
+                ErrMsg.fatal(info[0], info[1], msg);
+            }
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -1012,9 +1040,12 @@ class DotAccessExpNode extends ExpNode {
         p.print(").");
         myId.unparse(p, 0);
     }
-
+    public boolean lhsNoError;
     private ExpNode myLoc;
     private IdNode myId;
+    private Sym myLSym;
+    private Sym myRSym;
+    //create another field for right hand sym
 }
 
 class AssignNode extends ExpNode {
