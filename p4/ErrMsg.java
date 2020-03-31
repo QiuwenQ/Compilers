@@ -4,6 +4,7 @@
  * This class is used to generate warning and fatal error messages.
  */
 class ErrMsg {
+    /** Keeps track that an error has occured at least once */
     static boolean fatalCall = false;
     /**
      * Generates a fatal error message.
