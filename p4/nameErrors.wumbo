@@ -1,15 +1,69 @@
+#This file is for testing name analysis
 int zz;
+void zz; //error: non-function declared void
+bool zz; //error: multiply declared identifier
+int zz(){ //error: multiply declared identifier
+}
+struct zz{ //error: multiply declared identifier
+	int temp;
+};
 struct Point{
 	int b;
 	bool k;
+	int k; //error: multiply declared identifier
+	int zz; #valid
 };
-int func(int x, int y){
+//testing for struct access
+int testStruct(int x, int y){
 	struct Point a;
+	struct Point x; //error: multiply declared identifier
+	struct noStruct s; //error: invalid name of struct type
 	int test;
-//	test = a.b; //valid
-	test = a.b.c; //b.c invalid, error: dot access of non-struct type
-	test = a.b.c.d;
-	test = noDecl.b; //undeclared id
-//	test = a.c; //error: invalid struct field name
-//	test = test.b; //error: dot access of non-strct type
+	test = a.b; #valid
+	test = a.b.c; //error: dot access of non-struct type
+	test = a.b.c.d; //error: dot access of non-struct type
+	test = noDecl.b; //error: Undeclared identifier
+	test = a.c; //error: invalid struct field name
+	test = test.b; //error: dot access of non-strct 
+	test = undeclVar; //error: Undeclared identifier
+} 
+int func0(int x, bool x){ //error: non-function declared void AND multiply declared identifier
+	int temp;
 }
+//test bad/multiply declared names and simple use of undeclard names in different scopes
+int func1(int a1, void b1, bool c1){ //error: non-function declared void
+	int zz; //valid
+	b1 = 5; //error: undeclared identifier
+	undeclFn(); //error: undeclared identifier
+	if(true){
+		int var2;
+		void var; //error: non-function declared void
+		bool var2; //error: multiply declared identifier
+		var2 = undecl2; //error: undeclared identifier
+	} 
+	if (false){
+		int var2;
+		void var; //error: non-function declared void
+		bool var2; //error: multiply declared identifier
+		var2 = undecl2; //error: undeclared identifier
+	} else{
+		int var2;
+		void var; //error: non-function declared void
+		bool var2; //error: multiply declared identifier
+		var2 = undecl2; //error: undeclared identifier
+	}
+	while(true){
+		int var2;
+		void var; //error: non-function declared void
+		bool var2; //error: multiply declared identifier
+		var2 = undecl2; //error: undeclared identifier
+	}
+	repeat(true){
+		int var2;
+		void var; //error: non-function declared void
+		bool var2; //error: multiply declared identifier
+		var2 = undecl2; //error: undeclared identifier
+	}
+}
+
+//testing all exp usage of undeclared names along with function call
