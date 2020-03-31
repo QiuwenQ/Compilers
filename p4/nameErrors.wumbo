@@ -30,18 +30,20 @@ int testStruct(int x, int y){
 int func0(int x, bool x){ //error: non-function declared void AND multiply declared identifier
 	int temp;
 }
+int func0(){ //error: multiply declared identifier
+}
 //test bad/multiply declared names and simple use of undeclard names in different scopes
-int func1(int a1, void b1, bool c1){ //error: non-function declared void
+int func1(int a1, void b1, bool c1, int c1){ //error: non-function declared void multiply declared identifier
 	int zz; //valid
 	b1 = 5; //error: undeclared identifier
 	undeclFn(); //error: undeclared identifier
-	if(true){
+	if(exp){//error: undeclared identifier
 		int var2;
 		void var; //error: non-function declared void
 		bool var2; //error: multiply declared identifier
 		var2 = undecl2; //error: undeclared identifier
 	} 
-	if (false){
+	if(exp){//error: undeclared identifier
 		int var2;
 		void var; //error: non-function declared void
 		bool var2; //error: multiply declared identifier
@@ -52,13 +54,13 @@ int func1(int a1, void b1, bool c1){ //error: non-function declared void
 		bool var2; //error: multiply declared identifier
 		var2 = undecl2; //error: undeclared identifier
 	}
-	while(true){
+	while(exp){//error: undeclared identifier
 		int var2;
 		void var; //error: non-function declared void
 		bool var2; //error: multiply declared identifier
 		var2 = undecl2; //error: undeclared identifier
 	}
-	repeat(true){
+	repeat(exp){//error: undeclared identifier
 		int var2;
 		void var; //error: non-function declared void
 		bool var2; //error: multiply declared identifier
@@ -66,4 +68,35 @@ int func1(int a1, void b1, bool c1){ //error: non-function declared void
 	}
 }
 
-//testing all exp usage of undeclared names along with function call
+//testing rest of stmt and all exp usage of undeclared names along with function call
+void func2(){
+	//stmt and function call
+	int decl; #valid
+	undecl1 = undecl2;
+	undecl1.c ++;
+	undecl1.c --;
+	cin >> undecl1.c;
+	cout << undecl1;
+	return undecl1;
+	undeclFn(); //error: undeclared identifier
+	undeclFn(decl, undecl3, undecl4 + undecl5); 
+
+	//exp
+	decl = exp;
+	decl = exp + exp1;
+	decl = exp - exp1;
+	decl = exp * exp1;
+	decl = exp / exp1;
+	decl = !exp1;
+	decl = exp && exp1;
+	decl = exp || exp1;
+	decl = exp == exp1;
+	decl = exp != exp1;
+	decl = exp < exp1;
+	decl = exp > exp1;
+	decl = exp <= exp1;
+	decl = exp >= exp1;
+	decl = - exp1;
+	decl = undecl1.c;
+	decl = (undecl1.c);
+}

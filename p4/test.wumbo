@@ -1,15 +1,80 @@
+//This test all the good declarations and usage
 int zz;
+bool yy;
+int xx;
 struct Point{
 	int x;
 	int y;
+	bool zz;
+	bool Point;
 };
-int f(int x, bool b) { }
+int f(int x, bool b) { 
+	int zz;
+	int f;
+	x = x + 3;
+	return x;
+
+}
 void g() {
     int a;
     bool b;
     struct Point p;
+    int zz;
+    yy = a;
     p.x = a;
+    p.zz = b;
+    p.Point = b;
     b = a == 3;
     f(a + p.y*2, b);
     g();
+}
+int main(){
+	int a;
+	bool b;
+	struct Point pt;
+	bool xx;
+	a = a;
+	a = a == a;
+	b = b + yy;
+	b = b - yy;
+	b = b * yy;
+	b = b / yy;
+	b = !yy;
+	b = b && yy;
+	b = b || yy;
+	b = b != yy;
+	a = a < zz;
+	a = a > zz;
+	a = a <= zz;
+	a = a >= zz;
+	a = -zz;
+	a = a < zz;
+	a = pt.x;
+	a = 5;
+	a = "literal";
+	b = true;
+	b = false;
+	b = (true);
+	b = f(a + pt.y*2, b);
+	pt.x++;
+	pt.x--;
+	cin >> pt.x;
+	cout << pt.x;
+	if (xx){
+		a = a;
+	}
+	if (xx){
+		a = a;
+	} else{
+		b = b;
+	}
+	while (xx){
+		a = a;
+	}
+	repeat (xx){
+		a = a;
+	}
+	return;
+	return a+a;
+
 }
