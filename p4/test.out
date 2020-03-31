@@ -1,19 +1,82 @@
 int zz;
+bool yy;
+int xx;
 struct Point{
     int x;
     int y;
+    bool zz;
+    bool Point;
 };
 
 int f(int x, bool b) {
+    int zz;
+    int f;
+    x(int) = (x(int) + 3);
+    return x(int);
 }
 
 void g() {
     int a;
     bool b;
     struct Point p;
-    (p(Point)).x = a(int);
+    int zz;
+    yy(bool) = a(int);
+    p(Point).x(int) = a(int);
+    p(Point).zz(bool) = b(bool);
+    p(Point).Point(bool) = b(bool);
     b(bool) = (a(int) == 3);
-    f(int,bool->int)((a(int) + ((p(Point)).y * 2)), b);
+    f(int,bool->int)((a(int) + (p(Point).y(int) * 2)), b(bool));
     g(->void)();
+}
+
+int main() {
+    int a;
+    bool b;
+    struct Point pt;
+    bool xx;
+    a(int) = a(int);
+    a(int) = (a(int) == a(int));
+    b(bool) = (b(bool) + yy(bool));
+    b(bool) = (b(bool) - yy(bool));
+    b(bool) = (b(bool) * yy(bool));
+    b(bool) = (b(bool) / yy(bool));
+    b(bool) = (!yy(bool));
+    b(bool) = (b(bool) && yy(bool));
+    b(bool) = (b(bool) || yy(bool));
+    b(bool) = (b(bool) != yy(bool));
+    a(int) = (a(int) < zz(int));
+    a(int) = (a(int) > zz(int));
+    a(int) = (a(int) <= zz(int));
+    a(int) = (a(int) >= zz(int));
+    a(int) = (-zz(int));
+    a(int) = (a(int) < zz(int));
+    a(int) = pt(Point).x(int);
+    a(int) = 5;
+    a(int) = "literal";
+    b(bool) = true;
+    b(bool) = false;
+    b(bool) = true;
+    b(bool) = f(int,bool->int)((a(int) + (pt(Point).y(int) * 2)), b(bool));
+    pt(Point).x(int)++;
+    pt(Point).x(int)--;
+    cin >> pt(Point).x(int);
+    cout << pt(Point).x(int);
+    if (xx(bool)) {
+        a(int) = a(int);
+    }
+    if (xx(bool)) {
+        a(int) = a(int);
+    }
+    else {
+        b(bool) = b(bool);
+    }
+    while (xx(bool)) {
+        a(int) = a(int);
+    }
+    repeat (xx(bool)) {
+        a(int) = a(int);
+    }
+    return;
+    return (a(int) + a(int));
 }
 
