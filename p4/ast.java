@@ -1049,7 +1049,6 @@ class IdNode extends ExpNode {
     public void setIsStructAccess(){
         isStructAccess = true;
     }
-
     private int myLineNum;
     private int myCharNum;
     private String myStrVal;
@@ -1065,9 +1064,20 @@ class DotAccessExpNode extends ExpNode {
     public void analysis(PrintWriter p, SymTable sTable){
         //TODO: incorporate complicated nesting situations
         //current assumption only pt.x access
+        if (myLoc instanceof DotAccessExpNode){
+            myLoc.analysis(p, sTable);
+            //System.out.println("^^^^^^^DOTACCESSNODE^^^^^^^");
+            if (((DotAccessExpNode)myLoc).getlhsSuccess()){
+                int [] info = myId.getIdInfo();
+                String msg = "Dot-access of non-struct type";
+                ErrMsg.fatal(info[0], info[1], msg);
+            }
+            
+        } else{
         myLoc.analysis(p, sTable);
         
         myLSym = ((IdNode)myLoc).getIdSym(); //sym associated with lhs
+        //System.out.println("^^^^^^^^^^^^^^"+((IdNode)myLoc).getName());
         
         if (myLSym != null){ //a sym was linked so lhs exists
             //check if lhs is a struct
@@ -1079,9 +1089,9 @@ class DotAccessExpNode extends ExpNode {
             } catch (Exception e){
                 System.err.println("unexpected Exception in DotAccessExpNode.analysis lookupGlobal");
             }
-            //debug
-            //System.out.println("^^^^^^"+structSym.getType()+"^^^^^^^");
-            if (structSym.getType() == "struct"){
+            
+            if (structSym != null && structSym.getType() == "struct"){
+                //System.out.println("^^^^^^^HERE^^^^^^^");
                 //lhs is a struct so check right side is a field of struct
                 myId.setIsStructAccess();
                 SymTable structTable = structSym.getTable();
@@ -1096,6 +1106,8 @@ class DotAccessExpNode extends ExpNode {
                         String msg = "Invalid struct field name";
                         ErrMsg.fatal(info[0], info[1], msg);
                     }
+                    lhsSuccess = true;
+                    //System.out.println("^^^^^^^TRUE^^^^^^^");
                 } catch (Exception e){
                     System.err.println("unexpected Exception in DotAccessExpNode.analysis");
                 }
@@ -1104,16 +1116,18 @@ class DotAccessExpNode extends ExpNode {
                 String msg = "Dot-access of non-struct type";
                 ErrMsg.fatal(info[0], info[1], msg);
             }
-        }
+        }}
     }
     public void unparse(PrintWriter p, int indent) {
-        //p.print("(");
+        p.print("(");
         myLoc.unparse(p, 0);
-        p.print(".");
+        p.print(").");
         myId.unparse(p, 0);
-        //p.print("("+myRSym.getType()+")");
     }
-    public boolean lhsNoError;
+    public boolean getlhsSuccess(){
+        return lhsSuccess;
+    }
+    private boolean lhsSuccess = false;
     private ExpNode myLoc;
     private IdNode myId;
     private Sym myLSym; //type is i.e. Point
