@@ -313,7 +313,7 @@ class VarDeclNode extends DeclNode {
         if (myType.strName == "void"){
             String msg = "Non-function declared void";
             ErrMsg.fatal(info[0], info[1], msg);
-        } else{
+        } //else{
             try{
                 //check if in local scope, since not in local scope, then can declare this
                 if (sTable.lookupLocal(name) == null) {
@@ -332,7 +332,7 @@ class VarDeclNode extends DeclNode {
             } catch(Exception e){
                 System.err.println("unexpected Exception in VarDeclNode.analysis");
             }  
-        } 
+        //} 
     }
     
     //structure analysis
