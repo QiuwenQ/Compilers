@@ -11,9 +11,9 @@ void g() {
     int a;
     bool b;
     struct Point p;
-    p(Point).x = a(int);
+    (p(Point)).x = a(int);
     b(bool) = (a(int) == 3);
-    f(int,bool->int)((a(int) + (p(Point).y * 2)), b);
+    f(int,bool->int)((a(int) + ((p(Point)).y * 2)), b);
     g(->void)();
 }
 

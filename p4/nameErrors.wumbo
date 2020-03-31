@@ -1,23 +1,15 @@
-int a;
+int zz;
 struct Point{
-	int x;
-	bool y;
+	int b;
+	bool k;
 };
-int func(bool a, int b){
-	struct Point pt;
-	pt.x = a;
-	pt.y = 5;
-	pt.non = 5;
-	if ((a == b)) {
-        	bool b;
-        	b = a;
-    	}
-    	else {
-        	bool b;
-        	b = a;
-    	}
-}
-int func(bool a1, int b1){
-	struct Point pt1;
-	pt1.y = a1;
+int func(int x, int y){
+	struct Point a;
+	int test;
+//	test = a.b; //valid
+	test = a.b.c; //b.c invalid, error: dot access of non-struct type
+	test = a.b.c.d;
+	test = noDecl.b; //undeclared id
+//	test = a.c; //error: invalid struct field name
+//	test = test.b; //error: dot access of non-strct type
 }
