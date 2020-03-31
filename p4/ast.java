@@ -267,7 +267,7 @@ class ExpListNode extends ASTnode {
     }
     public void analysis(PrintWriter p, SymTable sTable){
         Iterator<ExpNode> it = myExps.iterator();
-        if (it.hasNext()) { // if there is at least one element
+        while (it.hasNext()) { // if there is at least one element
             it.next().analysis(p, sTable);
         }
     }
@@ -1013,7 +1013,7 @@ class IdNode extends ExpNode {
             Sym idSym = sTable.lookupLocal(myStrVal);
             if (idSym == null){ //not in local, try global
                 idSym = sTable.lookupGlobal(myStrVal);
-                if (idSym == null && !isStructAccess){
+                if (idSym == null){ //&& !isStructAccess
                     //id can't be find locally and globally: error
                     String msg = "Undeclared identifier";
                     ErrMsg.fatal(myLineNum, myCharNum, msg);
@@ -1043,7 +1043,7 @@ class IdNode extends ExpNode {
         p.print(myStrVal);
         if (mySym!=null && !isStructAccess){
             p.print("("+mySym.getType()+")");
-        }
+        } 
         
     }
     public void setIsStructAccess(){
@@ -1093,7 +1093,6 @@ class DotAccessExpNode extends ExpNode {
             if (structSym != null && structSym.getType() == "struct"){
                 //System.out.println("^^^^^^^HERE^^^^^^^");
                 //lhs is a struct so check right side is a field of struct
-                myId.setIsStructAccess();
                 SymTable structTable = structSym.getTable();
                 myId.analysis(p, structTable);
                 String rName = myId.getName();
@@ -1119,9 +1118,11 @@ class DotAccessExpNode extends ExpNode {
         }}
     }
     public void unparse(PrintWriter p, int indent) {
-        p.print("(");
+        //edit print to match output on assignment specification
+        //p.print("(");
         myLoc.unparse(p, 0);
-        p.print(").");
+        //p.print(").");
+        p.print(".");
         myId.unparse(p, 0);
     }
     public boolean getlhsSuccess(){
