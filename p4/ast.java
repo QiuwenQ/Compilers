@@ -134,8 +134,8 @@ class ProgramNode extends ASTnode {
         myDeclList.analysis(p, mySymTable);
 
         //debug
-        System.out.println("---------global");
-        mySymTable.print();
+        //System.out.println("---------global");
+        //mySymTable.print();
 
         //Debug
         //p.println("---------E:GlobalScope-------------");
@@ -438,8 +438,8 @@ class FnDeclNode extends DeclNode {
         myBody.analysis(p, sTable);
 
         //debug: print the function sym table
-        System.out.println("---------"+ name);
-        sTable.print();
+        //System.out.println("---------"+ name);
+        //sTable.print();
 
         try{
             //remove scope of the function after finishing analyzing formals and body
@@ -541,8 +541,8 @@ class StructDeclNode extends DeclNode {
                 myDeclList.analysis(p,structTable);
 
                 //Debug
-                System.out.println("---------" + name);
-                structTable.print();
+                //System.out.println("---------" + name);
+                //structTable.print();
 
                 idSym.setTable(structTable); //set the struct table
                 sTable.addDecl(name, idSym); //add the struct to this scope
@@ -1015,8 +1015,10 @@ class IdNode extends ExpNode {
                 idSym = sTable.lookupGlobal(myStrVal);
                 if (idSym == null){ //&& !isStructAccess
                     //id can't be find locally and globally: error
-                    String msg = "Undeclared identifier";
-                    ErrMsg.fatal(myLineNum, myCharNum, msg);
+                    if (!isStructAccess){
+                        String msg = "Undeclared identifier";
+                        ErrMsg.fatal(myLineNum, myCharNum, msg);
+                    }
                 } else{ //id found globally
                     mySym = idSym;//link the sym to this idNode
                 }
@@ -1041,10 +1043,12 @@ class IdNode extends ExpNode {
     }
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
-        if (mySym!=null && !isStructAccess){
+        if (mySym!=null && !noPrintType){
             p.print("("+mySym.getType()+")");
         } 
-        
+    }
+    public void setNoPrintType(){
+        noPrintType = true;
     }
     public void setIsStructAccess(){
         isStructAccess = true;
@@ -1053,6 +1057,7 @@ class IdNode extends ExpNode {
     private int myCharNum;
     private String myStrVal;
     private Sym mySym; //link to sym in symtable (has info on type)
+    private boolean noPrintType = false;
     private boolean isStructAccess = false;
 }
 
@@ -1094,6 +1099,7 @@ class DotAccessExpNode extends ExpNode {
                 //System.out.println("^^^^^^^HERE^^^^^^^");
                 //lhs is a struct so check right side is a field of struct
                 SymTable structTable = structSym.getTable();
+                myId.setIsStructAccess();
                 myId.analysis(p, structTable);
                 String rName = myId.getName();
                 //check in symbol table of struct if var name exists
@@ -1170,7 +1176,7 @@ class CallExpNode extends ExpNode {
     }
     public void analysis(PrintWriter p, SymTable sTable){
         //using this method to not print the type of func after the var name
-        myId.setIsStructAccess(); 
+        myId.setNoPrintType(); 
         myId.analysis(p, sTable);
         if (myExpList != null){
             myExpList.analysis(p, sTable);
