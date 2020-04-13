@@ -110,6 +110,13 @@ import java.util.*;
 abstract class ASTnode {
     // every subclass must provide an unparse operation
     abstract public void unparse(PrintWriter p, int indent);
+    /**
+    * This method analyzes the name of various variable, struct, and function for proper 
+    * declarations and usage 
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     abstract public void analysis(PrintWriter p, SymTable sTable);
     // this method can be used by the unparse methods to do indenting
     protected void addIndentation(PrintWriter p, int indent) {
@@ -126,19 +133,16 @@ class ProgramNode extends ASTnode {
     public ProgramNode(DeclListNode L) {
         myDeclList = L;
     }
+    /**
+    * This method analyzes the name of various variable, struct, and function for proper 
+    * declarations and usage in the program node
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         mySymTable = new SymTable();
-        //Debug
-        //p.println("---------S:GlobalScope-------------");
-
         myDeclList.analysis(p, mySymTable);
-
-        //debug
-        //System.out.println("---------global");
-        //mySymTable.print();
-
-        //Debug
-        //p.println("---------E:GlobalScope-------------");
     }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
@@ -152,12 +156,18 @@ class DeclListNode extends ASTnode {
     public DeclListNode(List<DeclNode> S) {
         myDecls = S;
     }
-    //go through each decl node and analyze it
+    /**
+    * This method analyzes the name of various variable, struct, and function for proper 
+    * declarations in the declaration list
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         Iterator it = myDecls.iterator();
         int x = 0;
         try {
-            while (it.hasNext()) {
+            while (it.hasNext()) { //at least 1 element
                 ((DeclNode)it.next()).analysis(p, sTable);
             }
         } catch (NoSuchElementException ex) {
@@ -184,6 +194,13 @@ class FormalsListNode extends ASTnode {
     public FormalsListNode(List<FormalDeclNode> S) {
         myFormals = S;
     }
+    /**
+    * This method analyzes the name of various variable for proper 
+    * declarations and usage in the formals list
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         fTypes = new ArrayList<>();
         //go through each formalDeclNode and analyze it
@@ -199,8 +216,6 @@ class FormalsListNode extends ASTnode {
                 }
             }
         }
-        //debug
-        //System.out.println("formal array:" + fTypes.toString());
     }
     public void unparse(PrintWriter p, int indent) {
         Iterator<FormalDeclNode> it = myFormals.iterator();
@@ -226,9 +241,15 @@ class FnBodyNode extends ASTnode {
         myDeclList = declList;
         myStmtList = stmtList;
     }
+    /**
+    * This method analyzes the name of various variable, struct, and function for proper 
+    * declarations and usage in the function
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //scope is within the function, also includes the formals
-        //TODO left : work on statement list (USAGE CHECKS!!)
         myDeclList.analysis(p,sTable);
         myStmtList.analysis(p,sTable);
     }
@@ -245,6 +266,12 @@ class StmtListNode extends ASTnode {
     public StmtListNode(List<StmtNode> S) {
         myStmts = S;
     }
+    /**
+    * This method analyzes the name used in stmts for proper usage
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         Iterator<StmtNode> it = myStmts.iterator();
         while (it.hasNext()) {
@@ -265,6 +292,12 @@ class ExpListNode extends ASTnode {
     public ExpListNode(List<ExpNode> S) {
         myExps = S;
     }
+    /**
+    * This method analyzes the name in exp for proper usage 
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         Iterator<ExpNode> it = myExps.iterator();
         while (it.hasNext()) { // if there is at least one element
@@ -298,6 +331,14 @@ class VarDeclNode extends DeclNode {
         myId = id;
         mySize = size;
     }
+    /**
+    * This method analyzes the name of variable for proper declarations.
+    * It calls a vAnalysis method to analyze a regular variable declaraion and the sAnalysis 
+    * to analyze a struct declaration
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p , SymTable sTable){
         if (mySize != 0){//a regular variable declaration
             vAnalysis(p, sTable);
@@ -305,7 +346,12 @@ class VarDeclNode extends DeclNode {
             sAnalysis(p, sTable);
         }
     }
-    //variable analysis
+    /**
+    * This method analyzes the name of a regular variable for proper declarations
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void vAnalysis(PrintWriter p , SymTable sTable){//regular var declaration 
         //TODO: check if type is void, if so, issue error: Non-function declared void
         int [] info = myId.getIdInfo();
@@ -321,9 +367,6 @@ class VarDeclNode extends DeclNode {
                     Sym idSym = new Sym(myType.strName);
                     idSym.setIdLocation(info[0], info[1]); //add line and char of var
                     sTable.addDecl(name, idSym);
-                
-                    //Debug
-                    //p.println(name +" "+ idSym.toString());
                 } else{
                     String msg = "Multiply declared identifier";
                     ErrMsg.fatal(info[0], info[1], msg);
@@ -335,7 +378,12 @@ class VarDeclNode extends DeclNode {
         //} 
     }
     
-    //structure analysis
+    /**
+    * This method analyzes the name of struct variable for proper declarations
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void sAnalysis(PrintWriter p , SymTable sTable){ //is a struct declaration
         
         //struct idNode information example for: struct Point
@@ -346,15 +394,13 @@ class VarDeclNode extends DeclNode {
         try{
             sSym = sTable.lookupGlobal(sName);
         } catch(Exception e){
-            //TODO: edit these error messages
             System.err.println("unexpected Exception in VarDeclNode.analysis");
         }
             
         //check if struct type has been declared and check if it is actually a struct type
         if(sSym != null){
             if (sSym.getType() == "struct"){ //name of a struct
-                //now check the variable name
-                //get id information
+                //get id information and check the variable name
                 int [] info = myId.getIdInfo();
                 String name = myId.getName();
                 try{
@@ -408,6 +454,12 @@ class FnDeclNode extends DeclNode {
         myFormalsList = formalList;
         myBody = body;
     }
+    /**
+    * This method analyzes for proper function declarations
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //TODO:check the type and ID for the function first before going into the formals and body!!
         int [] info = myId.getIdInfo();
@@ -436,10 +488,6 @@ class FnDeclNode extends DeclNode {
             idSym.setFnFormals(myFormalsList.getFTypes());
         }
         myBody.analysis(p, sTable);
-
-        //debug: print the function sym table
-        //System.out.println("---------"+ name);
-        //sTable.print();
 
         try{
             //remove scope of the function after finishing analyzing formals and body
@@ -472,6 +520,12 @@ class FormalDeclNode extends DeclNode {
         myType = type;
         myId = id;
     }
+    /**
+    * This method analyzes formals within a function for proper declarations
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //same idea as VarDeclNode.vAnalysis
         int [] info = myId.getIdInfo();
@@ -489,10 +543,6 @@ class FormalDeclNode extends DeclNode {
                     sTable.addDecl(name, idSym);
                     //store the type of this formal so FormalsListNode can access
                     formalType = myType.strName;
-
-                    //Debug
-                    //System.out.println("#### formalType = "+ formalType);
-                    //p.println(name +" "+ idSym.toString());
                 } else{
                     String msg = "Multiply declared identifier";
                     ErrMsg.fatal(info[0], info[1], msg);
@@ -512,7 +562,7 @@ class FormalDeclNode extends DeclNode {
     public String getFormalType(){
         return formalType;
     }
-    private String formalType = "";
+    private String formalType = ""; //to store the type of this formal i.e. int
     private TypeNode myType;
     private IdNode myId;
 }
@@ -522,6 +572,12 @@ class StructDeclNode extends DeclNode {
         myId = id;
         myDeclList = declList;
     }
+    /**
+    * This method analyzes the name for proper struct declaration
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         int [] info = myId.getIdInfo(); //line and char
         String name = myId.getName(); //var name of struct
@@ -534,24 +590,12 @@ class StructDeclNode extends DeclNode {
                 idSym.setIdLocation(info[0], info[1]); //add line and char of var
                 SymTable structTable = new SymTable();
 
-                //Debug
-                //p.println(name +" "+ idSym.toString());
-                //p.println("---------S:StructScope-------------");
-
                 myDeclList.analysis(p,structTable);
-
-                //Debug
-                //System.out.println("---------" + name);
-                //structTable.print();
 
                 idSym.setTable(structTable); //set the struct table
                 sTable.addDecl(name, idSym); //add the struct to this scope
 
-                //Debug
-                //p.println("---------E:StructScope-------------");
-                
             } else{
-                //TODO: var name exists, report error message:
                 String msg = "Multiply declared identifier";
                 ErrMsg.fatal(info[0], info[1], msg);
             }
@@ -587,8 +631,14 @@ class IntNode extends TypeNode {
     public IntNode() {
         strName = "int";
     }
+    /**
+    * This method is not used as an "int" does not need to be checked
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //empty
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("int");
@@ -599,8 +649,14 @@ class BoolNode extends TypeNode {
     public BoolNode() {
         strName = "bool";
     }
+    /**
+    * This method is not used as an "bool" does not need to be checked
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //empty
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("bool");
@@ -611,14 +667,25 @@ class VoidNode extends TypeNode {
     public VoidNode() {
         strName = "void";
     }
+    /**
+    * This method is not used as a "void" does not need to be checked
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
-        
+        //empty
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("void");
     }
 }
-
+    /**
+    * This method is not used as an "struct" does not need to be checked
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
 class StructNode extends TypeNode {
     public StructNode(IdNode id) {
         myId = id;
@@ -649,6 +716,12 @@ class AssignStmtNode extends StmtNode {
     public AssignStmtNode(AssignNode assign) {
         myAssign = assign;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myAssign.analysis(p,sTable);
     }
@@ -665,6 +738,12 @@ class PostIncStmtNode extends StmtNode {
     public PostIncStmtNode(ExpNode exp) {
         myExp = exp;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
     }
@@ -681,6 +760,12 @@ class PostDecStmtNode extends StmtNode {
     public PostDecStmtNode(ExpNode exp) {
         myExp = exp;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
     }
@@ -697,6 +782,12 @@ class ReadStmtNode extends StmtNode {
     public ReadStmtNode(ExpNode e) {
         myExp = e;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
     }
@@ -715,6 +806,12 @@ class WriteStmtNode extends StmtNode {
     public WriteStmtNode(ExpNode exp) {
         myExp = exp;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
     }
@@ -734,6 +831,12 @@ class IfStmtNode extends StmtNode {
         myExp = exp;
         myStmtList = slist;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
         try{
@@ -771,6 +874,12 @@ class IfElseStmtNode extends StmtNode {
         myElseDeclList = dlist2;
         myElseStmtList = slist2;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
         //add if scope
@@ -825,6 +934,12 @@ class WhileStmtNode extends StmtNode {
         myDeclList = dlist;
         myStmtList = slist;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
         try{
@@ -859,6 +974,12 @@ class RepeatStmtNode extends StmtNode {
         myDeclList = dlist;
         myStmtList = slist;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
         try{
@@ -891,6 +1012,12 @@ class CallStmtNode extends StmtNode {
     public CallStmtNode(CallExpNode call) {
         myCall = call;
     }
+    /**
+    * This method is used to analyze the correct usage in a function call
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myCall.analysis(p, sTable);
     }
@@ -907,6 +1034,12 @@ class ReturnStmtNode extends StmtNode {
     public ReturnStmtNode(ExpNode exp) {
         myExp = exp;
     }
+    /**
+    * This method is used to analyze the correct usage of exp in stmts
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         if (myExp != null){
             myExp.analysis(p, sTable);
@@ -938,6 +1071,12 @@ class IntLitNode extends ExpNode {
         myCharNum = charNum;
         myIntVal = intVal;
     }
+    /**
+    * This method not used. An intlit does not need to be analyzed
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //empty
     }
@@ -956,6 +1095,12 @@ class StringLitNode extends ExpNode {
         myCharNum = charNum;
         myStrVal = strVal;
     }
+    /**
+    * This method not used. A string literal does not need to be analyzed
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //empty
     }
@@ -973,6 +1118,12 @@ class TrueNode extends ExpNode {
         myLineNum = lineNum;
         myCharNum = charNum;
     }
+    /**
+    * This method not used. An "true" does not need to be analyzed
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //empty
     }
@@ -989,6 +1140,12 @@ class FalseNode extends ExpNode {
         myLineNum = lineNum;
         myCharNum = charNum;
     }
+    /**
+    * This method not used. A "false" does not need to be analyzed
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //empty
     }
@@ -1006,6 +1163,14 @@ class IdNode extends ExpNode {
         myCharNum = charNum;
         myStrVal = strVal; //name of the id
     }
+    /**
+    * This method is used to check if the name is previously declared locally 
+    * (or globally, for a struct and function). If it is not, a sym is attached
+    *  and the line number and char number that it appears in is stored
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //analysis of id usage
         //check local first then global if it is declared
@@ -1029,14 +1194,16 @@ class IdNode extends ExpNode {
             System.err.println("unexpected Exception in IdNode.analysis");
         }
     }
-    //access method for Id's line, char, and value
+    //accessor method for Id's line, char, and value
     public int [] getIdInfo(){
         int [] i = new int [] {myLineNum, myCharNum};
         return i;
     }
+    // accessor method for the name of this id
     public String getName(){
         return myStrVal;
     }
+    // accessor method for the sym associated with this id
     public Sym getIdSym(){
         //for usage of an ID in dot access
         return mySym;
@@ -1047,6 +1214,7 @@ class IdNode extends ExpNode {
             p.print("("+mySym.getType()+")");
         } 
     }
+    // used for functions, so the function type is not printed right after the name
     public void setNoPrintType(){
         noPrintType = true;
     }
@@ -1057,8 +1225,8 @@ class IdNode extends ExpNode {
     private int myCharNum;
     private String myStrVal;
     private Sym mySym; //link to sym in symtable (has info on type)
-    private boolean noPrintType = false;
-    private boolean isStructAccess = false;
+    private boolean noPrintType = false; // keeps track if we don't want to print func type
+    private boolean isStructAccess = false; // keeps track of if this id is a struct type
 }
 
 class DotAccessExpNode extends ExpNode {
@@ -1066,6 +1234,12 @@ class DotAccessExpNode extends ExpNode {
         myLoc = loc;
         myId = id;
     }
+    /**
+    * This method is used to check if the struct access is proper usage 
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //TODO: incorporate complicated nesting situations
         //current assumption only pt.x access
@@ -1082,7 +1256,6 @@ class DotAccessExpNode extends ExpNode {
         myLoc.analysis(p, sTable);
         
         myLSym = ((IdNode)myLoc).getIdSym(); //sym associated with lhs
-        //System.out.println("^^^^^^^^^^^^^^"+((IdNode)myLoc).getName());
         
         if (myLSym != null){ //a sym was linked so lhs exists
             //check if lhs is a struct
@@ -1096,7 +1269,6 @@ class DotAccessExpNode extends ExpNode {
             }
             
             if (structSym != null && structSym.getType() == "struct"){
-                //System.out.println("^^^^^^^HERE^^^^^^^");
                 //lhs is a struct so check right side is a field of struct
                 SymTable structTable = structSym.getTable();
                 myId.setIsStructAccess();
@@ -1112,7 +1284,6 @@ class DotAccessExpNode extends ExpNode {
                         ErrMsg.fatal(info[0], info[1], msg);
                     }
                     lhsSuccess = true;
-                    //System.out.println("^^^^^^^TRUE^^^^^^^");
                 } catch (Exception e){
                     System.err.println("unexpected Exception in DotAccessExpNode.analysis");
                 }
@@ -1131,6 +1302,7 @@ class DotAccessExpNode extends ExpNode {
         p.print(".");
         myId.unparse(p, 0);
     }
+    //used to keep track for nested dot acceess
     public boolean getlhsSuccess(){
         return lhsSuccess;
     }
@@ -1140,7 +1312,6 @@ class DotAccessExpNode extends ExpNode {
     private Sym myLSym; //type is i.e. Point
     private Sym structSym; //type is struct
     private Sym myRSym; //type is i.e int/bool
-    //create another field for right hand sym
 }
 
 class AssignNode extends ExpNode {
@@ -1148,6 +1319,12 @@ class AssignNode extends ExpNode {
         myLhs = lhs;
         myExp = exp;
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myLhs.analysis(p, sTable);
         myExp.analysis(p, sTable);
@@ -1174,6 +1351,12 @@ class CallExpNode extends ExpNode {
         myId = name;
         myExpList = new ExpListNode(new LinkedList<ExpNode>());
     }
+    /**
+    * This method is used to check if variables in function call is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         //using this method to not print the type of func after the var name
         myId.setNoPrintType(); 
@@ -1240,6 +1423,12 @@ class UnaryMinusNode extends UnaryExpNode {
     public UnaryMinusNode(ExpNode exp) {
         super(exp);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
     }
@@ -1254,6 +1443,12 @@ class NotNode extends UnaryExpNode {
     public NotNode(ExpNode exp) {
         super(exp);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp.analysis(p, sTable);
     }
@@ -1272,6 +1467,12 @@ class PlusNode extends BinaryExpNode {
     public PlusNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1289,6 +1490,12 @@ class MinusNode extends BinaryExpNode {
     public MinusNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1306,6 +1513,12 @@ class TimesNode extends BinaryExpNode {
     public TimesNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1323,6 +1536,12 @@ class DivideNode extends BinaryExpNode {
     public DivideNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1340,6 +1559,12 @@ class AndNode extends BinaryExpNode {
     public AndNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1357,6 +1582,12 @@ class OrNode extends BinaryExpNode {
     public OrNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1374,6 +1605,12 @@ class EqualsNode extends BinaryExpNode {
     public EqualsNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1391,6 +1628,12 @@ class NotEqualsNode extends BinaryExpNode {
     public NotEqualsNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1408,6 +1651,12 @@ class LessNode extends BinaryExpNode {
     public LessNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1425,6 +1674,12 @@ class GreaterNode extends BinaryExpNode {
     public GreaterNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1442,6 +1697,12 @@ class LessEqNode extends BinaryExpNode {
     public LessEqNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);
@@ -1459,6 +1720,12 @@ class GreaterEqNode extends BinaryExpNode {
     public GreaterEqNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    /**
+    * This method is used to check if exp is properly used
+    *
+    * @param p The PrintWriter which is used to print into an output file
+    * @param sTable The symTable of this program which holds all the correctly declared names
+    */
     public void analysis(PrintWriter p, SymTable sTable){
         myExp1.analysis(p, sTable);
         myExp2.analysis(p, sTable);

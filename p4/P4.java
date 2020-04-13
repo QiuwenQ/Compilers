@@ -54,7 +54,7 @@ public class P4 {
             System.exit(-1);
         }
 
-	// ADD NAME ANALYSIS PART HERE
+	   //Peform name analysis. Only unparse if analysis occured without error
         ((ASTnode)root.value).analysis(outFile, null);
         if (!ErrMsg.fatalCall){
             ((ASTnode)root.value).unparse(outFile, 0);
