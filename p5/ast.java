@@ -138,9 +138,11 @@ class ProgramNode extends ASTnode {
 
     /**
      * typeCheck
+     * Analyzes the type of expression within the program
      */
     public void typeCheck() {
 	// TODO: Implement a type checking method for this node and its children.
+        myDeclList.typeCheck();
     }
     
     public void unparse(PrintWriter p, int indent) {
@@ -179,7 +181,18 @@ class DeclListNode extends ASTnode {
             }
         }
     }    
-    
+    /**
+     * typeCheck
+     * Analyzes the type of expression within only function nodes
+     */
+    public void typeCheck(){
+        for (DeclNode node: myDecls){
+            if (node instanceof FnDeclNode){
+                ((FnDeclNode)node).typeCheck();
+            }
+        }
+    }
+
     public void unparse(PrintWriter p, int indent) {
         Iterator it = myDecls.iterator();
         try {
@@ -257,7 +270,13 @@ class FnBodyNode extends ASTnode {
         myDeclList.nameAnalysis(symTab);
         myStmtList.nameAnalysis(symTab);
     }    
-    
+    /**
+     * typeCheck
+     * Checks the types within the statement lists
+     */
+    public void typeCheck(){
+        myStmtList.typeCheck();
+    }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
         myStmtList.unparse(p, indent);
@@ -282,7 +301,16 @@ class StmtListNode extends ASTnode {
             node.nameAnalysis(symTab);
         }
     }    
-    
+    /**
+     * typeCheck
+     * Checks the type for each statement node
+     */
+    public Type typeCheck(){
+        for (StmtNode node: myStmts){
+            ((StmtNode)node).typeCheck();
+        }
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         Iterator<StmtNode> it = myStmts.iterator();
         while (it.hasNext()) {
@@ -537,6 +565,14 @@ class FnDeclNode extends DeclNode {
         
         return null;
     }    
+
+    /**
+     * typeCheck
+     * Checks the types in the function body
+     */
+    public void typeCheck(){
+        myBody.typeCheck();
+    }
     
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -797,6 +833,7 @@ class StructNode extends TypeNode {
 
 abstract class StmtNode extends ASTnode {
     abstract public void nameAnalysis(SymTable symTab);
+    public void typeCheck(){}
 }
 
 class AssignStmtNode extends StmtNode {
@@ -811,7 +848,13 @@ class AssignStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myAssign.nameAnalysis(symTab);
     }
-    
+    /**
+     * typeCheck
+     * Checks the types in the assign stmt node
+     */
+    public void typeCheck(){
+        myAssign.typeCheck();
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myAssign.unparse(p, -1); // no parentheses
@@ -834,7 +877,13 @@ class PostIncStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myExp.nameAnalysis(symTab);
     }
-    
+    /**
+     * typeCheck
+     * Checks the types in the postinc node
+     */
+    public void typeCheck(){
+        myExp.typeCheck();
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myExp.unparse(p, 0);
@@ -857,7 +906,13 @@ class PostDecStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myExp.nameAnalysis(symTab);
     }
-    
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public void typeCheck(){
+       myExp.typeCheck();
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myExp.unparse(p, 0);
@@ -880,7 +935,13 @@ class ReadStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myExp.nameAnalysis(symTab);
     }    
-    
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public void typeCheck(){
+       //1ODO
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         p.print("cin >> ");
@@ -904,7 +965,13 @@ class WriteStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myExp.nameAnalysis(symTab);
     }
-    
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public void typeCheck(){
+       //1ODO
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         p.print("cout << ");
@@ -944,7 +1011,13 @@ class IfStmtNode extends StmtNode {
             System.exit(-1);        
         }
     }
-    
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public void typeCheck(){
+       //1ODO
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         p.print("if (");
@@ -1007,7 +1080,13 @@ class IfElseStmtNode extends StmtNode {
             System.exit(-1);        
         }
     }
-    
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public void typeCheck(){
+       //1ODO
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         p.print("if (");
@@ -1061,7 +1140,13 @@ class WhileStmtNode extends StmtNode {
             System.exit(-1);        
         }
     }
-    
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public void typeCheck(){
+       //1ODO
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         p.print("while (");
@@ -1107,7 +1192,13 @@ class RepeatStmtNode extends StmtNode {
             System.exit(-1);        
         }
     }
-    
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public void typeCheck(){
+       //1ODO
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         p.print("repeat (");
@@ -1138,7 +1229,13 @@ class CallStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myCall.nameAnalysis(symTab);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public void typeCheck(){
+       //1ODO
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myCall.unparse(p, indent);
@@ -1164,7 +1261,13 @@ class ReturnStmtNode extends StmtNode {
             myExp.nameAnalysis(symTab);
         }
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public void typeCheck(){
+       //1ODO
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         p.print("return");
@@ -1188,6 +1291,7 @@ abstract class ExpNode extends ASTnode {
      * Default version for nodes with no names
      */
     public void nameAnalysis(SymTable symTab) { }
+    public Type typeCheck(){ return null;}
 }
 
 class IntLitNode extends ExpNode {
@@ -1196,7 +1300,13 @@ class IntLitNode extends ExpNode {
         myCharNum = charNum;
         myIntVal = intVal;
     }
-
+    /**
+     * typeCheck
+     * Return int type
+     */
+    public Type typeCheck(){
+        return new IntType();
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print(myIntVal);
     }
@@ -1212,7 +1322,13 @@ class StringLitNode extends ExpNode {
         myCharNum = charNum;
         myStrVal = strVal;
     }
-
+    /**
+     * typeCheck
+     * Return string type
+     */
+    public Type typeCheck(){
+        return new StringType();
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
     }
@@ -1227,7 +1343,13 @@ class TrueNode extends ExpNode {
         myLineNum = lineNum;
         myCharNum = charNum;
     }
-
+    /**
+     * typeCheck
+     * Return bool type
+     */
+    public Type typeCheck(){
+        return new BoolType();
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("true");
     }
@@ -1241,7 +1363,13 @@ class FalseNode extends ExpNode {
         myLineNum = lineNum;
         myCharNum = charNum;
     }
-
+    /**
+     * typeCheck
+     * Return bool type
+     */
+    public Type typeCheck(){
+        return new BoolType();
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("false");
     }
@@ -1256,7 +1384,13 @@ class IdNode extends ExpNode {
         myCharNum = charNum;
         myStrVal = strVal;
     }
-
+    /**
+     * typeCheck
+     * Return type of Id by accessing the sym
+     */
+    public Type typeCheck(){
+        return mySym.getType();
+    }
     /**
      * Link the given symbol to this ID.
      */
@@ -1333,7 +1467,14 @@ class DotAccessExpNode extends ExpNode {
         myId = id;
         mySym = null;
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     /**
      * Return the symbol associated with this dot-access node.
      */
@@ -1484,7 +1625,17 @@ class AssignNode extends ExpNode {
         myLhs.nameAnalysis(symTab);
         myExp.nameAnalysis(symTab);
     }
-    
+    /**
+     * typeCheck
+     * Checks and determines the type of this assignment
+     */
+    public Type typeCheck(){
+        Type lType = myLhs.typeCheck();
+        Type rType = myExp.typeCheck();
+
+        //TODO; check the resulting types from each side
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         if (indent != -1)  p.print("(");
         myLhs.unparse(p, 0);
@@ -1518,7 +1669,14 @@ class CallExpNode extends ExpNode {
         myId.nameAnalysis(symTab);
         myExpList.nameAnalysis(symTab);
     }    
-    
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     // ** unparse **
     public void unparse(PrintWriter p, int indent) {
         myId.unparse(p, 0);
@@ -1580,7 +1738,14 @@ class UnaryMinusNode extends UnaryExpNode {
     public UnaryMinusNode(ExpNode exp) {
         super(exp);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(-");
         myExp.unparse(p, 0);
@@ -1592,7 +1757,14 @@ class NotNode extends UnaryExpNode {
     public NotNode(ExpNode exp) {
         super(exp);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(!");
         myExp.unparse(p, 0);
@@ -1608,7 +1780,14 @@ class PlusNode extends BinaryExpNode {
     public PlusNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1622,7 +1801,14 @@ class MinusNode extends BinaryExpNode {
     public MinusNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1636,7 +1822,14 @@ class TimesNode extends BinaryExpNode {
     public TimesNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1650,7 +1843,14 @@ class DivideNode extends BinaryExpNode {
     public DivideNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1664,7 +1864,14 @@ class AndNode extends BinaryExpNode {
     public AndNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1678,7 +1885,14 @@ class OrNode extends BinaryExpNode {
     public OrNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1692,7 +1906,14 @@ class EqualsNode extends BinaryExpNode {
     public EqualsNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1706,7 +1927,14 @@ class NotEqualsNode extends BinaryExpNode {
     public NotEqualsNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1720,7 +1948,14 @@ class LessNode extends BinaryExpNode {
     public LessNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1734,7 +1969,14 @@ class GreaterNode extends BinaryExpNode {
     public GreaterNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1748,7 +1990,14 @@ class LessEqNode extends BinaryExpNode {
     public LessEqNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -1762,7 +2011,14 @@ class GreaterEqNode extends BinaryExpNode {
     public GreaterEqNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    /**
+     * typeCheck
+     * Checks the types 
+     */
+    public Type typeCheck(){
+        //1ODO
+        return null;
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
