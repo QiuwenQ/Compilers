@@ -13,6 +13,9 @@ struct Point2{
 };
 int f1(){}
 int f2(){}
+int f3(int x, bool a){
+	
+}
 int func1(){
 	struct Point1 p1;
 	struct Point2 p2;
@@ -70,8 +73,11 @@ int func1(){
 		//function
 	b=f1==f2;
 	b=f1!=f2;
+	//function calls
+	x();
+	f3(1);
+	x=f3(1<1,1);
+	x=f3(true,1);
+
 	
-
-
-
 }

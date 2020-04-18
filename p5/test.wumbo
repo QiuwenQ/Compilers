@@ -11,6 +11,11 @@ struct Point2{
 	int z;
 	bool c;	
 };
+int f1(){}
+int f2(){}
+int f3(int x, bool a){
+	
+}
 int func1(){
 	struct Point1 p1;
 	struct Point2 p2;
@@ -30,5 +35,20 @@ int func1(){
 	a=1>2;
 	a=1<=2;
 	a=1>=2;
+	//equality
+	b=(1==p2.z);//okay
+	b=b==a;
+	b=x==y;
+	b=p1.z == p2.z;
+	b=p1.c == p2.c;
+	b="s1"=="s2";
+	b=(1!=p2.z);//okay
+	b=b!=a;
+	b=x!=y;
+	b=p1.z != p2.z;
+	b=p1.c != p2.c;
+	b="s1"!="s2";
+	x=f1();//okay
+	x=f3(1,true);//okay
 
 }

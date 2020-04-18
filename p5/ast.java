@@ -321,12 +321,34 @@ class StmtListNode extends ASTnode {
     // list of kids (StmtNodes)
     private List<StmtNode> myStmts;
 }
-
+//expListNode is only for function call
 class ExpListNode extends ASTnode {
     public ExpListNode(List<ExpNode> S) {
         myExps = S;
     }
-    
+    public Type typeCheck(List <Type> paramList){
+        Type retType = null;
+        //go thorugh each corresponding exp and check if same
+        Iterator<ExpNode> itArg = myExps.iterator();
+        Iterator<Type> itParam = paramList.iterator();
+        while (itArg.hasNext()){
+            ExpNode curExp= itArg.next();
+            Type argType = curExp.typeCheck();
+            Type paramType = itParam.next();
+            if (!argType.equals(paramType)){
+                retType = new ErrorType();
+                String msg = "Type of actual does not match type of formal";
+                int [] lineChar=curExp.getLineChar();
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+                //System.out.println("======not equal======");
+            }
+        }
+        //System.out.println("======"+retType+"======");
+        return retType;
+    }
+    public int getSize(){
+        return myExps.size();
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, process each exp in the list.
@@ -1248,7 +1270,7 @@ class CallStmtNode extends StmtNode {
      * Checks the types 
      */
     public void typeCheck(){
-       //1ODO
+        myCall.typeCheck();
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -1307,7 +1329,7 @@ abstract class ExpNode extends ASTnode {
     public void nameAnalysis(SymTable symTab) { }
     public Type typeCheck(){ return null;}
     public boolean errorFound(){return false;}
-    public int[] getLineChar(){return null;}
+    public int[] getLineChar(){return new int[]{-2,-2};}
 }
 
 class IntLitNode extends ExpNode {
@@ -1754,9 +1776,35 @@ class CallExpNode extends ExpNode {
      * typeCheck
      * Checks the types 
      */
-    public Type typeCheck(){
+    public Type typeCheck(){ //function returns the function type
         //1ODO
-        return null;
+        Type idType = myId.typeCheck();
+        Type retType = new ErrorType();
+        if (!(idType instanceof FnType)){
+            //calling somthing other than a function, don't check params
+            String msg = "Attempt to call a non-function";
+            ErrMsg.fatal(myId.lineNum(), myId.charNum(), msg);
+        } else{ //is a fnType
+            //get return type
+            retType = ((FnSym)myId.sym()).getReturnType();
+            //check number of arguments
+            List <Type>paramList = ((FnSym)myId.sym()).getParamTypes();
+            if (myExpList.getSize()!=paramList.size()){
+                //call with wrong number of args
+                String msg = "Function call with wrong number of args";
+                ErrMsg.fatal(myId.lineNum(), myId.charNum(), msg);
+            } else{
+                //correct number of args so check types of the args
+                Type argRet = myExpList.typeCheck(paramList);
+                //System.out.println("argRet is == " + argRet);
+                if (argRet != null){
+                    //at least one arg type is wrong
+                    retType = argRet;
+                }
+            }
+        }
+        //System.out.println("retType is == " + retType);
+        return retType;
     }
     // ** unparse **
     public void unparse(PrintWriter p, int indent) {
@@ -2109,8 +2157,46 @@ class EqualsNode extends BinaryExpNode {
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+        Type lType = myExp1.typeCheck();
+        Type rType = myExp2.typeCheck();
+
+        Type retType = new ErrorType();
+        //TODO; check the resulting types from each side
+        //testing
+        if (lType == null){
+            System.out.print("lType null");
+        } else if (rType == null){
+            System.out.print("rType null");
+        }
+        if (lType.isFnType() && rType.isFnType()){
+            //System.out.println("lType is = " +rType);
+            //System.out.println("lType is = " +lType);
+            String msg = "Equality operator applied to functions";
+            ErrMsg.fatal(((IdNode)myExp1).lineNum(),((IdNode)myExp1).charNum(), msg);
+            //retType = new ErrorType();
+        } else if (lType.isStructDefType() && rType.isStructDefType()){
+            String msg = "Equality operator applied to struct names";
+            ErrMsg.fatal(((IdNode)myExp1).lineNum(),((IdNode)myExp1).charNum(), msg);
+            //retType = new ErrorType();
+        } else if (lType.isStructType() && rType.isStructType()){
+            String msg = "Equality operator applied to struct variables";
+            ErrMsg.fatal(((IdNode)myExp1).lineNum(),((IdNode)myExp1).charNum(), msg);
+            //retType = new ErrorType();
+        } else if (lType.equals(rType)){
+            //System.out.print("lType = "+ lType);
+            //System.out.println(" rType = "+ rType);
+            retType = new BoolType();
+        } else if (rType.isErrorType()){
+            retType = rType;
+        } else {
+            String msg = "Type mismatch";
+            int [] lineChar = myExp1.getLineChar();
+            if (lineChar==null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -2130,8 +2216,46 @@ class NotEqualsNode extends BinaryExpNode {
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+Type lType = myExp1.typeCheck();
+        Type rType = myExp2.typeCheck();
+
+        Type retType = new ErrorType();
+        //TODO; check the resulting types from each side
+        //testing
+        if (lType == null){
+            System.out.print("lType null");
+        } else if (rType == null){
+            System.out.print("rType null");
+        }
+        if (lType.isFnType() && rType.isFnType()){
+            //System.out.println("lType is = " +rType);
+            //System.out.println("lType is = " +lType);
+            String msg = "Equality operator applied to functions";
+            ErrMsg.fatal(((IdNode)myExp1).lineNum(),((IdNode)myExp1).charNum(), msg);
+            //retType = new ErrorType();
+        } else if (lType.isStructDefType() && rType.isStructDefType()){
+            String msg = "Equality operator applied to struct names";
+            ErrMsg.fatal(((IdNode)myExp1).lineNum(),((IdNode)myExp1).charNum(), msg);
+            //retType = new ErrorType();
+        } else if (lType.isStructType() && rType.isStructType()){
+            String msg = "Equality operator applied to struct variables";
+            ErrMsg.fatal(((IdNode)myExp1).lineNum(),((IdNode)myExp1).charNum(), msg);
+            //retType = new ErrorType();
+        } else if (lType.equals(rType)){
+            //System.out.print("lType = "+ lType);
+            //System.out.println(" rType = "+ rType);
+            retType = new BoolType();
+        } else if (rType.isErrorType()){
+            retType = rType;
+        } else {
+            String msg = "Type mismatch";
+            int [] lineChar = myExp1.getLineChar();
+            if (lineChar==null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
