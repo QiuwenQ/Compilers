@@ -1,0 +1,9 @@
+19:2 ***ERROR*** Type mismatch
+20:2 ***ERROR*** Type mismatch
+21:2 ***ERROR*** Struct name assignment
+22:11 ***ERROR*** Struct name assignment
+23:2 ***ERROR*** Struct variable assignment
+24:5 ***ERROR*** Struct variable assignment
+25:2 ***ERROR*** Function assignment
+26:5 ***ERROR*** Function assignment
+27:5 ***ERROR*** Type mismatch
