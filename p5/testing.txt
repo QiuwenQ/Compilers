@@ -7,12 +7,14 @@
 25:2 ***ERROR*** Function assignment
 26:5 ***ERROR*** Function assignment
 27:5 ***ERROR*** Type mismatch
-29:4 ***ERROR*** Arithmetic operator applied to non-numeric operand
-30:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
+30:4 ***ERROR*** Arithmetic operator applied to non-numeric operand
 31:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
 32:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
 33:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
 34:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
-35:8 ***ERROR*** Arithmetic operator applied to non-numeric operand
-36:2 ***ERROR*** Type mismatch
-
+35:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
+36:8 ***ERROR*** Arithmetic operator applied to non-numeric operand
+38:2 ***ERROR*** Arithmetic operator applied to non-numeric operand
+39:2 ***ERROR*** Arithmetic operator applied to non-numeric operand
+41:2 ***ERROR*** Arithmetic operator applied to non-numeric operand
+42:2 ***ERROR*** Arithmetic operator applied to non-numeric operand

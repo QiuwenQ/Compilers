@@ -34,5 +34,9 @@ int func1(){
 	x=1/true;
 	x=1*true;
 	x=1+2*"string";
+	a++;
+	p2.c++;
+	a--;
+	p2.c--;
 
 }

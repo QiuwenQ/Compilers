@@ -882,7 +882,14 @@ class PostIncStmtNode extends StmtNode {
      * Checks the types in the postinc node
      */
     public void typeCheck(){
-        myExp.typeCheck();
+        if (!(myExp.typeCheck().isIntType())){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -911,7 +918,14 @@ class PostDecStmtNode extends StmtNode {
      * Checks the types 
      */
     public void typeCheck(){
-       myExp.typeCheck();
+       if (!(myExp.typeCheck().isIntType())){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
