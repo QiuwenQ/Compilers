@@ -976,7 +976,17 @@ class ReadStmtNode extends StmtNode {
      * Checks the types 
      */
     public void typeCheck(){
-       //1ODO
+        Type eType = myExp.typeCheck();
+        if (eType.isFnType()){
+            String msg = "Attempt to read a function";
+            ErrMsg.fatal(((IdNode)myExp).lineNum(),((IdNode)myExp).charNum(), msg);
+        } else if (eType.isStructDefType()){
+            String msg = "Attempt to read a struct name";
+            ErrMsg.fatal(((IdNode)myExp).lineNum(),((IdNode)myExp).charNum(), msg);
+        } else if (eType.isStructType()){
+            String msg = "Attempt to read a struct variable";
+            ErrMsg.fatal(((IdNode)myExp).lineNum(),((IdNode)myExp).charNum(), msg);
+        } 
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -1006,7 +1016,21 @@ class WriteStmtNode extends StmtNode {
      * Checks the types 
      */
     public void typeCheck(){
-       //1ODO
+        Type eType = myExp.typeCheck();
+        if (eType.isFnType() && !(myExp instanceof CallExpNode)){ 
+            String msg = "Attempt to write a function";
+            ErrMsg.fatal(((IdNode)myExp).lineNum(),((IdNode)myExp).charNum(), msg);
+        } else if (eType.isStructDefType()){
+            String msg = "Attempt to write a struct name";
+            ErrMsg.fatal(((IdNode)myExp).lineNum(),((IdNode)myExp).charNum(), msg);
+        } else if (eType.isStructType()){
+            String msg = "Attempt to write a struct variable";
+            ErrMsg.fatal(((IdNode)myExp).lineNum(),((IdNode)myExp).charNum(), msg);
+        } else if (eType.isVoidType() && (myExp instanceof CallExpNode)){
+            int []lineChar = ((CallExpNode)myExp).getLineChar();
+            String msg = "Attempt to write void";
+            ErrMsg.fatal(lineChar[0],lineChar[1], msg);
+        }
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);

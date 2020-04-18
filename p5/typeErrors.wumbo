@@ -16,6 +16,8 @@ int f2(){}
 int f3(int x, bool a){
 	
 }
+void f4(){}
+bool f5(){}
 int func1(){
 	struct Point1 p1;
 	struct Point2 p2;
@@ -76,8 +78,15 @@ int func1(){
 	//function calls
 	x();
 	f3(1);
-	x=f3(1<1,1);
+	x=f3(1<1,true);
 	x=f3(true,1);
+	cin >> f1;
+	cin >> Point1;
+	cin >> p1;
+	cout << f1;
+	cout << f4();
+	
+	
 
 	
 }
