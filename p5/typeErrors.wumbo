@@ -25,7 +25,6 @@ int func1(){
 	f1=f2; //error: Function assignment
 	f1=f2=f2;
 	p1.z = p2.c; //error: type mismatch
-	x=1;
 	//error: Arithmetic operator applied to non-numeric operand
 	x=false+1; 
 	x=1+false; 
@@ -52,5 +51,27 @@ int func1(){
 	a=true>=1;
 	a=true>=false;
 	x=true>=false;
+	//equality operator
+	b=x==a; //error: Type mismatch
+	b=b==y; //error: Type mismatch
+	b=Point1 == Point2; //error: Struct name assignment
+	b=(false==1);
+	b=(1=="string");
+	b=p1==p2; //error: Struct variable assignment
+	b=p1.z == p2.c; //error: type mismatch
+		//not equals
+	b=x!=a; //error: Type mismatch
+	b=b!=y; //error: Type mismatch
+	b=Point1 != Point2; //error: Struct name assignment
+	b=(false!=1);
+	b=(1!="string");
+	b=p1!=p2; //error: Struct variable assignment
+	b=p1.z != p2.c; //error: type mismatch
+		//function
+	b=f1==f2;
+	b=f1!=f2;
+	
+
+
 
 }

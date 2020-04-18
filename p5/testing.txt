@@ -7,27 +7,43 @@
 25:2 ***ERROR*** Function assignment
 26:5 ***ERROR*** Function assignment
 27:5 ***ERROR*** Type mismatch
-30:4 ***ERROR*** Arithmetic operator applied to non-numeric operand
+29:4 ***ERROR*** Arithmetic operator applied to non-numeric operand
+30:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
 31:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
 32:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
 33:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
 34:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
-35:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
-36:8 ***ERROR*** Arithmetic operator applied to non-numeric operand
+35:8 ***ERROR*** Arithmetic operator applied to non-numeric operand
+36:2 ***ERROR*** Arithmetic operator applied to non-numeric operand
 37:2 ***ERROR*** Arithmetic operator applied to non-numeric operand
 38:2 ***ERROR*** Arithmetic operator applied to non-numeric operand
 39:2 ***ERROR*** Arithmetic operator applied to non-numeric operand
-40:2 ***ERROR*** Arithmetic operator applied to non-numeric operand
-42:6 ***ERROR*** Relational operator applied to non-numeric operand
+41:6 ***ERROR*** Relational operator applied to non-numeric operand
+42:4 ***ERROR*** Relational operator applied to non-numeric operand
 43:4 ***ERROR*** Relational operator applied to non-numeric operand
-44:4 ***ERROR*** Relational operator applied to non-numeric operand
-45:6 ***ERROR*** Relational operator applied to non-numeric operand
+44:6 ***ERROR*** Relational operator applied to non-numeric operand
+45:4 ***ERROR*** Relational operator applied to non-numeric operand
 46:4 ***ERROR*** Relational operator applied to non-numeric operand
-47:4 ***ERROR*** Relational operator applied to non-numeric operand
-48:7 ***ERROR*** Relational operator applied to non-numeric operand
+47:7 ***ERROR*** Relational operator applied to non-numeric operand
+48:4 ***ERROR*** Relational operator applied to non-numeric operand
 49:4 ***ERROR*** Relational operator applied to non-numeric operand
-50:4 ***ERROR*** Relational operator applied to non-numeric operand
-51:7 ***ERROR*** Relational operator applied to non-numeric operand
+50:7 ***ERROR*** Relational operator applied to non-numeric operand
+51:4 ***ERROR*** Relational operator applied to non-numeric operand
 52:4 ***ERROR*** Relational operator applied to non-numeric operand
 53:4 ***ERROR*** Relational operator applied to non-numeric operand
-54:4 ***ERROR*** Relational operator applied to non-numeric operand
+55:4 ***ERROR*** Type mismatch
+56:4 ***ERROR*** Type mismatch
+57:4 ***ERROR*** Equality operator applied to struct names
+58:5 ***ERROR*** Type mismatch
+59:5 ***ERROR*** Type mismatch
+60:4 ***ERROR*** Equality operator applied to struct variables
+61:4 ***ERROR*** Type mismatch
+63:4 ***ERROR*** Type mismatch
+64:4 ***ERROR*** Type mismatch
+65:4 ***ERROR*** Equality operator applied to struct names
+66:5 ***ERROR*** Type mismatch
+67:5 ***ERROR*** Type mismatch
+68:4 ***ERROR*** Equality operator applied to struct variables
+69:4 ***ERROR*** Type mismatch
+71:4 ***ERROR*** Equality operator applied to functions
+72:4 ***ERROR*** Equality operator applied to functions
