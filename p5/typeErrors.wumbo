@@ -24,7 +24,15 @@ int func1(){
 	p1=p2=p1;
 	f1=f2; //error: Function assignment
 	f1=f2=f2;
-	p1.z = p2.c; //still needs work!! dot access not completed yet
-	x=y; //okay
-	a=b; //okay
+	p1.z = p2.c; //error: type mismatch
+	x=1;
+	//error: Arithmetic operator applied to non-numeric operand
+	x=false+1; 
+	x=1+false; 
+	x=1+true+"string"; 
+	x=1-true;
+	x=1/true;
+	x=1*true;
+	x=1+2*"string";
+
 }
