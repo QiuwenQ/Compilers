@@ -38,5 +38,18 @@ int func1(){
 	p2.c++;
 	a--;
 	p2.c--;
+	a=1<true;
+	a=true<1;
+	a=true<false;
+	a=1>true;
+	a=true>1;
+	a=true>false;
+	a=1<=true;
+	a=true<=1;
+	a=true<=false;
+	a=1>=true;
+	a=true>=1;
+	a=true>=false;
+	x=true>=false;
 
 }

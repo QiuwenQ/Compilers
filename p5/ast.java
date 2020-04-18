@@ -2146,13 +2146,43 @@ class LessNode extends BinaryExpNode {
     public LessNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    private boolean firstError = false; 
+    public boolean errorFound(){
+        return firstError;
+    }
     /**
      * typeCheck
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+        //TODO:
+        Type exp1Type = myExp1.typeCheck();
+        Type exp2Type = myExp2.typeCheck();
+
+        Type retType = new ErrorType();
+        if (exp1Type.isIntType() && exp2Type.isIntType()){
+            return new BoolType();
+        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+            retType = new ErrorType();
+        }
+        else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp1.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            firstError = true;
+        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp2.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            firstError = true;
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -2167,13 +2197,43 @@ class GreaterNode extends BinaryExpNode {
     public GreaterNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    private boolean firstError = false; 
+    public boolean errorFound(){
+        return firstError;
+    }
+
     /**
      * typeCheck
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+        Type exp1Type = myExp1.typeCheck();
+        Type exp2Type = myExp2.typeCheck();
+
+        Type retType = new ErrorType();
+        if (exp1Type.isIntType() && exp2Type.isIntType()){
+            return new BoolType();
+        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+            retType = new ErrorType();
+        }
+        else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp1.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            firstError = true;
+        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp2.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            firstError = true;
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -2188,13 +2248,42 @@ class LessEqNode extends BinaryExpNode {
     public LessEqNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    private boolean firstError = false; 
+    public boolean errorFound(){
+        return firstError;
+    }
     /**
      * typeCheck
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+        Type exp1Type = myExp1.typeCheck();
+        Type exp2Type = myExp2.typeCheck();
+
+        Type retType = new ErrorType();
+        if (exp1Type.isIntType() && exp2Type.isIntType()){
+            return new BoolType();
+        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+            retType = new ErrorType();
+        }
+        else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp1.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            firstError = true;
+        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp2.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            firstError = true;
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -2209,13 +2298,42 @@ class GreaterEqNode extends BinaryExpNode {
     public GreaterEqNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    private boolean firstError = false; 
+    public boolean errorFound(){
+        return firstError;
+    }
     /**
      * typeCheck
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+        Type exp1Type = myExp1.typeCheck();
+        Type exp2Type = myExp2.typeCheck();
+
+        Type retType = new ErrorType();
+        if (exp1Type.isIntType() && exp2Type.isIntType()){
+            return new BoolType();
+        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+            retType = new ErrorType();
+        }
+        else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp1.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            firstError = true;
+        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
+            String msg = "Arithmetic operator applied to non-numeric operand";
+            int [] lineChar = myExp2.getLineChar();
+            if (lineChar == null){
+                lineChar = new int[] {-1,-1};
+            }
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            firstError = true;
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
