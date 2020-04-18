@@ -1472,8 +1472,9 @@ class DotAccessExpNode extends ExpNode {
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+        Type idType = myId.sym().getType();
+        //System.out.println(myId.name() + " = " + idType);
+        return idType;
     }
     /**
      * Return the symbol associated with this dot-access node.
@@ -1633,8 +1634,45 @@ class AssignNode extends ExpNode {
         Type lType = myLhs.typeCheck();
         Type rType = myExp.typeCheck();
 
+        Type retType = new ErrorType();
         //TODO; check the resulting types from each side
-        return null;
+        //testing
+        if (lType == null){
+            System.out.print("lType null");
+        } else if (rType == null){
+            System.out.print("rType null");
+        }
+        if (lType.isFnType() && rType.isFnType()){
+            //System.out.println("lType is = " +rType);
+            //System.out.println("lType is = " +lType);
+            String msg = "Function assignment";
+            ErrMsg.fatal(((IdNode)myLhs).lineNum(),((IdNode)myLhs).charNum(), msg);
+            //retType = new ErrorType();
+        } else if (lType.isStructDefType() && rType.isStructDefType()){
+            String msg = "Struct name assignment";
+            ErrMsg.fatal(((IdNode)myLhs).lineNum(),((IdNode)myLhs).charNum(), msg);
+            //retType = new ErrorType();
+        } else if (lType.isStructType() && rType.isStructType()){
+            String msg = "Struct variable assignment";
+            ErrMsg.fatal(((IdNode)myLhs).lineNum(),((IdNode)myLhs).charNum(), msg);
+            //retType = new ErrorType();
+        } else if (lType.equals(rType)){
+            //System.out.print("lType = "+ lType);
+            //System.out.println(" rType = "+ rType);
+            retType = rType;
+        } else if (rType.isErrorType()){
+            retType = rType;
+        } else {
+            String msg = "Type mismatch";
+            if (myLhs instanceof DotAccessExpNode && !(myExp instanceof DotAccessExpNode)){
+                ErrMsg.fatal(((DotAccessExpNode)myLhs).lineNum(),((DotAccessExpNode)myLhs).charNum(), msg);
+            } else if (myLhs instanceof DotAccessExpNode && myExp instanceof DotAccessExpNode){
+                ErrMsg.fatal(((DotAccessExpNode)myLhs).lineNum(),((DotAccessExpNode)myLhs).charNum(), msg);
+            }else if (!(myLhs instanceof DotAccessExpNode)){
+                ErrMsg.fatal(((IdNode)myLhs).lineNum(),((IdNode)myLhs).charNum(), msg);
+            }
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         if (indent != -1)  p.print("(");
