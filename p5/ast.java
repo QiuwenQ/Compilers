@@ -2166,7 +2166,7 @@ class LessNode extends BinaryExpNode {
             retType = new ErrorType();
         }
         else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
+            String msg = "Relational operator applied to non-numeric operand";
             int [] lineChar = myExp1.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
@@ -2174,7 +2174,7 @@ class LessNode extends BinaryExpNode {
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             firstError = true;
         } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
+            String msg = "Relational operator applied to non-numeric operand";
             int [] lineChar = myExp2.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
@@ -2217,7 +2217,7 @@ class GreaterNode extends BinaryExpNode {
             retType = new ErrorType();
         }
         else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
+            String msg = "Relational operator applied to non-numeric operand";
             int [] lineChar = myExp1.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
@@ -2225,7 +2225,7 @@ class GreaterNode extends BinaryExpNode {
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             firstError = true;
         } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
+            String msg = "Relational operator applied to non-numeric operand";
             int [] lineChar = myExp2.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
@@ -2267,7 +2267,7 @@ class LessEqNode extends BinaryExpNode {
             retType = new ErrorType();
         }
         else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
+            String msg = "Relational operator applied to non-numeric operand";
             int [] lineChar = myExp1.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
@@ -2275,7 +2275,7 @@ class LessEqNode extends BinaryExpNode {
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             firstError = true;
         } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
+            String msg = "Relational operator applied to non-numeric operand";
             int [] lineChar = myExp2.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
@@ -2317,7 +2317,7 @@ class GreaterEqNode extends BinaryExpNode {
             retType = new ErrorType();
         }
         else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
+            String msg = "Relational operator applied to non-numeric operand";
             int [] lineChar = myExp1.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
@@ -2325,7 +2325,7 @@ class GreaterEqNode extends BinaryExpNode {
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             firstError = true;
         } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
+            String msg = "Relational operator applied to non-numeric operand";
             int [] lineChar = myExp2.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};

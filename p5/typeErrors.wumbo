@@ -38,6 +38,7 @@ int func1(){
 	p2.c++;
 	a--;
 	p2.c--;
+	//error: Relational operator applied to non-numeric operand"
 	a=1<true;
 	a=true<1;
 	a=true<false;
