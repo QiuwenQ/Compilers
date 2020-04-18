@@ -1,0 +1,30 @@
+//Test that type errors are caught correctly
+int x;
+int y;
+bool a;
+bool b;
+struct Point1{
+	int z;
+	bool c;	
+};
+struct Point2{
+	int z;
+	bool c;	
+};
+int f1(){}
+int f2(){}
+int func1(){
+	struct Point1 p1;
+	struct Point2 p2;
+	x=a; //error: Type mismatch
+	b=y; //error: Type mismatch
+	Point1 = Point2; //error: Struct name assignment
+	Point1 = Point2 = Point1;
+	p1=p2; //error: Struct variable assignment
+	p1=p2=p1;
+	f1=f2; //error: Function assignment
+	f1=f2=f2;
+	p1.z = p2.c; //still needs work!! dot access not completed yet
+	x=y; //okay
+	a=b; //okay
+}

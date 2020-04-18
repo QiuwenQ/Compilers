@@ -1,0 +1,21 @@
+//Test for correct types
+int x;
+int y;
+bool a;
+bool b;
+struct Point1{
+	int z;
+	bool c;	
+};
+struct Point2{
+	int z;
+	bool c;	
+};
+int func1(){
+	struct Point1 p1;
+	struct Point2 p2;
+	x=y;
+	a=b=a;
+	p1.z = p2.z;
+	p1.c = p2.c;
+}
