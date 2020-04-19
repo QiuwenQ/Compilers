@@ -95,3 +95,11 @@
 126:6 ***ERROR*** Logical operator applied to non-bool operand
 127:6 ***ERROR*** Logical operator applied to non-bool operand
 128:6 ***ERROR*** Logical operator applied to non-bool operand
+129:4 ***ERROR*** Logical operator applied to non-bool operand
+130:4 ***ERROR*** Logical operator applied to non-bool operand
+131:4 ***ERROR*** Logical operator applied to non-bool operand
+132:4 ***ERROR*** Logical operator applied to non-bool operand
+133:4 ***ERROR*** Logical operator applied to non-bool operand
+134:4 ***ERROR*** Logical operator applied to non-bool operand
+135:4 ***ERROR*** Logical operator applied to non-bool operand
+136:4 ***ERROR*** Logical operator applied to non-bool operand

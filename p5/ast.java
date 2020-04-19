@@ -2210,13 +2210,30 @@ class AndNode extends BinaryExpNode {
     public AndNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+        Type exp1Type = myExp1.typeCheck();
+        Type exp2Type = myExp2.typeCheck();
+
+        Type retType = new ErrorType();
+        if (exp1Type.isBoolType() && exp2Type.isBoolType()){
+            lineChar = myExp1.getLineChar();
+            return new BoolType();
+        } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+            retType = new ErrorType();
+        } else {
+            String msg = "Logical operator applied to non-bool operand";
+            lineChar = myExp1.getLineChar();
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -2231,13 +2248,30 @@ class OrNode extends BinaryExpNode {
     public OrNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+        Type exp1Type = myExp1.typeCheck();
+        Type exp2Type = myExp2.typeCheck();
+
+        Type retType = new ErrorType();
+        if (exp1Type.isBoolType() && exp2Type.isBoolType()){
+            lineChar = myExp1.getLineChar();
+            return new BoolType();
+        } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+            retType = new ErrorType();
+        } else {
+            String msg = "Logical operator applied to non-bool operand";
+            lineChar = myExp1.getLineChar();
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
