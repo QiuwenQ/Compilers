@@ -117,8 +117,15 @@ int func1(){
 	while (p1.z*p2.z){}
 	while (p1.z/p2.z){}
 	//unary minus
-	x= -1;
 	x=-false;
 	x=-(p1.c*p2.c);
+	x=-(1/a);
+	//logical operators
+	a=!x;
+	a=!(1+2);
+	a=!(1-2);
+	a=!(1*2);
+	a=!(1/2);
+
 	
 }

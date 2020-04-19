@@ -98,6 +98,13 @@ int func1(){
 	x=-1;
 	x=p1.z/x;
 	x=-(p1.z*p2.z);
+	//logical operators
+	a=!a;
+	a=!false;
+	a=!(1<2);
+	a=!(1<=2);
+	a=!(1>=2);
+	a=!(1>=2);
 
 	
 

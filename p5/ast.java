@@ -1934,7 +1934,7 @@ class UnaryMinusNode extends UnaryExpNode {
         } else{ 
             //not int or error, so an error has occured
             String msg = "Arithmetic operator applied to non-numeric operand";
-            int [] lineChar = myExp.getLineChar();
+            lineChar = myExp.getLineChar();
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
 
         }
@@ -1951,13 +1951,28 @@ class NotNode extends UnaryExpNode {
     public NotNode(ExpNode exp) {
         super(exp);
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
      */
     public Type typeCheck(){
-        //1ODO
-        return null;
+        Type eType = myExp.typeCheck();
+        Type retType = new ErrorType();
+        if (eType.isBoolType()){
+            retType = eType;
+        } else if (eType.isErrorType()){
+            retType = retType;
+        } else{ 
+            //not bool or error, so an error has occured
+            String msg = "Logical operator applied to non-bool operand";
+            lineChar = myExp.getLineChar();
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+        }
+        return retType;
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(!");

@@ -87,5 +87,11 @@
 116:9 ***ERROR*** Non-bool expression used as an if condition
 117:9 ***ERROR*** Non-bool expression used as an if condition
 118:9 ***ERROR*** Non-bool expression used as an if condition
-121:5 ***ERROR*** Arithmetic operator applied to non-numeric operand
-122:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
+120:5 ***ERROR*** Arithmetic operator applied to non-numeric operand
+121:6 ***ERROR*** Arithmetic operator applied to non-numeric operand
+122:8 ***ERROR*** Arithmetic operator applied to non-numeric operand
+124:5 ***ERROR*** Logical operator applied to non-bool operand
+125:6 ***ERROR*** Logical operator applied to non-bool operand
+126:6 ***ERROR*** Logical operator applied to non-bool operand
+127:6 ***ERROR*** Logical operator applied to non-bool operand
+128:6 ***ERROR*** Logical operator applied to non-bool operand
