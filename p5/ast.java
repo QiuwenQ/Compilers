@@ -335,7 +335,7 @@ class ExpListNode extends ASTnode {
             ExpNode curExp= itArg.next();
             Type argType = curExp.typeCheck();
             Type paramType = itParam.next();
-            if (!argType.equals(paramType)){
+            if (!argType.equals(paramType) && !(argType.isErrorType())){
                 retType = new ErrorType();
                 String msg = "Type of actual does not match type of formal";
                 int [] lineChar=curExp.getLineChar();
@@ -2298,6 +2298,10 @@ class LessNode extends BinaryExpNode {
     public boolean errorFound(){
         return firstError;
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
@@ -2309,13 +2313,14 @@ class LessNode extends BinaryExpNode {
 
         Type retType = new ErrorType();
         if (exp1Type.isIntType() && exp2Type.isIntType()){
+            lineChar = myExp1.getLineChar();
             return new BoolType();
         }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
         }
         else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
             String msg = "Relational operator applied to non-numeric operand";
-            int [] lineChar = myExp1.getLineChar();
+            lineChar = myExp1.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
             }
@@ -2323,7 +2328,7 @@ class LessNode extends BinaryExpNode {
             firstError = true;
         } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
             String msg = "Relational operator applied to non-numeric operand";
-            int [] lineChar = myExp2.getLineChar();
+            lineChar = myExp2.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
             }
@@ -2349,7 +2354,10 @@ class GreaterNode extends BinaryExpNode {
     public boolean errorFound(){
         return firstError;
     }
-
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
@@ -2360,13 +2368,14 @@ class GreaterNode extends BinaryExpNode {
 
         Type retType = new ErrorType();
         if (exp1Type.isIntType() && exp2Type.isIntType()){
+            lineChar = myExp1.getLineChar();
             return new BoolType();
         }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
         }
         else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
             String msg = "Relational operator applied to non-numeric operand";
-            int [] lineChar = myExp1.getLineChar();
+            lineChar = myExp1.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
             }
@@ -2374,7 +2383,7 @@ class GreaterNode extends BinaryExpNode {
             firstError = true;
         } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
             String msg = "Relational operator applied to non-numeric operand";
-            int [] lineChar = myExp2.getLineChar();
+            lineChar = myExp2.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
             }
@@ -2400,6 +2409,10 @@ class LessEqNode extends BinaryExpNode {
     public boolean errorFound(){
         return firstError;
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
@@ -2410,13 +2423,14 @@ class LessEqNode extends BinaryExpNode {
 
         Type retType = new ErrorType();
         if (exp1Type.isIntType() && exp2Type.isIntType()){
+            lineChar = myExp1.getLineChar();
             return new BoolType();
         }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
         }
         else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
             String msg = "Relational operator applied to non-numeric operand";
-            int [] lineChar = myExp1.getLineChar();
+            lineChar = myExp1.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
             }
@@ -2424,7 +2438,7 @@ class LessEqNode extends BinaryExpNode {
             firstError = true;
         } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
             String msg = "Relational operator applied to non-numeric operand";
-            int [] lineChar = myExp2.getLineChar();
+            lineChar = myExp2.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
             }
@@ -2450,6 +2464,10 @@ class GreaterEqNode extends BinaryExpNode {
     public boolean errorFound(){
         return firstError;
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
@@ -2460,13 +2478,14 @@ class GreaterEqNode extends BinaryExpNode {
 
         Type retType = new ErrorType();
         if (exp1Type.isIntType() && exp2Type.isIntType()){
+            lineChar = myExp1.getLineChar();
             return new BoolType();
         }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
         }
         else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
             String msg = "Relational operator applied to non-numeric operand";
-            int [] lineChar = myExp1.getLineChar();
+            lineChar = myExp1.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
             }
@@ -2474,7 +2493,7 @@ class GreaterEqNode extends BinaryExpNode {
             firstError = true;
         } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
             String msg = "Relational operator applied to non-numeric operand";
-            int [] lineChar = myExp2.getLineChar();
+            lineChar = myExp2.getLineChar();
             if (lineChar == null){
                 lineChar = new int[] {-1,-1};
             }

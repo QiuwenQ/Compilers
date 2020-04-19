@@ -49,11 +49,11 @@
 77:4 ***ERROR*** Equality operator applied to functions
 79:2 ***ERROR*** Attempt to call a non-function
 80:2 ***ERROR*** Function call with wrong number of args
--2:-2 ***ERROR*** Type of actual does not match type of formal
+81:7 ***ERROR*** Type of actual does not match type of formal
 82:7 ***ERROR*** Type of actual does not match type of formal
 82:12 ***ERROR*** Type of actual does not match type of formal
 83:9 ***ERROR*** Attempt to read a function
 84:9 ***ERROR*** Attempt to read a struct name
 85:9 ***ERROR*** Attempt to read a struct variable
 86:10 ***ERROR*** Attempt to write a function
-89:10 ***ERROR*** Attempt to write void
+87:10 ***ERROR*** Attempt to write void
