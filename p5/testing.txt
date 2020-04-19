@@ -105,6 +105,12 @@
 136:4 ***ERROR*** Logical operator applied to non-bool operand
 137:4 ***ERROR*** Equality operator applied to void functions
 138:4 ***ERROR*** Equality operator applied to void functions
+139:9 ***ERROR*** Non-integer expression used as a repeat clause
 140:9 ***ERROR*** Non-integer expression used as a repeat clause
 141:9 ***ERROR*** Non-integer expression used as a repeat clause
-142:9 ***ERROR*** Non-integer expression used as a repeat clause
+146:9 ***ERROR*** Bad return value
+0:0 ***ERROR*** Missing return value
+150:9 ***ERROR*** Bad return value
+0:0 ***ERROR*** Missing return value
+155:9 ***ERROR*** Return with a value in a void function
+156:9 ***ERROR*** Return with a value in a void function

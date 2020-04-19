@@ -274,8 +274,8 @@ class FnBodyNode extends ASTnode {
      * typeCheck
      * Checks the types within the statement lists
      */
-    public void typeCheck(){
-        myStmtList.typeCheck();
+    public void typeCheck(Type fType){
+        myStmtList.typeCheck(fType);
     }
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
@@ -305,9 +305,9 @@ class StmtListNode extends ASTnode {
      * typeCheck
      * Checks the type for each statement node
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
         for (StmtNode node: myStmts){
-            ((StmtNode)node).typeCheck();
+            ((StmtNode)node).typeCheck(fType);
         }
     }
     public void unparse(PrintWriter p, int indent) {
@@ -592,7 +592,7 @@ class FnDeclNode extends DeclNode {
      * Checks the types in the function body
      */
     public void typeCheck(){
-        myBody.typeCheck();
+        myBody.typeCheck(myType.type());
     }
     
     public void unparse(PrintWriter p, int indent) {
@@ -854,7 +854,7 @@ class StructNode extends TypeNode {
 
 abstract class StmtNode extends ASTnode {
     abstract public void nameAnalysis(SymTable symTab);
-    public void typeCheck(){}
+    public void typeCheck(Type fType){};
 }
 
 class AssignStmtNode extends StmtNode {
@@ -873,7 +873,7 @@ class AssignStmtNode extends StmtNode {
      * typeCheck
      * Checks the types in the assign stmt node
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
         myAssign.typeCheck();
     }
     public void unparse(PrintWriter p, int indent) {
@@ -902,7 +902,7 @@ class PostIncStmtNode extends StmtNode {
      * typeCheck
      * Checks the types in the postinc node
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
         if (!(myExp.typeCheck().isIntType())){
             String msg = "Arithmetic operator applied to non-numeric operand";
             int [] lineChar = myExp.getLineChar();
@@ -938,7 +938,7 @@ class PostDecStmtNode extends StmtNode {
      * typeCheck
      * Checks the types 
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
        if (!(myExp.typeCheck().isIntType())){
             String msg = "Arithmetic operator applied to non-numeric operand";
             int [] lineChar = myExp.getLineChar();
@@ -974,7 +974,7 @@ class ReadStmtNode extends StmtNode {
      * typeCheck
      * Checks the types 
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
         Type eType = myExp.typeCheck();
         if (eType.isFnType()){
             String msg = "Attempt to read a function";
@@ -1014,7 +1014,7 @@ class WriteStmtNode extends StmtNode {
      * typeCheck
      * Checks the types 
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
         Type eType = myExp.typeCheck();
         if (eType.isFnType() && !(myExp instanceof CallExpNode)){ 
             String msg = "Attempt to write a function";
@@ -1074,7 +1074,7 @@ class IfStmtNode extends StmtNode {
      * typeCheck
      * Checks the types 
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
         //check exp node
         Type eType = myExp.typeCheck();
         if (!eType.isBoolType() && !eType.isErrorType()){
@@ -1083,7 +1083,7 @@ class IfStmtNode extends StmtNode {
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
 
         }
-        myStmtList.typeCheck();
+        myStmtList.typeCheck(fType);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -1151,7 +1151,7 @@ class IfElseStmtNode extends StmtNode {
      * typeCheck
      * Checks the types 
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
        //check exp node
         Type eType = myExp.typeCheck();
         if (!eType.isBoolType() && !eType.isErrorType()){
@@ -1160,8 +1160,8 @@ class IfElseStmtNode extends StmtNode {
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
 
         }
-        myThenStmtList.typeCheck();
-        myElseStmtList.typeCheck();
+        myThenStmtList.typeCheck(fType);
+        myElseStmtList.typeCheck(fType);
 
     }
     public void unparse(PrintWriter p, int indent) {
@@ -1221,7 +1221,7 @@ class WhileStmtNode extends StmtNode {
      * typeCheck
      * Checks the types 
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
        //check exp node
         Type eType = myExp.typeCheck();
         if (!eType.isBoolType() && !eType.isErrorType()){
@@ -1230,7 +1230,7 @@ class WhileStmtNode extends StmtNode {
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
 
         }
-        myStmtList.typeCheck();
+        myStmtList.typeCheck(fType);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -1281,7 +1281,7 @@ class RepeatStmtNode extends StmtNode {
      * typeCheck
      * Checks the types 
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
        Type eType = myExp.typeCheck();
        Type retType = new ErrorType();
        if (eType.isIntType()){
@@ -1291,7 +1291,7 @@ class RepeatStmtNode extends StmtNode {
             String msg = "Non-integer expression used as a repeat clause";
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
        }
-       myStmtList.typeCheck();
+       myStmtList.typeCheck(fType);
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -1327,7 +1327,7 @@ class CallStmtNode extends StmtNode {
      * typeCheck
      * Checks the types 
      */
-    public void typeCheck(){
+    public void typeCheck(Type fType){
         myCall.typeCheck();
     }
     public void unparse(PrintWriter p, int indent) {
@@ -1359,8 +1359,29 @@ class ReturnStmtNode extends StmtNode {
      * typeCheck
      * Checks the types 
      */
-    public void typeCheck(){
-       //1ODO
+    public void typeCheck(Type fType){
+        if (myExp!=null){ //something to return
+            Type eType = myExp.typeCheck();
+            int [] lineChar = myExp.getLineChar();
+            if (fType.isVoidType()){
+                //function is void, shoudn't return a value
+                String msg = "Return with a value in a void function";
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            } else{
+                //function not void, check if fType and eType are same then
+                if (!fType.equals(eType)){
+                    String msg = "Bad return value";
+                    ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+                }
+            }
+        } else {
+            //nothing is returned, check if fType is void
+            if (!fType.isVoidType()){
+                String msg = "Missing return value";
+                ErrMsg.fatal(0, 0, msg);
+            }
+        }
+        
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -1755,13 +1776,6 @@ class AssignNode extends ExpNode {
         Type rType = myExp.typeCheck();
 
         Type retType = new ErrorType();
-        //TODO; check the resulting types from each side
-        //testing
-        if (lType == null){
-            System.out.print("lType null");
-        } else if (rType == null){
-            System.out.print("rType null");
-        }
         if (lType.isFnType() && rType.isFnType()){
             //System.out.println("lType is = " +rType);
             //System.out.println("lType is = " +lType);
@@ -1835,7 +1849,6 @@ class CallExpNode extends ExpNode {
      * Checks the types 
      */
     public Type typeCheck(){ //function returns the function type
-        //1ODO
         Type idType = myId.typeCheck();
         Type retType = new ErrorType();
         if (!(idType instanceof FnType)){
@@ -2308,13 +2321,6 @@ class EqualsNode extends BinaryExpNode {
         Type rType = myExp2.typeCheck();
 
         Type retType = new ErrorType();
-        //TODO; check the resulting types from each side
-        //testing
-        if (lType == null){
-            System.out.print("lType null");
-        } else if (rType == null){
-            System.out.print("rType null");
-        }
         if (lType.isFnType() && rType.isFnType()){
             //System.out.println("lType is = " +rType);
             //System.out.println("lType is = " +lType);
@@ -2376,13 +2382,6 @@ class NotEqualsNode extends BinaryExpNode {
         Type rType = myExp2.typeCheck();
 
         Type retType = new ErrorType();
-        //TODO; check the resulting types from each side
-        //testing
-        if (lType == null){
-            System.out.print("lType null");
-        } else if (rType == null){
-            System.out.print("rType null");
-        }
         if (lType.isFnType() && rType.isFnType()){
             //System.out.println("lType is = " +rType);
             //System.out.println("lType is = " +lType);
@@ -2444,7 +2443,6 @@ class LessNode extends BinaryExpNode {
      * Checks the types 
      */
     public Type typeCheck(){
-        //TODO:
         Type exp1Type = myExp1.typeCheck();
         Type exp2Type = myExp2.typeCheck();
 
