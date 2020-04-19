@@ -136,10 +136,9 @@ int func1(){
 	a=f1()||f1();
 	a=f4()==f4(); //error: equals with void
 	a=f4()!=f4(); //error: equals with void
+	repeat(1){} //okay
+	repeat(false){}
+	repeat(f5()){}
+	repeat(f4()){}
 
-
-	
-
-
-	
 }

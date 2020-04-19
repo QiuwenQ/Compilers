@@ -113,6 +113,7 @@ int func1(){
 	a=f5()||f5();
 	a=f1()==f1(); //okay
 	a=f1()!=f1();
+	repeat(1){} //okay
 	
 
 }

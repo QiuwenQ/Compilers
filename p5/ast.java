@@ -1282,7 +1282,16 @@ class RepeatStmtNode extends StmtNode {
      * Checks the types 
      */
     public void typeCheck(){
-       //1ODO
+       Type eType = myExp.typeCheck();
+       Type retType = new ErrorType();
+       if (eType.isIntType()){
+            retType = eType;
+       } else{
+            int [] lineChar = myExp.getLineChar();
+            String msg = "Non-integer expression used as a repeat clause";
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+       }
+       myStmtList.typeCheck();
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
