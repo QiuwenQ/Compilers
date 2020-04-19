@@ -106,5 +106,15 @@ int func1(){
 	if (y-x){} else{}
 	if (p1.z*p2.z){} else{}
 	if (p1.z/p2.z){} else{}
+	while (1+1){}
+	while (1-1){}
+	while (1*1){}
+	while (1/1){}
+	while (1-1*1/1){}
+	while ("string"){}
+	while (x+y){}
+	while (y-x){}
+	while (p1.z*p2.z){}
+	while (p1.z/p2.z){}
 	
 }
