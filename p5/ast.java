@@ -1075,7 +1075,6 @@ class IfStmtNode extends StmtNode {
      * Checks the types 
      */
     public void typeCheck(){
-        //1ODO
         //check exp node
         Type eType = myExp.typeCheck();
         if (!eType.isBoolType() && !eType.isErrorType()){
@@ -1153,7 +1152,17 @@ class IfElseStmtNode extends StmtNode {
      * Checks the types 
      */
     public void typeCheck(){
-       //1ODO
+       //check exp node
+        Type eType = myExp.typeCheck();
+        if (!eType.isBoolType() && !eType.isErrorType()){
+            String msg = "Non-bool expression used as an if condition";
+            int [] lineChar = myExp.getLineChar();
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+
+        }
+        myThenStmtList.typeCheck();
+        myElseStmtList.typeCheck();
+
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);

@@ -57,7 +57,6 @@
 85:9 ***ERROR*** Attempt to read a struct variable
 86:10 ***ERROR*** Attempt to write a function
 87:10 ***ERROR*** Attempt to write void
-88:6 ***ERROR*** Non-bool expression used as an if condition
 89:6 ***ERROR*** Non-bool expression used as an if condition
 90:6 ***ERROR*** Non-bool expression used as an if condition
 91:6 ***ERROR*** Non-bool expression used as an if condition
@@ -67,3 +66,14 @@
 95:6 ***ERROR*** Non-bool expression used as an if condition
 96:6 ***ERROR*** Non-bool expression used as an if condition
 97:6 ***ERROR*** Non-bool expression used as an if condition
+98:6 ***ERROR*** Non-bool expression used as an if condition
+99:6 ***ERROR*** Non-bool expression used as an if condition
+100:6 ***ERROR*** Non-bool expression used as an if condition
+101:6 ***ERROR*** Non-bool expression used as an if condition
+102:6 ***ERROR*** Non-bool expression used as an if condition
+103:6 ***ERROR*** Non-bool expression used as an if condition
+104:6 ***ERROR*** Non-bool expression used as an if condition
+105:6 ***ERROR*** Non-bool expression used as an if condition
+106:6 ***ERROR*** Non-bool expression used as an if condition
+107:6 ***ERROR*** Non-bool expression used as an if condition
+108:6 ***ERROR*** Non-bool expression used as an if condition
