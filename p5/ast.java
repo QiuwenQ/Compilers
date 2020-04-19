@@ -305,11 +305,10 @@ class StmtListNode extends ASTnode {
      * typeCheck
      * Checks the type for each statement node
      */
-    public Type typeCheck(){
+    public void typeCheck(){
         for (StmtNode node: myStmts){
             ((StmtNode)node).typeCheck();
         }
-        return null;
     }
     public void unparse(PrintWriter p, int indent) {
         Iterator<StmtNode> it = myStmts.iterator();
@@ -1076,7 +1075,16 @@ class IfStmtNode extends StmtNode {
      * Checks the types 
      */
     public void typeCheck(){
-       //1ODO
+        //1ODO
+        //check exp node
+        Type eType = myExp.typeCheck();
+        if (!eType.isBoolType() && !eType.isErrorType()){
+            String msg = "Non-bool expression used as an if condition";
+            int [] lineChar = myExp.getLineChar();
+            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+
+        }
+        myStmtList.typeCheck();
     }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
@@ -1937,6 +1945,10 @@ class PlusNode extends BinaryExpNode {
     public boolean errorFound(){
         return firstError;
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
@@ -1947,6 +1959,7 @@ class PlusNode extends BinaryExpNode {
 
         Type retType = new ErrorType();
         if (exp1Type.isIntType() && exp2Type.isIntType()){
+            lineChar = myExp1.getLineChar();
             return new IntType();
         } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
@@ -1988,6 +2001,10 @@ class MinusNode extends BinaryExpNode {
     public boolean errorFound(){
         return firstError;
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
@@ -1998,6 +2015,7 @@ class MinusNode extends BinaryExpNode {
 
         Type retType = new ErrorType();
         if (exp1Type.isIntType() && exp2Type.isIntType()){
+            lineChar = myExp1.getLineChar();
             return new IntType();
         }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
@@ -2038,6 +2056,10 @@ class TimesNode extends BinaryExpNode {
     public boolean errorFound(){
         return firstError;
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
@@ -2048,6 +2070,7 @@ class TimesNode extends BinaryExpNode {
 
         Type retType = new ErrorType();
         if (exp1Type.isIntType() && exp2Type.isIntType()){
+            lineChar = myExp1.getLineChar();
             return new IntType();
         }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
@@ -2088,6 +2111,10 @@ class DivideNode extends BinaryExpNode {
     public boolean errorFound(){
         return firstError;
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
@@ -2098,6 +2125,7 @@ class DivideNode extends BinaryExpNode {
 
         Type retType = new ErrorType();
         if (exp1Type.isIntType() && exp2Type.isIntType()){
+            lineChar = myExp1.getLineChar();
             return new IntType();
         }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();

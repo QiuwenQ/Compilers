@@ -85,8 +85,16 @@ int func1(){
 	cin >> p1;
 	cout << f1;
 	cout << f4();
-	
-	
-
+	//Non-bool expression used as an if condition
+	if (1+1){}
+	if (1-1){}
+	if (1*1){}
+	if (1/1){}
+	if (1-1*1/1){}
+	if ("string"){}
+	if (x+y){}
+	if (y-x){}
+	if (p1.z*p2.z){}
+	if (p1.z/p2.z){}
 	
 }
