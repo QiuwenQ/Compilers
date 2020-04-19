@@ -1605,7 +1605,7 @@ class DotAccessExpNode extends ExpNode {
         mySym = null;
     }
     public int[] getLineChar(){
-        int [] a = ((IdNode)myLoc).getLineChar();
+        int [] a = ((IdNode)myId).getLineChar();
         return a;
     }
     /**
@@ -1984,6 +1984,7 @@ class NotNode extends UnaryExpNode {
     public Type typeCheck(){
         Type eType = myExp.typeCheck();
         Type retType = new ErrorType();
+        lineChar = myExp.getLineChar();
         if (eType.isBoolType()){
             retType = eType;
         } else if (eType.isErrorType()){
@@ -1991,7 +1992,6 @@ class NotNode extends UnaryExpNode {
         } else{ 
             //not bool or error, so an error has occured
             String msg = "Logical operator applied to non-bool operand";
-            lineChar = myExp.getLineChar();
             ErrMsg.fatal(lineChar[0], lineChar[1], msg);
         }
         return retType;
@@ -2033,24 +2033,24 @@ class PlusNode extends BinaryExpNode {
             return new IntType();
         } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
-        }
-        else if (!exp1Type.isIntType()&& !myExp1.errorFound()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
-            int [] lineChar = myExp1.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+        } else {
+            if (!exp1Type.isIntType()){
+                String msg = "Arithmetic operator applied to non-numeric operand";
+                lineChar = myExp1.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
-            int [] lineChar = myExp2.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+            if (!exp2Type.isIntType()){
+                String msg = "Arithmetic operator applied to non-numeric operand";
+                lineChar = myExp2.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        }
+        } 
         
         return retType;
     }
@@ -2087,26 +2087,26 @@ class MinusNode extends BinaryExpNode {
         if (exp1Type.isIntType() && exp2Type.isIntType()){
             lineChar = myExp1.getLineChar();
             return new IntType();
-        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+        } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
-        }
-        else if (!exp1Type.isIntType()&& !myExp1.errorFound()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
-            int [] lineChar = myExp1.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+        } else {
+            if (!exp1Type.isIntType()){
+                String msg = "Arithmetic operator applied to non-numeric operand";
+                lineChar = myExp1.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
-            int [] lineChar = myExp2.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+            if (!exp2Type.isIntType()){
+                String msg = "Arithmetic operator applied to non-numeric operand";
+                lineChar = myExp2.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        }
+        } 
         return retType;
     }
     public void unparse(PrintWriter p, int indent) {
@@ -2142,26 +2142,26 @@ class TimesNode extends BinaryExpNode {
         if (exp1Type.isIntType() && exp2Type.isIntType()){
             lineChar = myExp1.getLineChar();
             return new IntType();
-        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+        } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
-        }
-        else if (!exp1Type.isIntType()&& !myExp1.errorFound()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
-            int [] lineChar = myExp1.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+        } else {
+            if (!exp1Type.isIntType()){
+                String msg = "Arithmetic operator applied to non-numeric operand";
+                lineChar = myExp1.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
-            int [] lineChar = myExp2.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+            if (!exp2Type.isIntType()){
+                String msg = "Arithmetic operator applied to non-numeric operand";
+                lineChar = myExp2.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        }
+        } 
         return retType;
     }
     public void unparse(PrintWriter p, int indent) {
@@ -2197,26 +2197,26 @@ class DivideNode extends BinaryExpNode {
         if (exp1Type.isIntType() && exp2Type.isIntType()){
             lineChar = myExp1.getLineChar();
             return new IntType();
-        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+        } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
-        }
-        else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
-            int [] lineChar = myExp1.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+        } else {
+            if (!exp1Type.isIntType()){
+                String msg = "Arithmetic operator applied to non-numeric operand";
+                lineChar = myExp1.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Arithmetic operator applied to non-numeric operand";
-            int [] lineChar = myExp2.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+            if (!exp2Type.isIntType()){
+                String msg = "Arithmetic operator applied to non-numeric operand";
+                lineChar = myExp2.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        }
+        } 
         return retType;
     }
     public void unparse(PrintWriter p, int indent) {
@@ -2251,9 +2251,16 @@ class AndNode extends BinaryExpNode {
         } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
         } else {
-            String msg = "Logical operator applied to non-bool operand";
-            lineChar = myExp1.getLineChar();
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            if (!exp1Type.isBoolType()){
+                String msg = "Logical operator applied to non-bool operand";
+                lineChar = myExp1.getLineChar();
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            }
+            if (!exp2Type.isBoolType()){
+                String msg = "Logical operator applied to non-bool operand";
+                lineChar = myExp2.getLineChar();
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            }
         }
         return retType;
     }
@@ -2289,9 +2296,16 @@ class OrNode extends BinaryExpNode {
         } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
         } else {
-            String msg = "Logical operator applied to non-bool operand";
-            lineChar = myExp1.getLineChar();
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            if (!exp1Type.isBoolType()){
+                String msg = "Logical operator applied to non-bool operand";
+                lineChar = myExp1.getLineChar();
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            }
+            if (!exp2Type.isBoolType()){
+                String msg = "Logical operator applied to non-bool operand";
+                lineChar = myExp2.getLineChar();
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
+            }
         }
         return retType;
     }
@@ -2450,26 +2464,26 @@ class LessNode extends BinaryExpNode {
         if (exp1Type.isIntType() && exp2Type.isIntType()){
             lineChar = myExp1.getLineChar();
             return new BoolType();
-        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+        } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
-        }
-        else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
-            String msg = "Relational operator applied to non-numeric operand";
-            lineChar = myExp1.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+        } else {
+            if (!exp1Type.isIntType()){
+                String msg = "Relational operator applied to non-numeric operand";
+                lineChar = myExp1.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Relational operator applied to non-numeric operand";
-            lineChar = myExp2.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+            if (!exp2Type.isIntType()){
+                String msg = "Relational operator applied to non-numeric operand";
+                lineChar = myExp2.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        }
+        } 
         return retType;
     }
     public void unparse(PrintWriter p, int indent) {
@@ -2505,26 +2519,26 @@ class GreaterNode extends BinaryExpNode {
         if (exp1Type.isIntType() && exp2Type.isIntType()){
             lineChar = myExp1.getLineChar();
             return new BoolType();
-        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+        } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
-        }
-        else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
-            String msg = "Relational operator applied to non-numeric operand";
-            lineChar = myExp1.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+        } else {
+            if (!exp1Type.isIntType()){
+                String msg = "Relational operator applied to non-numeric operand";
+                lineChar = myExp1.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Relational operator applied to non-numeric operand";
-            lineChar = myExp2.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+            if (!exp2Type.isIntType()){
+                String msg = "Relational operator applied to non-numeric operand";
+                lineChar = myExp2.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        }
+        } 
         return retType;
     }
     public void unparse(PrintWriter p, int indent) {
@@ -2560,26 +2574,26 @@ class LessEqNode extends BinaryExpNode {
         if (exp1Type.isIntType() && exp2Type.isIntType()){
             lineChar = myExp1.getLineChar();
             return new BoolType();
-        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+        } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
-        }
-        else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
-            String msg = "Relational operator applied to non-numeric operand";
-            lineChar = myExp1.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+        } else {
+            if (!exp1Type.isIntType()){
+                String msg = "Relational operator applied to non-numeric operand";
+                lineChar = myExp1.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Relational operator applied to non-numeric operand";
-            lineChar = myExp2.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+            if (!exp2Type.isIntType()){
+                String msg = "Relational operator applied to non-numeric operand";
+                lineChar = myExp2.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        }
+        } 
         return retType;
     }
     public void unparse(PrintWriter p, int indent) {
@@ -2615,26 +2629,26 @@ class GreaterEqNode extends BinaryExpNode {
         if (exp1Type.isIntType() && exp2Type.isIntType()){
             lineChar = myExp1.getLineChar();
             return new BoolType();
-        }else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
+        } else if (exp1Type.isErrorType() || exp2Type.isErrorType()){
             retType = new ErrorType();
-        }
-        else if (!exp1Type.isIntType()&& !myExp1.errorFound() && !exp2Type.isErrorType()){
-            String msg = "Relational operator applied to non-numeric operand";
-            lineChar = myExp1.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+        } else {
+            if (!exp1Type.isIntType()){
+                String msg = "Relational operator applied to non-numeric operand";
+                lineChar = myExp1.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        } else if (!exp1Type.isErrorType() && !exp2Type.isIntType()){
-            String msg = "Relational operator applied to non-numeric operand";
-            lineChar = myExp2.getLineChar();
-            if (lineChar == null){
-                lineChar = new int[] {-1,-1};
+            if (!exp2Type.isIntType()){
+                String msg = "Relational operator applied to non-numeric operand";
+                lineChar = myExp2.getLineChar();
+                if (lineChar == null){
+                    lineChar = new int[] {-1,-1};
+                }
+                ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             }
-            ErrMsg.fatal(lineChar[0], lineChar[1], msg);
-            firstError = true;
-        }
+        } 
         return retType;
     }
     public void unparse(PrintWriter p, int indent) {
