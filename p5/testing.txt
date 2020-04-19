@@ -103,3 +103,5 @@
 134:4 ***ERROR*** Logical operator applied to non-bool operand
 135:4 ***ERROR*** Logical operator applied to non-bool operand
 136:4 ***ERROR*** Logical operator applied to non-bool operand
+137:4 ***ERROR*** Equality operator applied to void functions
+138:4 ***ERROR*** Equality operator applied to void functions

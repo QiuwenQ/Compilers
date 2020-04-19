@@ -134,6 +134,8 @@ int func1(){
 	a=p1.z||p2.z;
 	a=f1()&&f1();
 	a=f1()||f1();
+	a=f4()==f4(); //error: equals with void
+	a=f4()!=f4(); //error: equals with void
 
 
 	

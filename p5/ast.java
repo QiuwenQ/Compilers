@@ -2286,6 +2286,10 @@ class EqualsNode extends BinaryExpNode {
     public EqualsNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
@@ -2316,11 +2320,16 @@ class EqualsNode extends BinaryExpNode {
             String msg = "Equality operator applied to struct variables";
             ErrMsg.fatal(((IdNode)myExp1).lineNum(),((IdNode)myExp1).charNum(), msg);
             //retType = new ErrorType();
+        } else if (lType.isVoidType() && rType.isVoidType()){
+                //cannot apply equals to void func types
+                String msg = "Equality operator applied to void functions";
+                lineChar = myExp1.getLineChar();
+                ErrMsg.fatal(lineChar[0],lineChar[1], msg);
         } else if (lType.equals(rType)){
             //System.out.print("lType = "+ lType);
             //System.out.println(" rType = "+ rType);
             retType = new BoolType();
-        } else if (rType.isErrorType()){
+        } else if (rType.isErrorType()||lType.isErrorType()){
             retType = rType;
         } else {
             String msg = "Type mismatch";
@@ -2345,12 +2354,16 @@ class NotEqualsNode extends BinaryExpNode {
     public NotEqualsNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    private int []lineChar;
+    public int [] getLineChar(){
+        return lineChar;
+    }
     /**
      * typeCheck
      * Checks the types 
      */
     public Type typeCheck(){
-Type lType = myExp1.typeCheck();
+        Type lType = myExp1.typeCheck();
         Type rType = myExp2.typeCheck();
 
         Type retType = new ErrorType();
@@ -2375,7 +2388,12 @@ Type lType = myExp1.typeCheck();
             String msg = "Equality operator applied to struct variables";
             ErrMsg.fatal(((IdNode)myExp1).lineNum(),((IdNode)myExp1).charNum(), msg);
             //retType = new ErrorType();
-        } else if (lType.equals(rType)){
+        } else if (lType.isVoidType() && rType.isVoidType()){
+            //cannot apply equals to void func types
+            String msg = "Equality operator applied to void functions";
+            lineChar = myExp1.getLineChar();
+            ErrMsg.fatal(lineChar[0],lineChar[1], msg);
+        } else if (lType.equals(rType)||lType.isErrorType()){
             //System.out.print("lType = "+ lType);
             //System.out.println(" rType = "+ rType);
             retType = new BoolType();
