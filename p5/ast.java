@@ -141,7 +141,7 @@ class ProgramNode extends ASTnode {
      * Analyzes the type of expression within the program
      */
     public void typeCheck() {
-	// TODO: Implement a type checking method for this node and its children.
+    // TODO: Implement a type checking method for this node and its children.
         myDeclList.typeCheck();
     }
     
@@ -479,10 +479,10 @@ class VarDeclNode extends DeclNode {
                                    " in VarDeclNode.nameAnalysis");
                 System.exit(-1);
             } catch (IllegalArgumentException ex) {
-		System.err.println("Unexpected IllegalArgumentException " +
+        System.err.println("Unexpected IllegalArgumentException " +
                                    " in VarDeclNode.nameAnalysis");
-		System.exit(-1);
-	    }
+        System.exit(-1);
+        }
         }
         
         return sym;
@@ -560,10 +560,10 @@ class FnDeclNode extends DeclNode {
                                    " in FnDeclNode.nameAnalysis");
                 System.exit(-1);
             } catch (IllegalArgumentException ex) {
-		System.err.println("Unexpected IllegalArgumentException " +
+        System.err.println("Unexpected IllegalArgumentException " +
                                    " in VarDeclNode.nameAnalysis");
-		System.exit(-1);
-	    }
+        System.exit(-1);
+        }
         }
         
         symTab.addScope();  // add a new scope for locals and params
@@ -668,10 +668,10 @@ class FormalDeclNode extends DeclNode {
                                    " in VarDeclNode.nameAnalysis");
                 System.exit(-1);
             } catch (IllegalArgumentException ex) {
-		System.err.println("Unexpected IllegalArgumentException " +
+        System.err.println("Unexpected IllegalArgumentException " +
                                    " in VarDeclNode.nameAnalysis");
-		System.exit(-1);
-	    }
+        System.exit(-1);
+        }
         }
         
         return sym;
@@ -741,10 +741,10 @@ class StructDeclNode extends DeclNode {
                                    " in StructDeclNode.nameAnalysis");
                 System.exit(-1);
             } catch (IllegalArgumentException ex) {
-		System.err.println("Unexpected IllegalArgumentException " +
+        System.err.println("Unexpected IllegalArgumentException " +
                                    " in VarDeclNode.nameAnalysis");
-		System.exit(-1);
-	    }
+        System.exit(-1);
+        }
         }
         
         return null;
@@ -1369,7 +1369,7 @@ class ReturnStmtNode extends StmtNode {
                 ErrMsg.fatal(lineChar[0], lineChar[1], msg);
             } else{
                 //function not void, check if fType and eType are same then
-                if (!fType.equals(eType)){
+                if (!fType.equals(eType)&&!(eType.isErrorType())){
                     String msg = "Bad return value";
                     ErrMsg.fatal(lineChar[0], lineChar[1], msg);
                 }

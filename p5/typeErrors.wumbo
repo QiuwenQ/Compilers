@@ -21,16 +21,17 @@ bool f5(){}
 int func1(){
 	struct Point1 p1;
 	struct Point2 p2;
+		//equals errors
 	x=a; //error: Type mismatch
 	b=y; //error: Type mismatch
+	p1.z = p2.c; //error: Type mismatch
 	Point1 = Point2; //error: Struct name assignment
-	Point1 = Point2 = Point1;
+	Point1 = Point2 = Point1; //error: Struct name assignment
 	p1=p2; //error: Struct variable assignment
-	p1=p2=p1;
+	p1=p2=p1; //error: Struct variable assignment
 	f1=f2; //error: Function assignment
-	f1=f2=f2;
-	p1.z = p2.c; //error: type mismatch
-	//error: Arithmetic operator applied to non-numeric operand
+	f1=f2=f2; //error: Function assignment
+		//error: Arithmetic operator applied to non-numeric operand
 	x=false+1; 
 	x=1+false; 
 	x=1+true+"string"; 
@@ -42,7 +43,11 @@ int func1(){
 	p2.c++;
 	a--;
 	p2.c--;
-	//error: Relational operator applied to non-numeric operand"
+		//unary minus
+	x=-false;
+	x=-(p1.c*p2.c);
+	x=-(1/a);
+		//error: Relational operator applied to non-numeric operand"
 	a=1<true;
 	a=true<1;
 	a=true<false;
@@ -56,7 +61,7 @@ int func1(){
 	a=true>=1;
 	a=true>=false;
 	x=true>=false;
-	//equality operator
+		//equality operator
 	b=x==a; //error: Type mismatch
 	b=b==y; //error: Type mismatch
 	b=Point1 == Point2; //error: Struct name assignment
@@ -64,7 +69,7 @@ int func1(){
 	b=(1=="string");
 	b=p1==p2; //error: Struct variable assignment
 	b=p1.z == p2.c; //error: type mismatch
-		//not equals
+	//not equals
 	b=x!=a; //error: Type mismatch
 	b=b!=y; //error: Type mismatch
 	b=Point1 != Point2; //error: Struct name assignment
@@ -85,7 +90,7 @@ int func1(){
 	cin >> p1;
 	cout << f1;
 	cout << f4();
-	//Non-bool expression used as an if condition
+		//Non-bool expression used as an if condition
 	if (1+1){}
 	if (1-1){}
 	if (1*1){}
@@ -116,11 +121,7 @@ int func1(){
 	while (y-x){}
 	while (p1.z*p2.z){}
 	while (p1.z/p2.z){}
-	//unary minus
-	x=-false;
-	x=-(p1.c*p2.c);
-	x=-(1/a);
-	//logical operators
+		//logical operators
 	a=!x;
 	a=!(1+2);
 	a=!(1-2);
@@ -136,9 +137,19 @@ int func1(){
 	a=f1()||f1();
 	a=f4()==f4(); //error: equals with void
 	a=f4()!=f4(); //error: equals with void
-	repeat(false){}
+		//error: non int in repeat clause
+	repeat(false){} 
 	repeat(f5()){}
 	repeat(f4()){}
+	repeat(1<1){}
+	cout << Point1 + 1;          // P + 1 is an error; the write is OK
+	x= (true + 3) * 4;         // true + 3 is an error; the * is OK
+	a= true && (false || 3);   // false || 3 is an error; the && is OK
+	f3("a" * 4, false);            // "a" * 4 is an error; the call is OK
+	x= 1 + p1();               // p() is an error; the + is OK
+	a= (true + 3) == x;        // true + 3 is an error; the == is OK, regardless of the type of x
+    x= true + "hello";    // one error for each of the non-int operands of the +
+	return 3+true;
 
 }
 int f6(){
