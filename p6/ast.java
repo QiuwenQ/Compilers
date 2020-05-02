@@ -174,6 +174,13 @@ class DeclListNode extends ASTnode {
     public void setIsLocal(boolean _myScope){
         myScope = _myScope;
     }
+    private int _offset;
+    public void setOffset(int num){
+        _offset = num; 
+    }
+    public int getOffset(){
+        return _offset;
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, process all of the decls in the list.
@@ -192,6 +199,10 @@ class DeclListNode extends ASTnode {
         for (DeclNode node : myDecls) {
             if (node instanceof VarDeclNode) {
                 ((VarDeclNode)node).setIsLocal(myScope);
+                if (myScope){ //is a local variable
+                     ((VarDeclNode)node).setOffset(_offset);
+                     _offset -=4; //update offset to higher up the stack (lower address) for next var
+                }
                 ((VarDeclNode)node).nameAnalysis(symTab, globalTab);
             } else {
                 node.nameAnalysis(symTab);
@@ -243,10 +254,17 @@ class FormalsListNode extends ASTnode {
             if (sym != null) {
                 typeList.add(sym.getType());
             }
+            sym.setOffset(_offset);
+            _offset-=4;
+            System.out.println(" = is Local. Offset is = " + _offset);
+
         }
         return typeList;
     }
-
+    private int _offset;
+    public void setOffset(int num){
+        _offset = num; 
+    }
     /**
      * Return the number of formals in this list.
      */
@@ -282,10 +300,17 @@ class FnBodyNode extends ASTnode {
      * - process the statement list
      */
     public void nameAnalysis(SymTable symTab) {
+        //TODO pass this offset to decllistnode
+        myDeclList.setOffset(_offset);
         myDeclList.nameAnalysis(symTab);
+        int tempOffset = myDeclList.getOffset();
+        myStmtList.setOffset(tempOffset);
         myStmtList.nameAnalysis(symTab);
     }
-
+    private int _offset;
+    public void setOffset(int num){
+        _offset = num; 
+    }
     /**
      * typeCheck
      */
@@ -307,14 +332,23 @@ class StmtListNode extends ASTnode {
     public StmtListNode(List<StmtNode> S) {
         myStmts = S;
     }
-
+    private int _offset;
+    public void setOffset(int num){
+        _offset = num; 
+    }
+    public int getOffset(){
+        return _offset;
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, process each statement in the list.
      */
     public void nameAnalysis(SymTable symTab) {
         for (StmtNode node : myStmts) {
+            //pass offset to these statements as they have local declarations of variables
+            node.setOffset(_offset);
             node.nameAnalysis(symTab);
+            _offset = node.getOffset();
         }
     }
 
@@ -490,14 +524,15 @@ class VarDeclNode extends DeclNode {
                 if (myType instanceof StructNode) {
                     sym = new StructSym(structId);
                 }
-                else {
+                else { //regular var declaration
                     sym = new Sym(myType.type());
+                    sym.setOffset(_offset);
                 }
                 symTab.addDecl(name, sym);
                 myId.link(sym);
                 //id has been added to the sym table. set if added local or global
                 if (myScope){
-                    System.out.println(name + " = is Local");
+                    System.out.println(name + " = is Local. Offset is = " + _offset);
                 } else{
                     System.out.println(name + " = is Global");
                 }
@@ -518,10 +553,15 @@ class VarDeclNode extends DeclNode {
 
         return sym;
     }
-    private boolean myScope = true; //true if id is local, false if global
+    private int _offset;
+    public void setOffset(int num){
+        _offset = num; 
+    }
+    private boolean myScope; //true if id is local, false if global
     public void setIsLocal(boolean _myScope){
         myScope = _myScope;
     }
+
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myType.unparse(p, 0);
@@ -601,11 +641,22 @@ class FnDeclNode extends DeclNode {
 
         symTab.addScope();  // add a new scope for locals and params
 
+        int _offset = 0;
+        //now pass this offset to the formals list for para offsets TODO
+        myFormalsList.setOffset(_offset);
         // process the formals
         List<Type> typeList = myFormalsList.nameAnalysis(symTab);
         if (sym != null) {
             sym.addFormals(typeList);
         }
+
+        //set initial offeset to 8: for ctrl link and return address
+        _offset = 8;
+        //calculate the bytes of storage needed for it's params.
+        int paramBytes = myFormalsList.length() * 4;
+        _offset += paramBytes; //total offset to the first local var from end of caller AR
+        //now pass this negative offset to the fnbody for local offsets 
+        myBody.setOffset(-_offset);
 
         myBody.nameAnalysis(symTab); // process the function body
 
@@ -691,6 +742,7 @@ class FormalDeclNode extends DeclNode {
                 sym = new Sym(myType.type());
                 symTab.addDecl(name, sym);
                 myId.link(sym);
+                System.out.print(name);
             } catch (DuplicateSymException ex) {
                 System.err.println("Unexpected DuplicateSymException " +
                                    " in FormalDeclNode.nameAnalysis");
@@ -886,6 +938,9 @@ class StructNode extends TypeNode {
 abstract class StmtNode extends ASTnode {
     abstract public void nameAnalysis(SymTable symTab);
     abstract public void typeCheck(Type retType);
+    protected int _offset = 1;
+    public void setOffset(int num){ _offset= num;}
+    public int getOffset(){return _offset;}
 }
 
 class AssignStmtNode extends StmtNode {
@@ -1103,8 +1158,16 @@ class IfStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myExp.nameAnalysis(symTab);
         symTab.addScope();
+
+        myDeclList.setOffset(_offset);
+
         myDeclList.nameAnalysis(symTab);
+
+        int tempOffset = myDeclList.getOffset();
+        myStmtList.setOffset(tempOffset);
+
         myStmtList.nameAnalysis(symTab);
+        _offset = myStmtList.getOffset();
         try {
             symTab.removeScope();
         } catch (EmptySymTableException ex) {
@@ -1170,8 +1233,12 @@ class IfElseStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myExp.nameAnalysis(symTab);
         symTab.addScope();
+        myThenDeclList.setOffset(_offset);
         myThenDeclList.nameAnalysis(symTab);
+        int tempOffset = myThenDeclList.getOffset();
+        myThenStmtList.setOffset(tempOffset);
         myThenStmtList.nameAnalysis(symTab);
+        tempOffset=myThenStmtList.getOffset();
         try {
             symTab.removeScope();
         } catch (EmptySymTableException ex) {
@@ -1180,8 +1247,13 @@ class IfElseStmtNode extends StmtNode {
             System.exit(-1);
         }
         symTab.addScope();
+        myElseDeclList.setOffset(tempOffset);
         myElseDeclList.nameAnalysis(symTab);
+        tempOffset = myElseDeclList.getOffset();
+        myElseStmtList.setOffset(tempOffset);
         myElseStmtList.nameAnalysis(symTab);
+        _offset = myElseStmtList.getOffset();
+        setOffset(_offset);
         try {
             symTab.removeScope();
         } catch (EmptySymTableException ex) {
@@ -1249,8 +1321,12 @@ class WhileStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myExp.nameAnalysis(symTab);
         symTab.addScope();
+        myDeclList.setOffset(_offset);
         myDeclList.nameAnalysis(symTab);
+        int tempOffset = myDeclList.getOffset();
+        myStmtList.setOffset(tempOffset);
         myStmtList.nameAnalysis(symTab);
+        _offset = myStmtList.getOffset();
         try {
             symTab.removeScope();
         } catch (EmptySymTableException ex) {
