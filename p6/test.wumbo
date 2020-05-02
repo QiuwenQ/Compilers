@@ -1,0 +1,7 @@
+int a;
+void main(){
+	bool localB;
+	if (true){
+		bool localB2;
+	}
+}

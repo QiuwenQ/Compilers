@@ -139,7 +139,7 @@ public class P6 {
 
 	public int process() {
 		Symbol cfgRoot = parseCFG();
-
+		Codegen.p = outFile;
 		ProgramNode astRoot = (ProgramNode)cfgRoot.value;
 		if (ErrMsg.getErr()) {
 			return P6.RESULT_SYNTAX_ERROR;
@@ -158,6 +158,7 @@ public class P6 {
 		//////////////////////////
 		// TODO: Calling codeGen   //
 		//////////////////////////
+		astRoot.codeGen();
 
 		return P6.RESULT_CORRECT;
 	}

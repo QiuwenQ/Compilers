@@ -126,6 +126,10 @@ class ProgramNode extends ASTnode {
         myDeclList = L;
     }
 
+    public void codeGen(){
+        
+    }
+
     /**
      * nameAnalysis
      * Creates an empty symbol table for the outermost scope, then processes
@@ -133,7 +137,18 @@ class ProgramNode extends ASTnode {
      */
     public void nameAnalysis() {
         SymTable symTab = new SymTable();
+        myDeclList.setIsLocal(false); //whatever is declared is global
         myDeclList.nameAnalysis(symTab);
+        //Check if a main function has been declared
+        try{
+            Sym mainSym = symTab.lookupGlobal("main");
+            if (mainSym == null){
+                ErrMsg.fatal(0,0,"No main function");
+                
+            }
+        } catch (Exception e){
+            System.err.println("unexpected Exception in checking for main function");
+        }
     }
 
     /**
@@ -155,7 +170,10 @@ class DeclListNode extends ASTnode {
     public DeclListNode(List<DeclNode> S) {
         myDecls = S;
     }
-
+    private boolean myScope = true; //true if id is local, false if global
+    public void setIsLocal(boolean _myScope){
+        myScope = _myScope;
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, process all of the decls in the list.
@@ -173,6 +191,7 @@ class DeclListNode extends ASTnode {
     public void nameAnalysis(SymTable symTab, SymTable globalTab) {
         for (DeclNode node : myDecls) {
             if (node instanceof VarDeclNode) {
+                ((VarDeclNode)node).setIsLocal(myScope);
                 ((VarDeclNode)node).nameAnalysis(symTab, globalTab);
             } else {
                 node.nameAnalysis(symTab);
@@ -476,6 +495,12 @@ class VarDeclNode extends DeclNode {
                 }
                 symTab.addDecl(name, sym);
                 myId.link(sym);
+                //id has been added to the sym table. set if added local or global
+                if (myScope){
+                    System.out.println(name + " = is Local");
+                } else{
+                    System.out.println(name + " = is Global");
+                }
             } catch (DuplicateSymException ex) {
                 System.err.println("Unexpected DuplicateSymException " +
                                    " in VarDeclNode.nameAnalysis");
@@ -493,7 +518,10 @@ class VarDeclNode extends DeclNode {
 
         return sym;
     }
-
+    private boolean myScope = true; //true if id is local, false if global
+    public void setIsLocal(boolean _myScope){
+        myScope = _myScope;
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myType.unparse(p, 0);
@@ -1610,6 +1638,15 @@ class IdNode extends ExpNode {
     public int charNum() {
         return myCharNum;
     }
+
+
+    public void setIsLocal(boolean _myScope){
+        myScope = _myScope;
+    }
+    public boolean getIsLocal(){
+        return myScope;
+    }
+    private boolean myScope; //true if id is local, false if global
 
     /**
      * nameAnalysis
