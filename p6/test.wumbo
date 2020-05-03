@@ -3,7 +3,11 @@ void main(int b){
 	int localm12;
 	bool localm16;
 	bool localm20;
-	cout<<2;
-	cout<<"hello world";
-	//cout<<"hello world";
+	localm16 = false;
+	localm20 = true;
+	cout<< localm16;
+	cout<< localm20;
+	cout<<" \nhello world \n";
+	localm12 = 3000;
+	cout << localm12;
 }

@@ -22,6 +22,9 @@ public class Sym {
     public void setOffset(int num){
         offset = num;
     }
+    public int getOffset(){
+        return offset;
+    }
 }
 
 /**

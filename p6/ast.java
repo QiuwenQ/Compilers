@@ -329,7 +329,7 @@ class FnBodyNode extends ASTnode {
         Hashtable<String, String> stringTable = new Hashtable <String, String>();
         myStmtList.setTable(stringTable);
         myStmtList.setExitLabel(exitLabel);
-        myStmtList.codeGen(); //todo implement this in statement list and stmtnodes
+        myStmtList.codeGen(); //1odo implement this in statement list and stmtnodes
     }
     /**
      * typeCheck
@@ -1027,7 +1027,7 @@ abstract class StmtNode extends ASTnode {
     }
     protected Hashtable<String, String> _table;
     public void setTable(Hashtable <String, String> h){_table = h;}
-    //todo implemenent these for all stmtnodes and have them override this
+    //1odo implemenent these for all stmtnodes and have them override this
     public void codeGen(){}
 }
 
@@ -1035,7 +1035,9 @@ class AssignStmtNode extends StmtNode {
     public AssignStmtNode(AssignNode assign) {
         myAssign = assign;
     }
-
+    public void codeGen(){
+        myAssign.codeGen();
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, perform name analysis on this node's child
@@ -1196,6 +1198,7 @@ class WriteStmtNode extends StmtNode {
             ((StringLitNode)myExp).setTable(_table);
         }
         myExp.codeGen(); //generate code to evaluate the expression and leave value at top of stack
+        /*
         //pop address off of stack
         Codegen.generateIndexed("lw", Codegen.A0, Codegen.SP, 4, "POP value for write stmt");
         if (myExp instanceof StringLitNode){
@@ -1204,6 +1207,30 @@ class WriteStmtNode extends StmtNode {
             Codegen.generate("li", Codegen.V0, 1);
         }
         Codegen.generate("syscall");
+        */
+        //TODO: COMMENT THIS OUT WHEN SUBMITTTING AND MAKE SURE WE DON"T PRINT OUT ANY VARIABLES IN TEST.WUMBO
+        if (myExp instanceof IdNode){
+            //TODO;
+            //idNode: get the address off the stack and store in register
+            Codegen.genPop(Codegen.T0);
+            Codegen.generateIndexed("lw", Codegen.T1, Codegen.T0, 0, "put value into T1");
+            //load the value at the address in the register into A0
+            Codegen.generateWithComment("move","put value to A0", Codegen.A0, Codegen.T1);
+            //li V0, 4
+            Codegen.generate("li", Codegen.V0, 1);
+            //syscall
+            Codegen.generate("syscall");
+        } else{
+            //pop address off of stack
+            Codegen.generateIndexed("lw", Codegen.A0, Codegen.SP, 4, "POP value for write stmt");
+            if (myExp instanceof StringLitNode){
+                Codegen.generate("li", Codegen.V0, 4);
+            } else{
+                Codegen.generate("li", Codegen.V0, 1);
+            }
+            Codegen.generate("syscall");
+        }
+        
     }
 
     /**
@@ -1632,7 +1659,7 @@ abstract class ExpNode extends ASTnode {
     abstract public int lineNum();
     abstract public int charNum();
 
-    //todo implemenent these for all stmtnodes and have them override this
+    //1odo implemenent these for all stmtnodes and have them override this
     public void codeGen(){}
 }
 
@@ -1644,8 +1671,7 @@ class IntLitNode extends ExpNode {
     }
     public void codeGen(){
         Codegen.generateWithComment("li", "load intlit into TO", Codegen.T0, Integer.toString(myIntVal));
-        Codegen.generateIndexed("sw", Codegen.T0, Codegen.SP, 0, "push intlit to stack");
-        Codegen.generateWithComment("subu", "update SP after pushing intlit", Codegen.SP, Codegen.SP, Integer.toString(4));
+        Codegen.genPush(Codegen.T0);
     }
 
 
@@ -1693,14 +1719,12 @@ class StringLitNode extends ExpNode {
             stringLabel = Codegen.nextLabel();
             //add to table
             _table.put(myStrVal, stringLabel);
-            //TODO: left off here
             Codegen.generateLabeled(stringLabel, ".asciiz ", "store stringLit", myStrVal);
 
             //store stringLit in the static data area
             Codegen.generate(".text");
             Codegen.generateWithComment("la", "", Codegen.T0, stringLabel);
-            Codegen.generateIndexed("sw", Codegen.T0, Codegen.SP, 0, "PUSH stringlit onto stack");
-            Codegen.generate("subu", Codegen.SP, Codegen.SP, 4);
+            Codegen.genPush(Codegen.T0);
         } else{ //is in table, so is duplicate, return previous label
             stringLabel = tempLabel;
         }
@@ -1744,7 +1768,10 @@ class TrueNode extends ExpNode {
         myLineNum = lineNum;
         myCharNum = charNum;
     }
-
+    public void codeGen(){
+        Codegen.generateWithComment("li", "load intlit into TO", Codegen.T0, Codegen.TRUE);
+        Codegen.genPush(Codegen.T0);
+    }
     /**
      * Return the line number for this literal.
      */
@@ -1779,7 +1806,10 @@ class FalseNode extends ExpNode {
         myLineNum = lineNum;
         myCharNum = charNum;
     }
-
+    public void codeGen(){
+        Codegen.generateWithComment("li", "load intlit into TO", Codegen.T0, Codegen.FALSE);
+        Codegen.genPush(Codegen.T0);
+    }
     /**
      * Return the line number for this literal.
      */
@@ -1814,6 +1844,14 @@ class IdNode extends ExpNode {
         myLineNum = lineNum;
         myCharNum = charNum;
         myStrVal = strVal;
+    }
+
+    public void codeGen(){
+        //get the address of the idnode and put into T0
+        Codegen.generateIndexed("la", Codegen.T0, Codegen. FP, mySym.getOffset(), "get address of "+myStrVal);
+        //push id node address onto the stack
+        Codegen.genPush(Codegen.T0);
+
     }
 
     /**
@@ -2082,6 +2120,16 @@ class AssignNode extends ExpNode {
      */
     public int charNum() {
         return myLhs.charNum();
+    }
+
+    public void codeGen(){
+        //TODO: actually write the code for the lhs and rhs codegen 
+        myExp.codeGen(); //rhs
+        myLhs.codeGen();//lhs
+        //pop these values and assign
+        Codegen.genPop(Codegen.T1); //address of LHS
+        Codegen.genPop(Codegen.T0); //value of RHS
+        Codegen.generateIndexed("sw", Codegen.T0, Codegen.T1, 0, "ASSIGN");
     }
 
     /**

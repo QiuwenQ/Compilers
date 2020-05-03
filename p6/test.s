@@ -11,20 +11,74 @@ __start:		# add __start label for main only
 	subu  $sp, $sp, 4
 	addu  $fp, $sp, 12		#set the FP for this function
 	subu  $sp, $sp, 12		#push space for locals
-	li    $t0, 2		#load intlit into TO
-	sw    $t0, 0($sp)	#push intlit to stack
-	subu  $sp, $sp, 4		#update SP after pushing intlit
-	lw    $a0, 4($sp)	#POP value for write stmt
+	li    $t0, 0		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	la    $t0, -16($fp)	#get address of localm16
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	sw    $t0, 0($t1)	#ASSIGN
+	li    $t0, 1		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	la    $t0, -20($fp)	#get address of localm20
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	sw    $t0, 0($t1)	#ASSIGN
+	la    $t0, -16($fp)	#get address of localm16
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t1, 0($t0)	#put value into T1
+	move  $a0, $t1		#put value to A0
+	li    $v0, 1
+	syscall
+	la    $t0, -20($fp)	#get address of localm20
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t1, 0($t0)	#put value into T1
+	move  $a0, $t1		#put value to A0
 	li    $v0, 1
 	syscall
 	.data
-.L0:	.asciiz "hello world"	# store stringLit
+.L0:	.asciiz " \nhello world \n"	# store stringLit
 	.text
 	la    $t0, .L0
-	sw    $t0, 0($sp)	#PUSH stringlit onto stack
+	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	lw    $a0, 4($sp)	#POP value for write stmt
 	li    $v0, 4
+	syscall
+	li    $t0, 3000		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	la    $t0, -12($fp)	#get address of localm12
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	sw    $t0, 0($t1)	#ASSIGN
+	la    $t0, -12($fp)	#get address of localm12
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t1, 0($t0)	#put value into T1
+	move  $a0, $t1		#put value to A0
+	li    $v0, 1
 	syscall
 _main_Exit:
 	lw    $ra, -4($fp)
