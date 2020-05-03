@@ -602,6 +602,7 @@ class VarDeclNode extends DeclNode {
             Codegen.generate(".data");
             Codegen.generate(".align 2");
             Codegen.generateLabeled("_"+ myId.name(), ".space 4", "Global var "+ myId.name());
+            myId.sym().setOffset(1);
         }
     }
     public void unparse(PrintWriter p, int indent) {
@@ -1067,7 +1068,20 @@ class PostIncStmtNode extends StmtNode {
     public PostIncStmtNode(ExpNode exp) {
         myExp = exp;
     }
-
+    //TODO:
+    public void codeGen(){
+        
+        ((IdNode)myExp).genAddr(); //called idnode code gen, so address is on the stack
+        //pop address into T1
+        Codegen.genPop(Codegen.T1);
+        //Store value into T0
+        Codegen.generateIndexed("lw", Codegen.T0, Codegen.T1, 0);
+        //increment value
+        Codegen.generateWithComment("addu", "post increment "+ ((IdNode)myExp).name(), Codegen.T0, Codegen.T0, Integer.toString(1));
+        //push back to where it was stored before
+        Codegen.generateIndexed("sw", Codegen.T0, Codegen.T1, 0);
+        
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, perform name analysis on this node's child
@@ -1197,8 +1211,9 @@ class WriteStmtNode extends StmtNode {
         if (myExp instanceof StringLitNode){
             ((StringLitNode)myExp).setTable(_table);
         }
-        myExp.codeGen(); //generate code to evaluate the expression and leave value at top of stack
         /*
+        myExp.codeGen(); //generate code to evaluate the expression and leave value at top of stack
+        
         //pop address off of stack
         Codegen.generateIndexed("lw", Codegen.A0, Codegen.SP, 4, "POP value for write stmt");
         if (myExp instanceof StringLitNode){
@@ -1210,7 +1225,7 @@ class WriteStmtNode extends StmtNode {
         */
         //TODO: COMMENT THIS OUT WHEN SUBMITTTING AND MAKE SURE WE DON"T PRINT OUT ANY VARIABLES IN TEST.WUMBO
         if (myExp instanceof IdNode){
-            //TODO;
+            ((IdNode)myExp).genAddr();
             //idNode: get the address off the stack and store in register
             Codegen.genPop(Codegen.T0);
             Codegen.generateIndexed("lw", Codegen.T1, Codegen.T0, 0, "put value into T1");
@@ -1222,6 +1237,7 @@ class WriteStmtNode extends StmtNode {
             Codegen.generate("syscall");
         } else{
             //pop address off of stack
+            myExp.codeGen();
             Codegen.generateIndexed("lw", Codegen.A0, Codegen.SP, 4, "POP value for write stmt");
             if (myExp instanceof StringLitNode){
                 Codegen.generate("li", Codegen.V0, 4);
@@ -1846,12 +1862,32 @@ class IdNode extends ExpNode {
         myStrVal = strVal;
     }
 
-    public void codeGen(){
-        //get the address of the idnode and put into T0
-        Codegen.generateIndexed("la", Codegen.T0, Codegen. FP, mySym.getOffset(), "get address of "+myStrVal);
-        //push id node address onto the stack
-        Codegen.genPush(Codegen.T0);
+    public void codeGen(){ //put values onto the stack
+        //separate local and global var
+        if (mySym.getOffset() == 1){ //global var 
+            Codegen.generateWithComment("lw","get global var "+ myStrVal, Codegen.T0, "_"+myStrVal);
 
+        } else{ //local var
+            //get the address of the idnode and put into T0
+            Codegen.generateIndexed("lw", Codegen.T0, Codegen. FP, mySym.getOffset(), "get value of "+myStrVal);
+        }
+        //push id node value onto the stack
+        Codegen.genPush(Codegen.T0);
+    }
+    public void genAddr(){ //generate address of the variable for LHS
+        //separate local and global var
+        if (mySym.getOffset() == 1){ //global var 
+            Codegen.generateWithComment("la","get address global var "+ myStrVal, Codegen.T0, "_"+myStrVal);
+
+        } else{ //local var
+            //get the address of the idnode and put into T0
+            Codegen.generateIndexed("la", Codegen.T0, Codegen. FP, mySym.getOffset(), "get address of "+myStrVal);
+        }
+        //push id node value onto the stack
+        Codegen.genPush(Codegen.T0);
+    }
+    public void genJumpAndLink(String label){ //TODO: for functions, label is function label
+        Codegen.generate("jal", label);
     }
 
     /**
@@ -2125,7 +2161,7 @@ class AssignNode extends ExpNode {
     public void codeGen(){
         //TODO: actually write the code for the lhs and rhs codegen 
         myExp.codeGen(); //rhs
-        myLhs.codeGen();//lhs
+        ((IdNode)myLhs).genAddr();//lhs
         //pop these values and assign
         Codegen.genPop(Codegen.T1); //address of LHS
         Codegen.genPop(Codegen.T0); //value of RHS
