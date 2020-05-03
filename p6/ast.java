@@ -321,6 +321,16 @@ class FnBodyNode extends ASTnode {
     public int getOffset(){
         return _offset;
     }
+    private String exitLabel;
+    public void setExitLabel(String _exitLabel){
+        exitLabel = _exitLabel;
+    }
+    public void codeGen(){
+        Hashtable<String, String> stringTable = new Hashtable <String, String>();
+        myStmtList.setTable(stringTable);
+        myStmtList.setExitLabel(exitLabel);
+        myStmtList.codeGen(); //todo implement this in statement list and stmtnodes
+    }
     /**
      * typeCheck
      */
@@ -349,6 +359,10 @@ class StmtListNode extends ASTnode {
     public int getOffset(){
         return _offset;
     }
+    private Hashtable <String, String> _table;
+    public void setTable(Hashtable <String, String> h){
+        _table = h;
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, process each statement in the list.
@@ -359,6 +373,17 @@ class StmtListNode extends ASTnode {
             node.setOffset(_offset);
             node.nameAnalysis(symTab);
             _offset = node.getOffset();
+        }
+    }
+    private String exitLabel;
+    public void setExitLabel(String _exitLabel){
+        exitLabel = _exitLabel;
+    }
+    public void codeGen(){
+        for (StmtNode node: myStmts){
+            node.setExitLabel(exitLabel);
+            node.setTable(_table);
+            node.codeGen();
         }
     }
 
@@ -571,7 +596,7 @@ class VarDeclNode extends DeclNode {
     public void setIsLocal(boolean _myScope){
         myScope = _myScope;
     }
-    //TODO: write code for local variables
+    //write code for global variables, no need to generate any code for the local declarations in fnbody
     public void codeGen(){
         if (!myScope){ //global variable
             Codegen.generate(".data");
@@ -695,6 +720,7 @@ class FnDeclNode extends DeclNode {
             Codegen.generate(".text");
             Codegen.generate(".globl main");
             Codegen.generateLabeled("main", "","");
+            Codegen.generateLabeled("__start", "", "add __start label for main only");
         } else{
             Codegen.generate(".text");
             Codegen.generateLabeled("_"+myId.name(), "","");
@@ -707,9 +733,10 @@ class FnDeclNode extends DeclNode {
         int localOffset = myBody.getOffset();
         int localSize = -localOffset -newFPoffset;
         Codegen.generateWithComment("subu", "push space for locals", Codegen.SP, Codegen.SP, Integer.toString(localSize));
-        //TODO: call the function body codeGen function, and only call it on the stmtlistnode
+        //call the function body codeGen function, and only call it on the stmtlistnode
         String exitLabel = "_"+myId.name() +"_Exit";
-        
+        myBody.setExitLabel(exitLabel);
+        myBody.codeGen();
         //function exit
         Codegen.genLabel(exitLabel);
         Codegen.generateIndexed("lw", Codegen.RA, Codegen.FP, -paramBytes);//load return address
@@ -719,7 +746,7 @@ class FnDeclNode extends DeclNode {
         if (!myId.name().equals("main")){ //normal function jumps back to return address
             Codegen.generate("jr", Codegen.RA); //return out of the function
         } else{ //main function exiting with syscall
-            Codegen.generateWithComment("li", "load exit code for syscall",Codegen.V0, Codegen.T0); //save control link
+            Codegen.generateWithComment("li", "load exit code for syscall", Codegen.V0, "10"); //save control link
             Codegen.generateWithComment("syscall", "only do this for main");
         }
     }
@@ -993,6 +1020,15 @@ abstract class StmtNode extends ASTnode {
     protected int _offset = 1;
     public void setOffset(int num){ _offset= num;}
     public int getOffset(){return _offset;}
+    
+    protected String exitLabel;
+    public void setExitLabel(String _exitLabel){
+        exitLabel = _exitLabel;
+    }
+    protected Hashtable<String, String> _table;
+    public void setTable(Hashtable <String, String> h){_table = h;}
+    //todo implemenent these for all stmtnodes and have them override this
+    public void codeGen(){}
 }
 
 class AssignStmtNode extends StmtNode {
@@ -1152,6 +1188,22 @@ class WriteStmtNode extends StmtNode {
      */
     public void nameAnalysis(SymTable symTab) {
         myExp.nameAnalysis(symTab);
+    }
+
+    public void codeGen(){
+        //call code gen of expression being printed (is an integer)
+        if (myExp instanceof StringLitNode){
+            ((StringLitNode)myExp).setTable(_table);
+        }
+        myExp.codeGen(); //generate code to evaluate the expression and leave value at top of stack
+        //pop address off of stack
+        Codegen.generateIndexed("lw", Codegen.A0, Codegen.SP, 4, "POP value for write stmt");
+        if (myExp instanceof StringLitNode){
+            Codegen.generate("li", Codegen.V0, 4);
+        } else{
+            Codegen.generate("li", Codegen.V0, 1);
+        }
+        Codegen.generate("syscall");
     }
 
     /**
@@ -1579,6 +1631,9 @@ abstract class ExpNode extends ASTnode {
     abstract public Type typeCheck();
     abstract public int lineNum();
     abstract public int charNum();
+
+    //todo implemenent these for all stmtnodes and have them override this
+    public void codeGen(){}
 }
 
 class IntLitNode extends ExpNode {
@@ -1587,6 +1642,12 @@ class IntLitNode extends ExpNode {
         myCharNum = charNum;
         myIntVal = intVal;
     }
+    public void codeGen(){
+        Codegen.generateWithComment("li", "load intlit into TO", Codegen.T0, Integer.toString(myIntVal));
+        Codegen.generateIndexed("sw", Codegen.T0, Codegen.SP, 0, "push intlit to stack");
+        Codegen.generateWithComment("subu", "update SP after pushing intlit", Codegen.SP, Codegen.SP, Integer.toString(4));
+    }
+
 
     /**
      * Return the line number for this literal.
@@ -1624,7 +1685,30 @@ class StringLitNode extends ExpNode {
         myCharNum = charNum;
         myStrVal = strVal;
     }
+    public void codeGen(){
+        String tempLabel = _table.get(myStrVal);
+        String stringLabel = "";
+        if (tempLabel == null){ //is not in table
+            Codegen.generate(".data");
+            stringLabel = Codegen.nextLabel();
+            //add to table
+            _table.put(myStrVal, stringLabel);
+            //TODO: left off here
+            Codegen.generateLabeled(stringLabel, ".asciiz ", "store stringLit", myStrVal);
 
+            //store stringLit in the static data area
+            Codegen.generate(".text");
+            Codegen.generateWithComment("la", "", Codegen.T0, stringLabel);
+            Codegen.generateIndexed("sw", Codegen.T0, Codegen.SP, 0, "PUSH stringlit onto stack");
+            Codegen.generate("subu", Codegen.SP, Codegen.SP, 4);
+        } else{ //is in table, so is duplicate, return previous label
+            stringLabel = tempLabel;
+        }
+    }
+    private Hashtable <String, String> _table;
+    public void setTable(Hashtable <String, String> h){
+        _table = h;
+    }
     /**
      * Return the line number for this literal.
      */

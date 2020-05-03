@@ -1,8 +1,9 @@
 int a;
 void main(int b){
-	bool localm12;
+	int localm12;
 	bool localm16;
 	bool localm20;
-}
-void f(){
+	cout<<2;
+	cout<<"hello world";
+	//cout<<"hello world";
 }
