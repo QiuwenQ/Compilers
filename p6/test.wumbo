@@ -4,3 +4,5 @@ void main(int b){
 	bool localm16;
 	bool localm20;
 }
+void f(){
+}

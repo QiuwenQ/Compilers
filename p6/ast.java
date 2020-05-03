@@ -687,8 +687,8 @@ class FnDeclNode extends DeclNode {
 
         return null;
     }
-    private int paramBytes;
-    //TODO
+    private int paramBytes; //postiive number
+    
     public void codeGen(){
         //function preamble
         if (myId.name().equals("main")){
@@ -704,11 +704,24 @@ class FnDeclNode extends DeclNode {
         Codegen.genPush(Codegen.FP); //push control link
         int newFPoffset = paramBytes + 8; //positive number
         Codegen.generateWithComment("addu","set the FP for this function", Codegen.FP, Codegen.SP, Integer.toString(newFPoffset));
-        //TODO
         int localOffset = myBody.getOffset();
         int localSize = -localOffset -newFPoffset;
         Codegen.generateWithComment("subu", "push space for locals", Codegen.SP, Codegen.SP, Integer.toString(localSize));
-
+        //TODO: call the function body codeGen function, and only call it on the stmtlistnode
+        String exitLabel = "_"+myId.name() +"_Exit";
+        
+        //function exit
+        Codegen.genLabel(exitLabel);
+        Codegen.generateIndexed("lw", Codegen.RA, Codegen.FP, -paramBytes);//load return address
+        Codegen.generateWithComment("move", "save control link", Codegen.T0, Codegen.FP); //save control link
+        Codegen.generateIndexed("lw", Codegen.FP, Codegen.FP, -(paramBytes+4), "restore FP");//restore FP
+        Codegen.generateWithComment("move", "restore SP", Codegen.SP, Codegen.T0); //restore SP
+        if (!myId.name().equals("main")){ //normal function jumps back to return address
+            Codegen.generate("jr", Codegen.RA); //return out of the function
+        } else{ //main function exiting with syscall
+            Codegen.generateWithComment("li", "load exit code for syscall",Codegen.V0, Codegen.T0); //save control link
+            Codegen.generateWithComment("syscall", "only do this for main");
+        }
     }
     /**
      * typeCheck
