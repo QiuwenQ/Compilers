@@ -114,6 +114,7 @@ abstract class ASTnode {
     protected void addIndentation(PrintWriter p, int indent) {
         for (int k=0; k<indent; k++) p.print(" ");
     }
+    protected void codeGen(){}
 }
 
 // **********************************************************************
@@ -127,7 +128,7 @@ class ProgramNode extends ASTnode {
     }
 
     public void codeGen(){
-        
+       myDeclList.codeGen();
     }
 
     /**
@@ -180,6 +181,11 @@ class DeclListNode extends ASTnode {
     }
     public int getOffset(){
         return _offset;
+    }
+    public void codeGen(){
+        for (DeclNode node : myDecls){
+            node.codeGen();
+        }
     }
     /**
      * nameAnalysis
@@ -300,16 +306,20 @@ class FnBodyNode extends ASTnode {
      * - process the statement list
      */
     public void nameAnalysis(SymTable symTab) {
-        //TODO pass this offset to decllistnode
+        //pass this offset to decllistnode
         myDeclList.setOffset(_offset);
         myDeclList.nameAnalysis(symTab);
         int tempOffset = myDeclList.getOffset();
         myStmtList.setOffset(tempOffset);
         myStmtList.nameAnalysis(symTab);
+        _offset = myStmtList.getOffset();
     }
     private int _offset;
     public void setOffset(int num){
         _offset = num; 
+    }
+    public int getOffset(){
+        return _offset;
     }
     /**
      * typeCheck
@@ -561,7 +571,14 @@ class VarDeclNode extends DeclNode {
     public void setIsLocal(boolean _myScope){
         myScope = _myScope;
     }
-
+    //TODO: write code for local variables
+    public void codeGen(){
+        if (!myScope){ //global variable
+            Codegen.generate(".data");
+            Codegen.generate(".align 2");
+            Codegen.generateLabeled("_"+ myId.name(), ".space 4", "Global var "+ myId.name());
+        }
+    }
     public void unparse(PrintWriter p, int indent) {
         addIndentation(p, indent);
         myType.unparse(p, 0);
@@ -642,7 +659,7 @@ class FnDeclNode extends DeclNode {
         symTab.addScope();  // add a new scope for locals and params
 
         int _offset = 0;
-        //now pass this offset to the formals list for para offsets TODO
+        //now pass this offset to the formals list for para offsets
         myFormalsList.setOffset(_offset);
         // process the formals
         List<Type> typeList = myFormalsList.nameAnalysis(symTab);
@@ -653,7 +670,7 @@ class FnDeclNode extends DeclNode {
         //set initial offeset to 8: for ctrl link and return address
         _offset = 8;
         //calculate the bytes of storage needed for it's params.
-        int paramBytes = myFormalsList.length() * 4;
+        paramBytes = myFormalsList.length() * 4;
         _offset += paramBytes; //total offset to the first local var from end of caller AR
         //now pass this negative offset to the fnbody for local offsets 
         myBody.setOffset(-_offset);
@@ -670,7 +687,29 @@ class FnDeclNode extends DeclNode {
 
         return null;
     }
+    private int paramBytes;
+    //TODO
+    public void codeGen(){
+        //function preamble
+        if (myId.name().equals("main")){
+            Codegen.generate(".text");
+            Codegen.generate(".globl main");
+            Codegen.generateLabeled("main", "","");
+        } else{
+            Codegen.generate(".text");
+            Codegen.generateLabeled("_"+myId.name(), "","");
+        }
+        //function entry
+        Codegen.genPush(Codegen.RA); //push return address onto stack
+        Codegen.genPush(Codegen.FP); //push control link
+        int newFPoffset = paramBytes + 8; //positive number
+        Codegen.generateWithComment("addu","set the FP for this function", Codegen.FP, Codegen.SP, Integer.toString(newFPoffset));
+        //TODO
+        int localOffset = myBody.getOffset();
+        int localSize = -localOffset -newFPoffset;
+        Codegen.generateWithComment("subu", "push space for locals", Codegen.SP, Codegen.SP, Integer.toString(localSize));
 
+    }
     /**
      * typeCheck
      */

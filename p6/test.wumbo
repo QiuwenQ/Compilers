@@ -1,17 +1,6 @@
 int a;
-void main(){
-	bool localm8;
+void main(int b){
 	bool localm12;
-	if (true){
-		bool localm16;
-	} else{
-		bool localm20;
-	}
-	while(true){
-		bool localm24;
-	}
-}
-int f(int a4, int b8, int c12){
-	bool localfm20;
-	return 2;
+	bool localm16;
+	bool localm20;
 }
