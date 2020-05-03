@@ -415,7 +415,13 @@ class ExpListNode extends ASTnode {
     public int size() {
         return myExps.size();
     }
-
+    public void codeGen(){
+        int _offset = 0;
+        for (ExpNode node: myExps){
+            //TODO: evaluate each actual parameter and push values onto stack
+            node.codeGen();
+        }
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, process each exp in the list.
@@ -1116,7 +1122,7 @@ class PostDecStmtNode extends StmtNode {
     public PostDecStmtNode(ExpNode exp) {
         myExp = exp;
     }
-    public void codeGen(){
+    public void codeGen(){ //same idea as post inc node
         
         ((IdNode)myExp).genAddr(); //called idnode code gen, so address is on the stack
         //pop address into T1
@@ -1591,7 +1597,9 @@ class CallStmtNode extends StmtNode {
     public CallStmtNode(CallExpNode call) {
         myCall = call;
     }
-
+    public void codeGen(){
+        myCall.codeGen();
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, perform name analysis on this node's child
@@ -1898,7 +1906,7 @@ class IdNode extends ExpNode {
         //push id node value onto the stack
         Codegen.genPush(Codegen.T0);
     }
-    public void genJumpAndLink(String label){ //TODO: for functions, label is function label
+    public void genJumpAndLink(String label){ //for functions, label is function label
         Codegen.generate("jal", label);
     }
 
@@ -2171,7 +2179,7 @@ class AssignNode extends ExpNode {
     }
 
     public void codeGen(){
-        //TODO: actually write the code for the lhs and rhs codegen 
+        //1ODO: actually write the code for the lhs and rhs codegen 
         myExp.codeGen(); //rhs
         ((IdNode)myLhs).genAddr();//lhs
         //pop these values and assign
@@ -2248,7 +2256,13 @@ class CallExpNode extends ExpNode {
         myId = name;
         myExpList = new ExpListNode(new LinkedList<ExpNode>());
     }
+    public void codeGen(){
+        myExpList.codeGen();
+        myId.genJumpAndLink("_" + myId.name());
+        Codegen.genPush(Codegen.V0); //push returned value onto stack
 
+        //TODO left
+    }
     /**
      * Return the line number for this call node.
      * The line number is the one corresponding to the function name.

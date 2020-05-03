@@ -1,16 +1,14 @@
 int a;
+void f(int f1, int f2){
+	f1++;
+	f2++;
+	cout<<f1;
+	cout<<f2;
+}
 void main(int b){
 	int localm12;
 	bool localm16;
 	bool localm20;
-	a = 1;
-	a++;
-	cout<<a;
-	a--;
-	cout<<a;
-	localm12=3;
-	localm12++;
-	cout<<localm12;
-	localm12--;
-	cout<<localm12;
+	f(7,8);
 }
+
