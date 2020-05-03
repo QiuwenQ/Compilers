@@ -6,4 +6,11 @@ void main(int b){
 	a = 1;
 	a++;
 	cout<<a;
+	a--;
+	cout<<a;
+	localm12=3;
+	localm12++;
+	cout<<localm12;
+	localm12--;
+	cout<<localm12;
 }

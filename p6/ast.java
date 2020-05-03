@@ -1068,7 +1068,7 @@ class PostIncStmtNode extends StmtNode {
     public PostIncStmtNode(ExpNode exp) {
         myExp = exp;
     }
-    //TODO:
+
     public void codeGen(){
         
         ((IdNode)myExp).genAddr(); //called idnode code gen, so address is on the stack
@@ -1116,7 +1116,19 @@ class PostDecStmtNode extends StmtNode {
     public PostDecStmtNode(ExpNode exp) {
         myExp = exp;
     }
-
+    public void codeGen(){
+        
+        ((IdNode)myExp).genAddr(); //called idnode code gen, so address is on the stack
+        //pop address into T1
+        Codegen.genPop(Codegen.T1);
+        //Store value into T0
+        Codegen.generateIndexed("lw", Codegen.T0, Codegen.T1, 0);
+        //increment value
+        Codegen.generateWithComment("subu", "post increment "+ ((IdNode)myExp).name(), Codegen.T0, Codegen.T0, Integer.toString(1));
+        //push back to where it was stored before
+        Codegen.generateIndexed("sw", Codegen.T0, Codegen.T1, 0);
+        
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, perform name analysis on this node's child
