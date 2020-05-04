@@ -1232,8 +1232,11 @@ class WriteStmtNode extends StmtNode {
 
     public void codeGen(){
         //call code gen of expression being printed (is an integer)
-        if (myExp instanceof StringLitNode){
-            ((StringLitNode)myExp).setTable(_table);
+        if (_table == null){
+            System.out.println("========NULL HERE========");
+        }
+        if (myExp instanceof EqualityExpNode){
+            ((EqualityExpNode)myExp).setTable(_table);
         }
         /*
         myExp.codeGen(); //generate code to evaluate the expression and leave value at top of stack
@@ -1703,6 +1706,9 @@ abstract class ExpNode extends ASTnode {
 
     //1odo implemenent these for all stmtnodes and have them override this
     public void codeGen(){}
+
+    protected Hashtable<String, String> _table;
+    public void setTable(Hashtable <String, String> h){_table = h;}
 }
 
 class IntLitNode extends ExpNode {
@@ -1761,15 +1767,15 @@ class StringLitNode extends ExpNode {
             stringLabel = Codegen.nextLabel();
             //add to table
             _table.put(myStrVal, stringLabel);
-            Codegen.generateLabeled(stringLabel, ".asciiz ", "store stringLit", myStrVal);
 
             //store stringLit in the static data area
-            Codegen.generate(".text");
-            Codegen.generateWithComment("la", "", Codegen.T0, stringLabel);
-            Codegen.genPush(Codegen.T0);
+            Codegen.generateLabeled(stringLabel, ".asciiz ", "store stringLit", myStrVal);
         } else{ //is in table, so is duplicate, return previous label
             stringLabel = tempLabel;
         }
+        Codegen.generate(".text");
+        Codegen.generateWithComment("la", "", Codegen.T0, stringLabel);
+        Codegen.genPush(Codegen.T0);
     }
     private Hashtable <String, String> _table;
     public void setTable(Hashtable <String, String> h){
@@ -2556,7 +2562,13 @@ abstract class EqualityExpNode extends BinaryExpNode {
     public EqualityExpNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGen(){
+        codeGenHelper();
+    }
+    protected Hashtable <String, String> _table;
+    public void setTable(Hashtable <String, String> h){
+        _table = h;
+    }
     /**
      * typeCheck
      */
@@ -2759,7 +2771,30 @@ class EqualsNode extends EqualityExpNode {
     public EqualsNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        if (myExp1 instanceof StringLitNode){
+            myExp1.setTable(_table);
+        }
+        if (myExp2 instanceof StringLitNode){
+            myExp2.setTable(_table);
+        }
+        myExp1.codeGen();
+        myExp2.codeGen();
+        Codegen.genPop(Codegen.T1); //right
+        Codegen.genPop(Codegen.T0); //left
+        String equalLabel = Codegen.nextLabel();
+        String endLabel = Codegen.nextLabel();
+        Codegen.generateWithComment("beq", "operation ==", Codegen.T0, Codegen.T1, equalLabel);
+        //not equal
+        Codegen.generateWithComment("li", "not equal", Codegen.T0, Integer.toString(0));
+        Codegen.genPush(Codegen.T0);
+        Codegen.generate("j", endLabel);
+        //equal
+        Codegen.genLabel(equalLabel);
+        Codegen.generateWithComment("li", "equal", Codegen.T0, Integer.toString(1));
+        Codegen.genPush(Codegen.T0);
+        Codegen.genLabel(endLabel);
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
