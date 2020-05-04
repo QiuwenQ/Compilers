@@ -2345,7 +2345,7 @@ abstract class UnaryExpNode extends ExpNode {
     public UnaryExpNode(ExpNode exp) {
         myExp = exp;
     }
-
+    public void codeGen(){}
     /**
      * Return the line number for this unary expression node.
      * The line number is the one corresponding to the  operand.
@@ -2420,7 +2420,13 @@ class UnaryMinusNode extends UnaryExpNode {
     public UnaryMinusNode(ExpNode exp) {
         super(exp);
     }
-
+    public void codeGen(){
+        myExp.codeGen(); //value at top of the stack
+        Codegen.genPop(Codegen.T1);
+        Codegen.generateWithComment("li", "load 0 for unary minus", Codegen.T0, Integer.toString(0));
+        Codegen.generateWithComment("sub", "operation unary -", Codegen.T0, Codegen.T0, Codegen.T1); //value in T0
+        Codegen.genPush(Codegen.T0);
+    }
     /**
      * typeCheck
      */
@@ -2452,7 +2458,13 @@ class NotNode extends UnaryExpNode {
     public NotNode(ExpNode exp) {
         super(exp);
     }
-
+    public void codeGen(){
+        myExp.codeGen();
+        Codegen.genPop(Codegen.T1);
+        Codegen.generateWithComment("li", "load 0 for not", Codegen.T0, Integer.toString(0));
+        Codegen.generateWithComment("seq", "operation !", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.genPush(Codegen.T0);
+    }
     /**
      * typeCheck
      */
