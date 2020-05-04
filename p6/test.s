@@ -34,7 +34,7 @@ __start:		# add __start label for main only
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
 	beq   $t0, 0, .L0
-	li    $t0, 0		#load intlit into TO
+	li    $t0, 1		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	j     .L3
@@ -70,21 +70,15 @@ __start:		# add __start label for main only
 	lw    $a0, 4($sp)	#POP value for write stmt
 	li    $v0, 1
 	syscall
-.L6:		# if condition false
-	li    $t0, 1		#load intlit into TO
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t0, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	li    $t1, 0
-	beq   $t0, $t1, .L7		#evaluate if condition
+	j     .L7		#jump to end of if-else code
+.L6:		# else code
 	li    $t0, 2		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	lw    $a0, 4($sp)	#POP value for write stmt
 	li    $v0, 1
 	syscall
-.L7:		# if condition false
+.L7:		# end of if-else code
 	li    $t0, 7		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4

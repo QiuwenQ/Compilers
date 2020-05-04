@@ -1406,7 +1406,23 @@ class IfElseStmtNode extends StmtNode {
         myElseDeclList = dlist2;
         myElseStmtList = slist2;
     }
-
+    public void codeGen(){
+        myExp.codeGen();
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate("li", Codegen.T1, Integer.toString(0)); //false
+        String elseLabel = Codegen.nextLabel();
+        String doneLabel = Codegen.nextLabel();
+        //evaluate if condition
+        Codegen.generateWithComment("beq", "evaluate if condition", Codegen.T0, Codegen.T1, elseLabel);
+        //if code 
+        myThenStmtList.codeGen();
+        Codegen.generateWithComment("j", "jump to end of if-else code", doneLabel);
+        //else code
+        Codegen.genLabel(elseLabel, "else code");
+        myElseStmtList.codeGen();
+        //end of if else stmt
+        Codegen.genLabel(doneLabel, "end of if-else code");
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, do:
