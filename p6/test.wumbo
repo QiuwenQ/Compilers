@@ -5,12 +5,10 @@ void main(int b){
 	bool localm20;
 	localm16 = true; //true
 	localm20 = false; //false
-	a = 1;
-	localm12 = 2;
-	cout << a == a; //1
-	cout << localm12 == a; //0
-	cout << "hi" == "hi"; //1
-	cout << "hi" == "bye"; //0
+	cout<< localm20 && localm16; //false and don't evaluate the second 0
+	cout<< localm16 && localm16; //true! 1 
+	cout<< localm16 || localm20; //true and don't evaluate the second 1
+	cout<< localm20 || localm20; //false! 0
 
 }
 

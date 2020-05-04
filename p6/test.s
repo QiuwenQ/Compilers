@@ -33,125 +33,75 @@ __start:		# add __start label for main only
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
 	sw    $t0, 0($t1)	#ASSIGN
-	li    $t0, 1		#load intlit into TO
+	lw    $t0, -20($fp)	#get value of localm20
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	la    $t0, _a		#get address global var a
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	sw    $t0, 0($t1)	#ASSIGN
-	li    $t0, 2		#load intlit into TO
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	la    $t0, -12($fp)	#get address of localm12
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	lw    $t0, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	sw    $t0, 0($t1)	#ASSIGN
-	lw    $t0, _a		#get global var a
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t0, _a		#get global var a
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	lw    $t0, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	beq   $t0, $t1, .L0		#operation ==
-	li    $t0, 0		#not equal
+	beq   $t0, 0, .L0
+	lw    $t0, -16($fp)	#get value of localm16
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	j     .L1
 .L0:
-	li    $t0, 1		#equal
+	lw    $t0, -20($fp)	#get value of localm20
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 .L1:
 	lw    $a0, 4($sp)	#POP value for write stmt
 	li    $v0, 1
 	syscall
-	lw    $t0, -12($fp)	#get value of localm12
+	lw    $t0, -16($fp)	#get value of localm16
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	lw    $t0, _a		#get global var a
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	beq   $t0, $t1, .L2		#operation ==
-	li    $t0, 0		#not equal
+	beq   $t0, 0, .L2
+	lw    $t0, -16($fp)	#get value of localm16
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	j     .L3
 .L2:
-	li    $t0, 1		#equal
+	lw    $t0, -16($fp)	#get value of localm16
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 .L3:
 	lw    $a0, 4($sp)	#POP value for write stmt
 	li    $v0, 1
 	syscall
-	.data
-.L4:	.asciiz "hi"	# store stringLit
-	.text
-	la    $t0, .L4
+	lw    $t0, -16($fp)	#get value of localm16
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	.text
-	la    $t0, .L4
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	beq   $t0, $t1, .L5		#operation ==
-	li    $t0, 0		#not equal
+	beq   $t0, 1, .L4
+	lw    $t0, -20($fp)	#get value of localm20
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	j     .L6
+	j     .L5
+.L4:
+	lw    $t0, -16($fp)	#get value of localm16
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
 .L5:
-	li    $t0, 1		#equal
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-.L6:
 	lw    $a0, 4($sp)	#POP value for write stmt
 	li    $v0, 1
 	syscall
-	.text
-	la    $t0, .L4
+	lw    $t0, -20($fp)	#get value of localm20
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	.data
-.L7:	.asciiz "bye"	# store stringLit
-	.text
-	la    $t0, .L7
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	beq   $t0, $t1, .L8		#operation ==
-	li    $t0, 0		#not equal
+	beq   $t0, 1, .L6
+	lw    $t0, -20($fp)	#get value of localm20
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	j     .L9
-.L8:
-	li    $t0, 1		#equal
+	j     .L7
+.L6:
+	lw    $t0, -20($fp)	#get value of localm20
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-.L9:
+.L7:
 	lw    $a0, 4($sp)	#POP value for write stmt
 	li    $v0, 1
 	syscall
