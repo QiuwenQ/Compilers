@@ -3,11 +3,8 @@ void main(int b){
 	int localm12;
 	bool localm16;
 	bool localm20;
-	if (2<3 && true){
-		cout<<1; //no print
-	}
-	else{
-		cout<<2; //print
+	while (2<3 && true){
+		cout<<1; //print
 	}
 	cout<< 7;
 

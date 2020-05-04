@@ -1513,7 +1513,19 @@ class WhileStmtNode extends StmtNode {
         myDeclList = dlist;
         myStmtList = slist;
     }
+    public void codeGen(){
+        myExp.codeGen();
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate("li", Codegen.T1, Integer.toString(0));
+        String falseLabel = Codegen.nextLabel();
+        //evaluate if condition
+        Codegen.generateWithComment("beq", "evaluate while condition", Codegen.T0, Codegen.T1, falseLabel);
+        //true 
+        myStmtList.codeGen();
+        //false
+        Codegen.genLabel(falseLabel, "while condition false");
 
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, do:
