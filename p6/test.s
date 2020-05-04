@@ -43,13 +43,13 @@ __start:		# add __start label for main only
 	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	bne   $t0, $t1, .L0		#operation ==
-	li    $t0, 0		#not equal
+	bne   $t0, $t1, .L0		#operation !=
+	li    $t0, 0		#equal
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	j     .L1
 .L0:
-	li    $t0, 1		#equal
+	li    $t0, 1		#not equal
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 .L1:
@@ -66,13 +66,13 @@ __start:		# add __start label for main only
 	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	bne   $t0, $t1, .L2		#operation ==
-	li    $t0, 0		#not equal
+	bne   $t0, $t1, .L2		#operation !=
+	li    $t0, 0		#equal
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	j     .L3
 .L2:
-	li    $t0, 1		#equal
+	li    $t0, 1		#not equal
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 .L3:
@@ -93,13 +93,13 @@ __start:		# add __start label for main only
 	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	bne   $t0, $t1, .L5		#operation ==
-	li    $t0, 0		#not equal
+	bne   $t0, $t1, .L5		#operation !=
+	li    $t0, 0		#equal
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	j     .L6
 .L5:
-	li    $t0, 1		#equal
+	li    $t0, 1		#not equal
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 .L6:
@@ -120,13 +120,13 @@ __start:		# add __start label for main only
 	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	bne   $t0, $t1, .L8		#operation ==
-	li    $t0, 0		#not equal
+	bne   $t0, $t1, .L8		#operation !=
+	li    $t0, 0		#equal
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	j     .L9
 .L8:
-	li    $t0, 1		#equal
+	li    $t0, 1		#not equal
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 .L9:

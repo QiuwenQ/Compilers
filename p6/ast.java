@@ -2827,14 +2827,14 @@ class NotEqualsNode extends EqualityExpNode {
         Codegen.genPop(Codegen.T0); //left
         String equalLabel = Codegen.nextLabel();
         String endLabel = Codegen.nextLabel();
-        Codegen.generateWithComment("bne", "operation ==", Codegen.T0, Codegen.T1, equalLabel);
+        Codegen.generateWithComment("bne", "operation !=", Codegen.T0, Codegen.T1, equalLabel);
         //not equal
-        Codegen.generateWithComment("li", "not equal", Codegen.T0, Integer.toString(0));
+        Codegen.generateWithComment("li", "equal", Codegen.T0, Integer.toString(0));
         Codegen.genPush(Codegen.T0);
         Codegen.generate("j", endLabel);
         //equal
         Codegen.genLabel(equalLabel);
-        Codegen.generateWithComment("li", "equal", Codegen.T0, Integer.toString(1));
+        Codegen.generateWithComment("li", "not equal", Codegen.T0, Integer.toString(1));
         Codegen.genPush(Codegen.T0);
         Codegen.genLabel(endLabel);
     }
