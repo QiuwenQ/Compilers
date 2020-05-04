@@ -1330,6 +1330,7 @@ class IfStmtNode extends StmtNode {
         //evaluate if condition
         Codegen.generateWithComment("beq", "evaluate if condition", Codegen.T0, Codegen.T1, falseLabel);
         //true 
+        myStmtList.setExitLabel(exitLabel);
         myStmtList.codeGen();
         //false
         Codegen.genLabel(falseLabel, "if condition false");
@@ -1415,10 +1416,12 @@ class IfElseStmtNode extends StmtNode {
         //evaluate if condition
         Codegen.generateWithComment("beq", "evaluate if condition", Codegen.T0, Codegen.T1, elseLabel);
         //if code 
+        myThenStmtList.setExitLabel(exitLabel);
         myThenStmtList.codeGen();
         Codegen.generateWithComment("j", "jump to end of if-else code", doneLabel);
         //else code
         Codegen.genLabel(elseLabel, "else code");
+        myElseStmtList.setExitLabel(exitLabel);
         myElseStmtList.codeGen();
         //end of if else stmt
         Codegen.genLabel(doneLabel, "end of if-else code");
@@ -1521,6 +1524,7 @@ class WhileStmtNode extends StmtNode {
         //evaluate if condition
         Codegen.generateWithComment("beq", "evaluate while condition", Codegen.T0, Codegen.T1, falseLabel);
         //true 
+        myStmtList.setExitLabel(exitLabel);
         myStmtList.codeGen();
         //false
         Codegen.genLabel(falseLabel, "while condition false");
@@ -1589,7 +1593,8 @@ class RepeatStmtNode extends StmtNode {
         myDeclList = dlist;
         myStmtList = slist;
     }
-
+    //don't need to implement for this project
+    public void codeGen(){}
     /**
      * nameAnalysis
      * Given a symbol table symTab, do:
@@ -1679,6 +1684,14 @@ class CallStmtNode extends StmtNode {
 class ReturnStmtNode extends StmtNode {
     public ReturnStmtNode(ExpNode exp) {
         myExp = exp;
+    }  
+    public void codeGen(){
+        if (myExp != null){
+            myExp.codeGen(); //value on the stack
+            Codegen.genPop(Codegen.V0);
+        }
+        Codegen.generateWithComment("j", "return statement, jump to function exit", exitLabel);
+
     }
 
     /**

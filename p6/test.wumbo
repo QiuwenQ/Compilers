@@ -1,12 +1,24 @@
 int a;
+int f(int a){
+	a++;
+	if (false){
+		return -2;
+	} else {
+		return a;
+	}
+}
+int f2(){
+	while (false){
+		return 5;
+	}
+	return 6;
+}
 void main(int b){
 	int localm12;
 	bool localm16;
 	bool localm20;
-	while (2<3 && true){
-		cout<<1; //print
-	}
-	cout<< 7;
-
+	cout << f(11);
+	cout << f2();
 }
+
 
