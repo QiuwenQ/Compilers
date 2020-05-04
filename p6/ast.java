@@ -329,7 +329,7 @@ class FnBodyNode extends ASTnode {
         Hashtable<String, String> stringTable = new Hashtable <String, String>();
         myStmtList.setTable(stringTable);
         myStmtList.setExitLabel(exitLabel);
-        myStmtList.codeGen(); //1odo implement this in statement list and stmtnodes
+        myStmtList.codeGen();
     }
     /**
      * typeCheck
@@ -1034,7 +1034,6 @@ abstract class StmtNode extends ASTnode {
     }
     protected Hashtable<String, String> _table;
     public void setTable(Hashtable <String, String> h){_table = h;}
-    //1odo implemenent these for all stmtnodes and have them override this
     public void codeGen(){}
 }
 
@@ -1234,25 +1233,13 @@ class WriteStmtNode extends StmtNode {
         //call code gen of expression being printed (is an integer)
         /*
         if (_table == null){
-            System.out.println("========NULL HERE========"); //TODO; remove this
+            System.out.println("========NULL HERE========");
         }
         */
         if (myExp instanceof EqualityExpNode){
             ((EqualityExpNode)myExp).setTable(_table);
         }
-        /*
-        myExp.codeGen(); //generate code to evaluate the expression and leave value at top of stack
-        
-        //pop address off of stack
-        Codegen.generateIndexed("lw", Codegen.A0, Codegen.SP, 4, "POP value for write stmt");
-        if (myExp instanceof StringLitNode){
-            Codegen.generate("li", Codegen.V0, 4);
-        } else{
-            Codegen.generate("li", Codegen.V0, 1);
-        }
-        Codegen.generate("syscall");
-        */
-        //TODO: COMMENT THIS OUT WHEN SUBMITTTING AND MAKE SURE WE DON"T PRINT OUT ANY VARIABLES IN TEST.WUMBO
+        //print out int or bool expressions or string literals
         if (myExp instanceof IdNode){
             ((IdNode)myExp).genAddr();
             //idNode: get the address off the stack and store in register
@@ -1759,7 +1746,6 @@ abstract class ExpNode extends ASTnode {
     abstract public int lineNum();
     abstract public int charNum();
 
-    //1odo implemenent these for all stmtnodes and have them override this
     public void codeGen(){}
 
     protected Hashtable<String, String> _table;
@@ -2246,7 +2232,6 @@ class AssignNode extends ExpNode {
     }
 
     public void codeGen(){
-        //1ODO: actually write the code for the lhs and rhs codegen 
         myExp.codeGen(); //rhs
         ((IdNode)myLhs).genAddr();//lhs
         //pop these values and assign
