@@ -3,10 +3,9 @@ void main(int b){
 	int localm12;
 	bool localm16;
 	bool localm20;
-	a = 4;
-	localm12 = 1+2*3;
-	cout<< localm12;
-	localm12 = a/2*3;
-	cout<< localm12;
+	localm16 = true; //true
+	localm20 = false; //false
+	cout<< localm20 && localm16; //false and don't evaluate the second
+	cout<< localm16 && localm16; //true!
 }
 

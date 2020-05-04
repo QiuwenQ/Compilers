@@ -2399,13 +2399,7 @@ abstract class BinaryExpNode extends ExpNode {
         myExp1.nameAnalysis(symTab);
         myExp2.nameAnalysis(symTab);
     }
-    public void codeGen(){
-        myExp1.codeGen(); //left
-        myExp2.codeGen(); //right
-        Codegen.genPop(Codegen.T1); //right
-        Codegen.genPop(Codegen.T0); //left
-        codeGenHelper(); //call the corresponding binary helper and pushes value to stack
-    }
+    public void codeGen(){}
     public void codeGenHelper(){}
     // two kids
     protected ExpNode myExp1;
@@ -2488,7 +2482,13 @@ abstract class ArithmeticExpNode extends BinaryExpNode {
     public ArithmeticExpNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGen(){
+        myExp1.codeGen(); //left
+        myExp2.codeGen(); //right
+        Codegen.genPop(Codegen.T1); //right
+        Codegen.genPop(Codegen.T0); //left
+        codeGenHelper(); //call the corresponding binary helper and pushes value to stack
+    }
     /**
      * typeCheck
      */
@@ -2521,7 +2521,9 @@ abstract class LogicalExpNode extends BinaryExpNode {
     public LogicalExpNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGen(){
+        codeGenHelper();
+    }
     /**
      * typeCheck
      */
@@ -2709,7 +2711,19 @@ class AndNode extends LogicalExpNode {
     public AndNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
+    public void codeGenHelper(){
+        String falseLabel = Codegen.nextLabel();
+        //evaluate the left operand
+        myExp1.codeGen();
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate("beq", Codegen.T0, Codegen.FALSE, falseLabel);
+        myExp2.codeGen(); //what is on the stack is the value of the whole expression
+        Codegen.genLabel(falseLabel); //generate false label
+        //first exp is false, no need to evaluate
+        myExp1.codeGen(); //push the false value from exp1 back to the stack
 
+
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
