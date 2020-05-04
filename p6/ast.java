@@ -418,7 +418,7 @@ class ExpListNode extends ASTnode {
     public void codeGen(){
         int _offset = 0;
         for (ExpNode node: myExps){
-            //TODO: evaluate each actual parameter and push values onto stack
+            //evaluate each actual parameter and push values onto stack
             node.codeGen();
         }
     }
@@ -1177,7 +1177,13 @@ class ReadStmtNode extends StmtNode {
     public void nameAnalysis(SymTable symTab) {
         myExp.nameAnalysis(symTab);
     }
-
+    public void codeGen(){
+        Codegen.generateWithComment("li", "read stmt", Codegen.V0, Integer.toString(5));
+        Codegen.generate("syscall");
+        ((IdNode)myExp).genAddr();
+        Codegen.genPop(Codegen.T0);
+        Codegen.generateIndexed("sw", Codegen.V0, Codegen.T0, 0, "read stmt STORE value");
+    }
     /**
      * typeCheck
      */
@@ -2260,8 +2266,6 @@ class CallExpNode extends ExpNode {
         myExpList.codeGen();
         myId.genJumpAndLink("_" + myId.name());
         Codegen.genPush(Codegen.V0); //push returned value onto stack
-
-        //TODO left
     }
     /**
      * Return the line number for this call node.
