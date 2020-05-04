@@ -3,9 +3,10 @@ void main(int b){
 	int localm12;
 	bool localm16;
 	bool localm20;
-	cin >> localm12;
-	cout << localm12;
-	cin >> localm16;
-	cout << localm16;
+	a = 2;
+	localm12 = 1+1+1;
+	cout<< localm12;
+	localm12 = a+a;
+	cout<< localm12;
 }
 

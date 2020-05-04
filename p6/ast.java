@@ -2399,7 +2399,14 @@ abstract class BinaryExpNode extends ExpNode {
         myExp1.nameAnalysis(symTab);
         myExp2.nameAnalysis(symTab);
     }
-
+    public void codeGen(){
+        myExp1.codeGen(); //left
+        myExp2.codeGen(); //right
+        Codegen.genPop(Codegen.T1); //right
+        Codegen.genPop(Codegen.T0); //left
+        codeGenHelper(); //call the corresponding binary helper and pushes value to stack
+    }
+    public void codeGenHelper(){}
     // two kids
     protected ExpNode myExp1;
     protected ExpNode myExp2;
@@ -2631,7 +2638,10 @@ class PlusNode extends ArithmeticExpNode {
     public PlusNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        Codegen.generateWithComment("add", "adding values", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.genPush(Codegen.T0);
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);

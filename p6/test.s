@@ -11,14 +11,48 @@ __start:		# add __start label for main only
 	subu  $sp, $sp, 4
 	addu  $fp, $sp, 12		#set the FP for this function
 	subu  $sp, $sp, 12		#push space for locals
-	li    $v0, 5		#read stmt
-	syscall
+	li    $t0, 2		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	la    $t0, _a		#get address global var a
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	sw    $t0, 0($t1)	#ASSIGN
+	li    $t0, 1		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	li    $t0, 1		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	add   $t0, $t0, $t1		#adding values
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	li    $t0, 1		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	add   $t0, $t0, $t1		#adding values
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
 	la    $t0, -12($fp)	#get address of localm12
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	sw    $v0, 0($t0)	#read stmt STORE value
+	sw    $t0, 0($t1)	#ASSIGN
 	la    $t0, -12($fp)	#get address of localm12
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
@@ -28,15 +62,28 @@ __start:		# add __start label for main only
 	move  $a0, $t1		#put value to A0
 	li    $v0, 1
 	syscall
-	li    $v0, 5		#read stmt
-	syscall
-	la    $t0, -16($fp)	#get address of localm16
+	lw    $t0, _a		#get global var a
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
+	lw    $t0, _a		#get global var a
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	sw    $v0, 0($t0)	#read stmt STORE value
-	la    $t0, -16($fp)	#get address of localm16
+	add   $t0, $t0, $t1		#adding values
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	la    $t0, -12($fp)	#get address of localm12
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	sw    $t0, 0($t1)	#ASSIGN
+	la    $t0, -12($fp)	#get address of localm12
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
