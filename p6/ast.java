@@ -2814,7 +2814,30 @@ class NotEqualsNode extends EqualityExpNode {
     public NotEqualsNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        if (myExp1 instanceof StringLitNode){
+            myExp1.setTable(_table);
+        }
+        if (myExp2 instanceof StringLitNode){
+            myExp2.setTable(_table);
+        }
+        myExp1.codeGen();
+        myExp2.codeGen();
+        Codegen.genPop(Codegen.T1); //right
+        Codegen.genPop(Codegen.T0); //left
+        String equalLabel = Codegen.nextLabel();
+        String endLabel = Codegen.nextLabel();
+        Codegen.generateWithComment("bne", "operation ==", Codegen.T0, Codegen.T1, equalLabel);
+        //not equal
+        Codegen.generateWithComment("li", "not equal", Codegen.T0, Integer.toString(0));
+        Codegen.genPush(Codegen.T0);
+        Codegen.generate("j", endLabel);
+        //equal
+        Codegen.genLabel(equalLabel);
+        Codegen.generateWithComment("li", "equal", Codegen.T0, Integer.toString(1));
+        Codegen.genPush(Codegen.T0);
+        Codegen.genLabel(endLabel);
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
