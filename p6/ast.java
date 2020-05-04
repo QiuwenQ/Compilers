@@ -2619,7 +2619,9 @@ abstract class RelationalExpNode extends BinaryExpNode {
     public RelationalExpNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGen(){
+        codeGenHelper();
+    }
     /**
      * typeCheck
      */
@@ -2851,7 +2853,24 @@ class LessNode extends RelationalExpNode {
     public LessNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        myExp1.codeGen();
+        myExp2.codeGen();
+        Codegen.genPop(Codegen.T1); //right
+        Codegen.genPop(Codegen.T0); //left
+        String trueLabel = Codegen.nextLabel();
+        String endLabel = Codegen.nextLabel();
+        Codegen.generateWithComment("blt", "operation <", Codegen.T0, Codegen.T1, trueLabel);
+        //false
+        Codegen.generateWithComment("li", "not less than", Codegen.T0, Integer.toString(0));
+        Codegen.genPush(Codegen.T0);
+        Codegen.generate("j", endLabel);
+        //true
+        Codegen.genLabel(trueLabel);
+        Codegen.generateWithComment("li", "less than", Codegen.T0, Integer.toString(1));
+        Codegen.genPush(Codegen.T0);
+        Codegen.genLabel(endLabel);
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -2865,7 +2884,24 @@ class GreaterNode extends RelationalExpNode {
     public GreaterNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        myExp1.codeGen();
+        myExp2.codeGen();
+        Codegen.genPop(Codegen.T1); //right
+        Codegen.genPop(Codegen.T0); //left
+        String trueLabel = Codegen.nextLabel();
+        String endLabel = Codegen.nextLabel();
+        Codegen.generateWithComment("bgt", "operation >", Codegen.T0, Codegen.T1, trueLabel);
+        //false
+        Codegen.generateWithComment("li", "not less than", Codegen.T0, Integer.toString(0));
+        Codegen.genPush(Codegen.T0);
+        Codegen.generate("j", endLabel);
+        //true
+        Codegen.genLabel(trueLabel);
+        Codegen.generateWithComment("li", "less than", Codegen.T0, Integer.toString(1));
+        Codegen.genPush(Codegen.T0);
+        Codegen.genLabel(endLabel);
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -2879,7 +2915,24 @@ class LessEqNode extends RelationalExpNode {
     public LessEqNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        myExp1.codeGen();
+        myExp2.codeGen();
+        Codegen.genPop(Codegen.T1); //right
+        Codegen.genPop(Codegen.T0); //left
+        String trueLabel = Codegen.nextLabel();
+        String endLabel = Codegen.nextLabel();
+        Codegen.generateWithComment("ble", "operation <=", Codegen.T0, Codegen.T1, trueLabel);
+        //false
+        Codegen.generateWithComment("li", "not less than", Codegen.T0, Integer.toString(0));
+        Codegen.genPush(Codegen.T0);
+        Codegen.generate("j", endLabel);
+        //true
+        Codegen.genLabel(trueLabel);
+        Codegen.generateWithComment("li", "less than", Codegen.T0, Integer.toString(1));
+        Codegen.genPush(Codegen.T0);
+        Codegen.genLabel(endLabel);
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -2893,7 +2946,24 @@ class GreaterEqNode extends RelationalExpNode {
     public GreaterEqNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        myExp1.codeGen();
+        myExp2.codeGen();
+        Codegen.genPop(Codegen.T1); //right
+        Codegen.genPop(Codegen.T0); //left
+        String trueLabel = Codegen.nextLabel();
+        String endLabel = Codegen.nextLabel();
+        Codegen.generateWithComment("bge", "operation >=", Codegen.T0, Codegen.T1, trueLabel);
+        //false
+        Codegen.generateWithComment("li", "not less than", Codegen.T0, Integer.toString(0));
+        Codegen.genPush(Codegen.T0);
+        Codegen.generate("j", endLabel);
+        //true
+        Codegen.genLabel(trueLabel);
+        Codegen.generateWithComment("li", "less than", Codegen.T0, Integer.toString(1));
+        Codegen.genPush(Codegen.T0);
+        Codegen.genLabel(endLabel);
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
