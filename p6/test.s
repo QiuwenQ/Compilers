@@ -11,7 +11,7 @@ __start:		# add __start label for main only
 	subu  $sp, $sp, 4
 	addu  $fp, $sp, 12		#set the FP for this function
 	subu  $sp, $sp, 12		#push space for locals
-	li    $t0, 2		#load intlit into TO
+	li    $t0, 4		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	la    $t0, _a		#get address global var a
@@ -25,24 +25,25 @@ __start:		# add __start label for main only
 	li    $t0, 1		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	li    $t0, 1		#load intlit into TO
+	li    $t0, 2		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	li    $t0, 3		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	lw    $t1, 4($sp)	#POP
 	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	add   $t0, $t0, $t1		#adding values
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	li    $t0, 1		#load intlit into TO
+	mult  $t0, $t1		#operation *
+	mflo  $t0
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	lw    $t1, 4($sp)	#POP
 	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	add   $t0, $t0, $t1		#adding values
+	add   $t0, $t0, $t1		#operation +
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	la    $t0, -12($fp)	#get address of localm12
@@ -65,14 +66,26 @@ __start:		# add __start label for main only
 	lw    $t0, _a		#get global var a
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	lw    $t0, _a		#get global var a
+	li    $t0, 2		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	lw    $t1, 4($sp)	#POP
 	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	add   $t0, $t0, $t1		#adding values
+	div   $t0, $t1		#operation /
+	mflo  $t0
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	li    $t0, 3		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	mult  $t0, $t1		#operation *
+	mflo  $t0
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	la    $t0, -12($fp)	#get address of localm12

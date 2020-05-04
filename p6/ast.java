@@ -2639,7 +2639,7 @@ class PlusNode extends ArithmeticExpNode {
         super(exp1, exp2);
     }
     public void codeGenHelper(){
-        Codegen.generateWithComment("add", "adding values", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.generateWithComment("add", "operation +", Codegen.T0, Codegen.T0, Codegen.T1);
         Codegen.genPush(Codegen.T0);
     }
     public void unparse(PrintWriter p, int indent) {
@@ -2655,7 +2655,10 @@ class MinusNode extends ArithmeticExpNode {
     public MinusNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        Codegen.generateWithComment("subu", "operation -", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.genPush(Codegen.T0);
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
@@ -2669,7 +2672,11 @@ class TimesNode extends ArithmeticExpNode {
     public TimesNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        Codegen.generateWithComment("mult", "operation *", Codegen.T0, Codegen.T1);
+        Codegen.generate("mflo", Codegen.T0);
+        Codegen.genPush(Codegen.T0);
+    }
 
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -2684,7 +2691,11 @@ class DivideNode extends ArithmeticExpNode {
     public DivideNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        Codegen.generateWithComment("div", "operation /", Codegen.T0, Codegen.T1);
+        Codegen.generate("mflo", Codegen.T0);
+        Codegen.genPush(Codegen.T0);
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);

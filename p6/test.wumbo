@@ -3,10 +3,10 @@ void main(int b){
 	int localm12;
 	bool localm16;
 	bool localm20;
-	a = 2;
-	localm12 = 1+1+1;
+	a = 4;
+	localm12 = 1+2*3;
 	cout<< localm12;
-	localm12 = a+a;
+	localm12 = a/2*3;
 	cout<< localm12;
 }
 
