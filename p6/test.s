@@ -11,93 +11,81 @@ __start:		# add __start label for main only
 	subu  $sp, $sp, 4
 	addu  $fp, $sp, 12		#set the FP for this function
 	subu  $sp, $sp, 12		#push space for locals
-	li    $t0, 1		#load intlit into TO
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	la    $t0, _a		#get address global var a
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	lw    $t0, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	sw    $t0, 0($t1)	#ASSIGN
 	li    $t0, 2		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	la    $t0, -12($fp)	#get address of localm12
+	li    $t0, 3		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	lw    $t1, 4($sp)	#POP
 	addu  $sp, $sp, 4
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	sw    $t0, 0($t1)	#ASSIGN
-	li    $t0, 2		#load intlit into TO
+	blt   $t0, $t1, .L1		#operation <
+	li    $t0, 0		#not less than
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	lw    $t0, _a		#get global var a
+	j     .L2
+.L1:
+	li    $t0, 1		#less than
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	lw    $t0, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	subu  $t0, $t0, $t1		#operation -
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	li    $t0, 0		#load 0 for unary minus
-	sub   $t0, $t0, $t1		#operation unary -
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $a0, 4($sp)	#POP value for write stmt
-	li    $v0, 1
-	syscall
-	li    $t0, 0		#load intlit into TO
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	li    $t0, 0		#load 0 for not
-	seq   $t0, $t0, $t1		#operation !
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $a0, 4($sp)	#POP value for write stmt
-	li    $v0, 1
-	syscall
-	li    $t0, 1		#load intlit into TO
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $t1, 4($sp)	#POP
-	addu  $sp, $sp, 4
-	li    $t0, 0		#load 0 for not
-	seq   $t0, $t0, $t1		#operation !
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	lw    $a0, 4($sp)	#POP value for write stmt
-	li    $v0, 1
-	syscall
-	li    $t0, 1		#load intlit into TO
-	sw    $t0, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
+.L2:
 	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
 	beq   $t0, 0, .L0
 	li    $t0, 0		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	j     .L1
+	j     .L3
 .L0:
+	li    $t0, 2		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	li    $t0, 3		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	blt   $t0, $t1, .L4		#operation <
+	li    $t0, 0		#not less than
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	j     .L5
+.L4:
+	li    $t0, 1		#less than
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+.L5:
+.L3:
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	li    $t1, 0
+	beq   $t0, $t1, .L6		#evaluate if condition
 	li    $t0, 1		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-.L1:
-	lw    $t1, 4($sp)	#POP
+	lw    $a0, 4($sp)	#POP value for write stmt
+	li    $v0, 1
+	syscall
+.L6:		# if condition false
+	li    $t0, 1		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
 	addu  $sp, $sp, 4
-	li    $t0, 0		#load 0 for not
-	seq   $t0, $t0, $t1		#operation !
+	li    $t1, 0
+	beq   $t0, $t1, .L7		#evaluate if condition
+	li    $t0, 2		#load intlit into TO
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $a0, 4($sp)	#POP value for write stmt
+	li    $v0, 1
+	syscall
+.L7:		# if condition false
+	li    $t0, 7		#load intlit into TO
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	lw    $a0, 4($sp)	#POP value for write stmt

@@ -3,12 +3,13 @@ void main(int b){
 	int localm12;
 	bool localm16;
 	bool localm20;
-	a = 1;
-	localm12 = 2;
-	cout << -(2-a); //-1
-	cout << !false; //1
-	cout << !true; //0
-	cout << !(true&&false); //1
+	if (2<3 && false){
+		cout<<1; //no print
+	}
+	if (true){
+		cout<<2; //print
+	}
+	cout<< 7;
 
 }
 

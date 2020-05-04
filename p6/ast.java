@@ -1232,9 +1232,11 @@ class WriteStmtNode extends StmtNode {
 
     public void codeGen(){
         //call code gen of expression being printed (is an integer)
+        /*
         if (_table == null){
-            System.out.println("========NULL HERE========");
+            System.out.println("========NULL HERE========"); //TODO; remove this
         }
+        */
         if (myExp instanceof EqualityExpNode){
             ((EqualityExpNode)myExp).setTable(_table);
         }
@@ -1320,7 +1322,19 @@ class IfStmtNode extends StmtNode {
         myExp = exp;
         myStmtList = slist;
     }
+    public void codeGen(){
+        myExp.codeGen();
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate("li", Codegen.T1, Integer.toString(0));
+        String falseLabel = Codegen.nextLabel();
+        //evaluate if condition
+        Codegen.generateWithComment("beq", "evaluate if condition", Codegen.T0, Codegen.T1, falseLabel);
+        //true 
+        myStmtList.codeGen();
+        //false
+        Codegen.genLabel(falseLabel, "if condition false");
 
+    }
     /**
      * nameAnalysis
      * Given a symbol table symTab, do:
