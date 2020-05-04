@@ -1,24 +1,47 @@
-int a;
-int f(int a){
-	a++;
-	if (false){
-		return -2;
+int g;
+int g1;
+int f1(int l4, bool l8){
+	int l16;
+	bool l20;
+	l16 = l4 * 2;
+	cout<<l16;	//print: 6
+	l20 = 1<1 && (false || true); //true
+	if(l8){
+		int l24;
+		cout<< "\nl8 is true \n"; //print
+	}
+	if ("string" == "string"){
+		cout<< "string true"; //print
+		return 10;
 	} else {
-		return a;
+		cout<< "string false";
 	}
 }
-int f2(){
-	while (false){
-		return 5;
-	}
-	return 6;
+bool f2(){
+	return false;
 }
-void main(int b){
-	int localm12;
-	bool localm16;
-	bool localm20;
-	cout << f(11);
+void main(){
+	int l8;
+	bool l12;
+	int temp;
+	l8 = f1(3, true);
+	cout << l8; //print 0
 	cout << f2();
+	cout << "\n=====start of a bunch of testing======\n";
+	cout << ("string" != "string"); //0
+	temp = 3;
+	temp--;
+	cout << temp; //2
+	temp++; //3
+	cout << temp;
+	cout << temp +temp; //6
+	cout << temp - temp; //0
+	cout << temp/temp; //1
+	cout << temp*temp; //9
+	cout << !true; //0
+	cout << true && true; //1
+	cout << false && true; //0
 }
+
 
 

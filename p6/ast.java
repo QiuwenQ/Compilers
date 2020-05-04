@@ -115,6 +115,7 @@ abstract class ASTnode {
         for (int k=0; k<indent; k++) p.print(" ");
     }
     protected void codeGen(){}
+    static Hashtable<String, String> _table = new Hashtable<String, String>();
 }
 
 // **********************************************************************
@@ -326,8 +327,9 @@ class FnBodyNode extends ASTnode {
         exitLabel = _exitLabel;
     }
     public void codeGen(){
-        Hashtable<String, String> stringTable = new Hashtable <String, String>();
-        myStmtList.setTable(stringTable);
+        //Hashtable<String, String> stringTable = new Hashtable <String, String>();
+        //myStmtList.setTable(stringTable);
+        //myStmtList.setTable(_table);
         myStmtList.setExitLabel(exitLabel);
         myStmtList.codeGen();
     }
@@ -359,10 +361,12 @@ class StmtListNode extends ASTnode {
     public int getOffset(){
         return _offset;
     }
+    /*
     private Hashtable <String, String> _table;
     public void setTable(Hashtable <String, String> h){
         _table = h;
     }
+    */
     /**
      * nameAnalysis
      * Given a symbol table symTab, process each statement in the list.
@@ -382,7 +386,7 @@ class StmtListNode extends ASTnode {
     public void codeGen(){
         for (StmtNode node: myStmts){
             node.setExitLabel(exitLabel);
-            node.setTable(_table);
+            //node.setTable(_table);
             node.codeGen();
         }
     }
@@ -1032,8 +1036,10 @@ abstract class StmtNode extends ASTnode {
     public void setExitLabel(String _exitLabel){
         exitLabel = _exitLabel;
     }
+    /*
     protected Hashtable<String, String> _table;
     public void setTable(Hashtable <String, String> h){_table = h;}
+    */
     public void codeGen(){}
 }
 
@@ -1236,9 +1242,11 @@ class WriteStmtNode extends StmtNode {
             System.out.println("========NULL HERE========");
         }
         */
+        /*
         if (myExp instanceof EqualityExpNode){
             ((EqualityExpNode)myExp).setTable(_table);
         }
+        */
         //print out int or bool expressions or string literals
         if (myExp instanceof IdNode){
             ((IdNode)myExp).genAddr();
@@ -1310,6 +1318,7 @@ class IfStmtNode extends StmtNode {
         myStmtList = slist;
     }
     public void codeGen(){
+        //myExp.setTable(_table);
         myExp.codeGen();
         Codegen.genPop(Codegen.T0);
         Codegen.generate("li", Codegen.T1, Integer.toString(0));
@@ -1317,6 +1326,7 @@ class IfStmtNode extends StmtNode {
         //evaluate if condition
         Codegen.generateWithComment("beq", "evaluate if condition", Codegen.T0, Codegen.T1, falseLabel);
         //true 
+        //myStmtList.setTable(_table);
         myStmtList.setExitLabel(exitLabel);
         myStmtList.codeGen();
         //false
@@ -1395,6 +1405,7 @@ class IfElseStmtNode extends StmtNode {
         myElseStmtList = slist2;
     }
     public void codeGen(){
+        //myExp.setTable(_table);
         myExp.codeGen();
         Codegen.genPop(Codegen.T0);
         Codegen.generate("li", Codegen.T1, Integer.toString(0)); //false
@@ -1403,11 +1414,13 @@ class IfElseStmtNode extends StmtNode {
         //evaluate if condition
         Codegen.generateWithComment("beq", "evaluate if condition", Codegen.T0, Codegen.T1, elseLabel);
         //if code 
+        //myThenStmtList.setTable(_table);
         myThenStmtList.setExitLabel(exitLabel);
         myThenStmtList.codeGen();
         Codegen.generateWithComment("j", "jump to end of if-else code", doneLabel);
         //else code
         Codegen.genLabel(elseLabel, "else code");
+        //myElseStmtList.setTable(_table);
         myElseStmtList.setExitLabel(exitLabel);
         myElseStmtList.codeGen();
         //end of if else stmt
@@ -1504,6 +1517,7 @@ class WhileStmtNode extends StmtNode {
         myStmtList = slist;
     }
     public void codeGen(){
+        //myExp.setTable(_table);
         myExp.codeGen();
         Codegen.genPop(Codegen.T0);
         Codegen.generate("li", Codegen.T1, Integer.toString(0));
@@ -1511,6 +1525,7 @@ class WhileStmtNode extends StmtNode {
         //evaluate if condition
         Codegen.generateWithComment("beq", "evaluate while condition", Codegen.T0, Codegen.T1, falseLabel);
         //true 
+        //myStmtList.setTable(_table);
         myStmtList.setExitLabel(exitLabel);
         myStmtList.codeGen();
         //false
@@ -1747,9 +1762,10 @@ abstract class ExpNode extends ASTnode {
     abstract public int charNum();
 
     public void codeGen(){}
-
+    /*
     protected Hashtable<String, String> _table;
     public void setTable(Hashtable <String, String> h){_table = h;}
+    */
 }
 
 class IntLitNode extends ExpNode {
@@ -1818,10 +1834,12 @@ class StringLitNode extends ExpNode {
         Codegen.generateWithComment("la", "", Codegen.T0, stringLabel);
         Codegen.genPush(Codegen.T0);
     }
+    /*
     private Hashtable <String, String> _table;
     public void setTable(Hashtable <String, String> h){
         _table = h;
     }
+    */
     /**
      * Return the line number for this literal.
      */
@@ -2617,10 +2635,12 @@ abstract class EqualityExpNode extends BinaryExpNode {
     public void codeGen(){
         codeGenHelper();
     }
+    /*
     protected Hashtable <String, String> _table;
     public void setTable(Hashtable <String, String> h){
         _table = h;
     }
+    */
     /**
      * typeCheck
      */
@@ -2832,12 +2852,14 @@ class EqualsNode extends EqualityExpNode {
         super(exp1, exp2);
     }
     public void codeGenHelper(){
+        /*
         if (myExp1 instanceof StringLitNode){
             myExp1.setTable(_table);
         }
         if (myExp2 instanceof StringLitNode){
             myExp2.setTable(_table);
         }
+        */
         myExp1.codeGen();
         myExp2.codeGen();
         Codegen.genPop(Codegen.T1); //right
@@ -2869,12 +2891,14 @@ class NotEqualsNode extends EqualityExpNode {
         super(exp1, exp2);
     }
     public void codeGenHelper(){
+        /*
         if (myExp1 instanceof StringLitNode){
             myExp1.setTable(_table);
         }
         if (myExp2 instanceof StringLitNode){
             myExp2.setTable(_table);
         }
+        */
         myExp1.codeGen();
         myExp2.codeGen();
         Codegen.genPop(Codegen.T1); //right
