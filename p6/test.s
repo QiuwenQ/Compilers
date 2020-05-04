@@ -65,6 +65,38 @@ __start:		# add __start label for main only
 	lw    $a0, 4($sp)	#POP value for write stmt
 	li    $v0, 1
 	syscall
+	lw    $t0, -16($fp)	#get value of localm16
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	beq   $t0, 0, .L2
+	lw    $t0, -20($fp)	#get value of localm20
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+.L2:
+	lw    $t0, -16($fp)	#get value of localm16
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $a0, 4($sp)	#POP value for write stmt
+	li    $v0, 1
+	syscall
+	lw    $t0, -20($fp)	#get value of localm20
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	beq   $t0, 0, .L3
+	lw    $t0, -20($fp)	#get value of localm20
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+.L3:
+	lw    $t0, -20($fp)	#get value of localm20
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $a0, 4($sp)	#POP value for write stmt
+	li    $v0, 1
+	syscall
 _main_Exit:
 	lw    $ra, -4($fp)
 	move  $t0, $fp		#save control link

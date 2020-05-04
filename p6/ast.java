@@ -2721,8 +2721,6 @@ class AndNode extends LogicalExpNode {
         Codegen.genLabel(falseLabel); //generate false label
         //first exp is false, no need to evaluate
         myExp1.codeGen(); //push the false value from exp1 back to the stack
-
-
     }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -2737,7 +2735,17 @@ class OrNode extends LogicalExpNode {
     public OrNode(ExpNode exp1, ExpNode exp2) {
         super(exp1, exp2);
     }
-
+    public void codeGenHelper(){
+        String trueLabel = Codegen.nextLabel();
+        //evaluate the left operand
+        myExp1.codeGen();
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate("beq", Codegen.T0, Codegen.FALSE, trueLabel);
+        myExp2.codeGen(); //what is on the stack is the value of the whole expression
+        Codegen.genLabel(trueLabel); //generate false label
+        //first exp is false, no need to evaluate
+        myExp1.codeGen(); //push the true value from exp1 back to the stack
+    }
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
         myExp1.unparse(p, 0);
