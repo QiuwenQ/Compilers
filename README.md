@@ -4,7 +4,7 @@ CS 536 Introduction to Compilers, Spring 2020
 Wumbo: name of language defined by the course instructor
 
 ## Projects 
-### p1: Symbol Table (unavailable)
+### p1: Symbol table (unavailable)
 - Creates a Symbol Table (Symtable) to store symbols (Sym) for each local scope and for the global scope
 - Checks for any duplicates within the scopes before adding a Syms to the Symtable of that scope
 - Symtables can be added or removed
